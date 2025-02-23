@@ -39,7 +39,7 @@ main {
     @include absolute($header-size, 0, 0, 0);
     @include dimensions(100vw, calc(100vh - $header-size));
     @include verticalCenter;
-    //background: url('../assets/background.jpg') no-repeat center center fixed;
+    //background: url('../assets/imgs/background.jpg') no-repeat center center fixed;
     //background-size: cover;
     background-color: $background-color;
 }

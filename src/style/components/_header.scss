@@ -9,9 +9,7 @@ header {
 
         ul {
             @include fullDimensions;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
+            @include flexRightCenter;
             gap: 2rem;
         }
 
@@ -20,7 +18,7 @@ header {
             padding: 0 $padding-md;
 
             ul {
-                @include bottomCenter;
+                @include flexBottomCenter;
             }
         }
     }

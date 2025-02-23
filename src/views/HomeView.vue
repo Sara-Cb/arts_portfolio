@@ -1,13 +1,10 @@
 <script setup>
-import Category from '@/components/home/Category.vue';
 import TitleHero from '@/components/home/TitleHero.vue';
-import { ref } from 'vue';
+import { useCategoriesStore } from '@/stores/categories';
+import { storeToRefs } from 'pinia';
 
-const categories = ref([
-    { name: 'Sculpture', img: 'https://via.assets.so/game.png?id=1&q=95&w=360&h=360&fit=fill' },
-    { name: 'Photography', img: 'https://via.assets.so/game.png?id=2&q=95&w=360&h=360&fit=fill' },
-    { name: 'Performance', img: 'https://via.assets.so/game.png?id=3&q=95&w=360&h=360&fit=fill' },
-])
+const store = useCategoriesStore();
+const { categories } = storeToRefs(store);
 
 </script>
 
@@ -15,7 +12,11 @@ const categories = ref([
     <div class="pageContainer">
         <TitleHero />
         <div class="categories">
-            <Category v-for="(cat) in categories" :name='cat.name' :key="cat.name" :img="cat.img" />
+            <RouterLink v-for="(cat) in categories" :to="'/projects/' + cat.type" class="category" :class="cat.type"
+                :key="cat.type">
+                <div class="img"><img :src="cat.img" alt="photo"></div>
+                <h5 class="label">{{ cat.title }}</h5>
+            </RouterLink>
         </div>
     </div>
 </template>

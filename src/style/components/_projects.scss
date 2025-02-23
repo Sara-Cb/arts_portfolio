@@ -1,0 +1,49 @@
+@use "@/style/partials/variables" as *;
+@use "@/style/partials/colors" as *;
+@use "@/style/partials/typography" as *;
+@use "@/style/partials/mixins" as *;
+
+.projectsPage {
+    @include dimensions(100%, calc(100vh - $header-size));
+    @include relative($header-size, 0, 0, auto);
+    @include flexTopCenter;
+
+    .projectsMenu {
+        @include dimensions(100%, 4rem);
+        @include absolute(0, 0, 0, 0);
+        @include flexRowSpaceBetween;
+        padding: 1rem;
+
+
+        .title {
+            color: $cool;
+            font-size: $font-size-lg;
+            margin: 0;
+        }
+
+        .categories {
+            min-width: 40%;
+            @include flexRightCenter;
+            gap: 1rem;
+
+            .category {
+                color: $text-color;
+                font-size: $font-size-xs;
+                cursor: pointer;
+                transition: color 0.3s;
+
+                &:hover {
+                    color: $cool;
+                }
+            }
+        }
+
+
+    }
+
+    @media screen and (min-width: $breakpoint-sm) {
+        @include dimensions(calc(100vw - $header-size), 100%);
+        @include relative(0, $header-size, 0, 0);
+
+    }
+}

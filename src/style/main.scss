@@ -1,0 +1,129 @@
+@use './partials/colors' as *;
+@use './partials/typography' as *;
+@use './partials/variables' as *;
+@use './partials/mixins' as *;
+@forward './components/scrollbar';
+@forward './components/home';
+@forward './components/header';
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+    font-family: $font-family-base;
+    font-size: $font-size-base;
+    line-height: $line-height-base;
+    color: $text-color;
+    background-color: $background-color;
+    @include fullScreen;
+    overflow: hidden;
+}
+
+header {
+    @include dimensions(100vw, $header-size);
+    @include fixed(0, 0, 0, auto);
+    @include flexRowSpaceBetween;
+    gap: 1rem;
+    padding: 0 1rem;
+    background-color: $background-color;
+    border-bottom: 1px solid $text-color;
+    z-index: 1000;
+}
+
+main {
+    @include absolute($header-size, 0, 0, 0);
+    @include dimensions(100vw, calc(100vh - $header-size));
+    @include verticalCenter;
+    //background: url('../assets/background.jpg') no-repeat center center fixed;
+    //background-size: cover;
+    background-color: $background-color;
+}
+
+@media screen and (min-width: $breakpoint-sm) {
+    header {
+        @include fixed(0, 0, auto, 0);
+        @include dimensions($header-size, 100vh);
+        @include flexColumnSpaceBetween;
+        padding: 1rem 0;
+        border-bottom: none;
+        border-right: 1px solid $text-color;
+        @include containerPadding;
+    }
+
+    main {
+        @include absolute(0, $header-size, 0, 0);
+        @include dimensions(calc(100vw - $header-size), 100vh);
+    }
+
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: $font-family-heading;
+    line-height: $line-height-heading;
+    color: $heading-color;
+}
+
+h1 {
+    font-size: $heading-h1-size;
+}
+
+h2 {
+    font-size: $heading-h2-size;
+}
+
+h3 {
+    font-size: $heading-h3-size;
+}
+
+h4 {
+    font-size: $heading-h4-size;
+}
+
+h5 {
+    font-size: $heading-h5-size;
+}
+
+h6 {
+    font-size: $heading-h6-size;
+}
+
+@media screen and (max-width: $breakpoint-md) {
+    h1 {
+        font-size: $heading-h1-size-sm;
+    }
+
+    h2 {
+        font-size: $heading-h2-size-sm;
+    }
+
+    h3 {
+        font-size: $heading-h3-size-sm;
+    }
+
+    h4 {
+        font-size: $heading-h4-size-sm;
+    }
+
+    h5 {
+        font-size: $heading-h5-size-sm;
+    }
+
+    h6 {
+        font-size: $heading-h6-size-sm;
+    }
+
+}
+
+.pageContainer {
+    @include container;
+}

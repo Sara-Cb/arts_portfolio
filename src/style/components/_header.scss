@@ -1,0 +1,27 @@
+@use '../partials/variables' as *;
+@use '../partials/mixins' as *;
+
+header {
+    .navMenu {
+        height: 100%;
+        width: 30%;
+        padding: $padding-md 0;
+
+        ul {
+            @include fullDimensions;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 2rem;
+        }
+
+        @media screen and (min-width: $breakpoint-sm) {
+            @include dimensions(100%, 30%);
+            padding: 0 $padding-md;
+
+            ul {
+                @include bottomCenter;
+            }
+        }
+    }
+}

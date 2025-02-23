@@ -1,0 +1,70 @@
+@use 'colors' as *;
+@import url('https://fonts.googleapis.com/css2?family=Jolly+Lodger&display=swap');
+
+@font-face {
+    font-family: 'BlackFlag';
+    src: url(@/assets/BlackFlag.ttf);
+}
+
+//
+// FONT FAMILY
+//
+$font-family-base: 'Jolly Lodger', 'Roboto', sans-serif;
+$font-family-heading: 'BlackFlag', 'Arial', sans-serif;
+
+//
+// FONT SIZES
+//
+$font-size-base: 16px;
+$font-size-sm: 14px;
+$font-size-lg: 20px;
+$font-size-xl: 24px;
+
+$heading-h1-size: 3rem;
+$heading-h2-size: 2.5rem;
+$heading-h3-size: 2rem;
+$heading-h4-size: 1.75rem;
+$heading-h5-size: 1.5rem;
+$heading-h6-size: 1.25rem;
+$heading-h1-size-sm: 2rem;
+$heading-h2-size-sm: 1.75rem;
+$heading-h3-size-sm: 1.65rem;
+$heading-h4-size-sm: 1.5rem;
+$heading-h5-size-sm: 1.35rem;
+$heading-h6-size-sm: 1.25rem;
+
+//
+// FONT WEIGHT
+//
+$font-weight-light: 300;
+$font-weight-normal: 400;
+$font-weight-medium: 500;
+$font-weight-bold: 700;
+
+//
+// LINE HEIGHT
+//
+$line-height-base: 1.5;
+$line-height-heading: 1.2;
+
+//
+// LETTER SPACING
+//
+$letter-spacing-normal: 0;
+$letter-spacing-wide: 0.05em;
+
+//
+// COLORI TESTO DI BASE
+//
+$text-color: $ghost;
+$text-color-inverted: $night;
+
+$text-color-muted: $cool;
+$text-color-muted-inverted: $cool-darker-20;
+
+$text-color-accent: $chocolate;
+$text-color-accent-inverted: $madder;
+
+$heading-color: $chocolate;
+$background-color: $night;
+$background-color-inverted: $ghost;

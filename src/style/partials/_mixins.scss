@@ -1,0 +1,194 @@
+@use './variables' as *;
+
+//
+// DISPLAY
+//
+
+@mixin dimensions($width: 100%, $height: 100%) {
+    @if $width !=null {
+        width: $width;
+    }
+
+    @if $height !=null {
+        height: $height;
+    }
+}
+
+@mixin fullDimensions() {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+}
+
+@mixin fullScreen() {
+    width: 100vw;
+    height: 100vh;
+    min-width: 100%;
+    min-height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+@mixin flexCenter() {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@mixin fullCenter() {
+    @include fullDimensions;
+    @include flexCenter;
+}
+
+@mixin verticalCenter() {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+@mixin bottomCenter() {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+@mixin flexRowCenter() {
+    @include flexCenter;
+    flex-direction: row;
+}
+
+@mixin flexColumnSpaceBetween() {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+@mixin flexRowSpaceBetween() {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+@mixin container() {
+    // Includi le dichiarazioni subito
+    @include fullDimensions;
+    @include verticalCenter;
+    gap: $margin-md;
+    margin: 0 auto;
+    @include containerPadding;
+}
+
+@mixin containerPadding() {
+    padding: $padding-sm 0;
+
+    // Poi eventuali media query (senza & se fai riferimento a questo stesso selettore)
+    @media screen and (min-width: $breakpoint-sm) {
+        padding: $padding-md 0;
+    }
+
+    @media screen and (min-width: $breakpoint-md) {
+        padding: $padding-lg 0;
+    }
+
+    @media screen and (min-width: $breakpoint-lg) {
+        padding: $padding-xl 0;
+    }
+
+    @media screen and (min-width: $breakpoint-xl) {
+        gap: $margin-lg;
+        padding: 0;
+        max-width: 1200px;
+    }
+}
+
+//
+// POSITION
+//
+
+@mixin absoluteCenter() {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateY(-50%) translateX(-50%);
+}
+
+@mixin absolute($top: 0, $left: 0, $right: 0, $bottom: 0) {
+    position: absolute;
+    top: $top;
+    left: $left;
+    right: $right;
+    bottom: $bottom;
+}
+
+@mixin fixed($top: 0, $left: 0, $right: 0, $bottom: 0) {
+    position: fixed;
+    top: $top;
+    left: $left;
+    right: $right;
+    bottom: $bottom;
+}
+
+@mixin relative($top: 0, $left: 0, $right: 0, $bottom: 0) {
+    position: relative;
+    top: $top;
+    left: $left;
+    right: $right;
+    bottom: $bottom;
+}
+
+//
+// BUTTONS
+//
+@mixin button($variant: 'night', $transparent: false) {
+
+    $colors: (
+        'night': $night,
+        'cool': $cool,
+        'chocolate': $chocolate,
+        'madder': $madder,
+        'ghost': $ghost
+    );
+
+$opposites: (
+    'night': $ghost,
+    'cool': $night,
+    'chocolate': $ghost,
+    'madder': $ghost,
+    'ghost': $night
+);
+
+@if not map-has-key($colors, $variant) {
+    @error 'Variant not found';
+}
+
+@if $transparent ==true {
+    background-color: transparent;
+    color: map-get($colors, $variant);
+    border-color: map-get($colors, $variant);
+
+    &:hover {
+        color: map-get($opposites, $variant);
+        border-color: map-get($opposites, $variant);
+    }
+}
+
+else {
+    background-color: map-get($colors, $variant);
+    color: map-get($opposites, $variant);
+    border-color: map-get($opposites, $variant);
+
+    &:hover {
+        background-color: map-get($opposites, $variant);
+        color: map-get($colors, $variant);
+        border-color: map-get($colors, $variant);
+    }
+}
+
+border: 1px solid;
+padding: 0.5rem 1rem;
+border-radius: 0.5rem;
+cursor: pointer;
+transition: all 0.3s;
+}

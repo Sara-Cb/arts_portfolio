@@ -14,9 +14,14 @@ import {
     faChevronUp,
     faQuoteLeft,
     faQuoteRight,
-    faQ
+    faPhone,
+    faEnvelope
+
 } from '@fortawesome/free-solid-svg-icons'
 
-library.add(faHome, faUser, faFolder, faMagnifyingGlass, faBars, faTimes, faImage, faA, faChevronDown, faChevronUp, faQuoteLeft, faQuoteRight)
+import { faInstagram, faLinkedin } from '@fortawesome/free-brands-svg-icons'
+
+
+library.add(faHome, faUser, faFolder, faMagnifyingGlass, faBars, faTimes, faImage, faA, faChevronDown, faChevronUp, faQuoteLeft, faQuoteRight, faPhone, faEnvelope, faInstagram, faLinkedin)
 
 export default FontAwesomeIcon

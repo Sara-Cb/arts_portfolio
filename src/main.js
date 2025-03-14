@@ -1,6 +1,6 @@
 import 'sass-reset'
 import './style/main.scss'
-import FontAwesomeIcon from './assets/icons.js'
+import FontAwesomeIcon from './assets/icons/icons.js'
 
 import { createApp } from 'vue'
 import App from './App.vue'

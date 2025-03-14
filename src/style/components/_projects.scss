@@ -4,10 +4,6 @@
 @use "@/style/partials/mixins" as *;
 
 .projectsPage {
-    @include dimensions(100%, calc(100vh - $header-size));
-    @include relative($header-size, 0, 0, auto);
-    @include flexTopCenter;
-
     .projectsMenu {
         @include dimensions(100%, 4rem);
         @include absolute(0, 0, 0, 0);

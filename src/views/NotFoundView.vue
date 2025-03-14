@@ -1,5 +1,5 @@
 <template>
-    <section class="pageWrapper" id="pageNotFound">
+    <section class="pageContainer" id="pageNotFound">
         <h1 class="error-code">404</h1>
         <p class="error-message">Oops! The page you are looking for does not exist.</p>
         <router-link to="/" class="back-home">Back to Home</router-link>

@@ -2,6 +2,7 @@
 @use './partials/typography' as *;
 @use './partials/variables' as *;
 @use './partials/mixins' as *;
+@forward './components/about';
 @forward './components/header';
 @forward './components/home';
 @forward './components/projects';

@@ -63,9 +63,16 @@
     justify-content: flex-end;
 }
 
+
 @mixin flexRowCenter() {
     @include flexCenter;
     flex-direction: row;
+}
+
+@mixin flexRowSpaceBetween() {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
 @mixin flexColumnCenter() {
@@ -79,15 +86,16 @@
     justify-content: space-between;
 }
 
-@mixin flexRowSpaceBetween() {
+@mixin flexColumnLeft() {
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
 }
 
 @mixin container() {
     // Includi le dichiarazioni subito
-    @include fullDimensions;
+    @include dimensions(100%, auto);
     @include flexTopCenter;
     gap: $margin-lg;
     margin: 0 auto;
@@ -97,7 +105,6 @@
 @mixin containerPadding() {
     padding: $padding-sm 0;
 
-    // Poi eventuali media query (senza & se fai riferimento a questo stesso selettore)
     @media screen and (min-width: $breakpoint-sm) {
         padding: $padding-md 0;
     }
@@ -210,7 +217,7 @@ transition: all 0.3s;
 //
 // BORDERS
 //
-@mixin border($side, $color: $text-color, $width: 1px, $style: solid) {
+@mixin border($side: 'all', $color: $text-color, $width: 1px, $style: solid) {
 
     @if $side =='top' {
         border-top: $width $style $color;

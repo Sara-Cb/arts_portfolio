@@ -3,4 +3,113 @@
 @use "@/style/partials/variables" as *;
 @use "@/style/partials/mixins" as *;
 
-.aboutPage {}
+.aboutPage {
+
+    .hero,
+    .contacts {
+        @include dimensions(100%, auto);
+        gap: 1rem;
+        padding: 0 1rem;
+    }
+
+    .hero {
+        min-height: 20rem;
+        @include flexColumnCenter;
+        @include border('bottom');
+
+        .mirror {
+            @include dimensions(100%, auto);
+            @include flexColumnCenter;
+            gap: 1rem;
+
+            .profile {
+                @include dimensions(10rem, 10rem);
+                @include border;
+                border-radius: 50%;
+                overflow: hidden;
+
+                img {
+                    @include fullDimensions;
+                    object-fit: cover;
+                }
+            }
+
+            .bio {
+                @include dimensions(100%, auto);
+
+                p {
+                    font-size: 1.2rem;
+                    font-weight: 300;
+                    text-align: center;
+                }
+            }
+        }
+
+    }
+
+    .contacts {
+        @include flexColumnLeft;
+
+        .contactList {
+            @include dimensions(100%, auto);
+            @include flexColumnCenter;
+            gap: 0.5rem;
+
+            .contact {
+                @include dimensions(100%, auto);
+                @include flexRowCenter;
+                gap: 1rem;
+            }
+        }
+    }
+
+    @media screen and (min-width: $breakpoint-md) {
+        .hero {
+
+            .mirror {
+                @include flexRowSpaceBetween;
+                gap: 2rem;
+
+                .profile {
+                    @include dimensions(12rem, 12rem);
+                }
+
+                .bio {
+                    @include dimensions(60%, auto);
+                    flex-grow: 1;
+
+                    p {
+                        text-align: left;
+                    }
+                }
+            }
+        }
+
+        .contacts {
+            .contactList {
+                @include flexRowSpaceBetween;
+                gap: 1rem;
+
+                .contact {
+                    @include dimensions(30%, auto);
+                    @include flexColumnCenter;
+                    gap: 0;
+
+                    .icon {
+                        font-size: 2rem;
+                    }
+                }
+            }
+        }
+
+    }
+
+    @media screen and (min-width: $breakpoint-lg) {
+        .hero {
+            .profile {
+                @include dimensions(15rem, 15rem);
+            }
+        }
+
+    }
+}

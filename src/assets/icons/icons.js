@@ -19,9 +19,9 @@ import {
 
 } from '@fortawesome/free-solid-svg-icons'
 
-import { faInstagram, faLinkedin } from '@fortawesome/free-brands-svg-icons'
+import { faInstagram, faLinkedin, faWhatsapp } from '@fortawesome/free-brands-svg-icons'
 
 
-library.add(faHome, faUser, faFolder, faMagnifyingGlass, faBars, faTimes, faImage, faA, faChevronDown, faChevronUp, faQuoteLeft, faQuoteRight, faPhone, faEnvelope, faInstagram, faLinkedin)
+library.add(faHome, faUser, faFolder, faMagnifyingGlass, faBars, faTimes, faImage, faA, faChevronDown, faChevronUp, faQuoteLeft, faQuoteRight, faPhone, faEnvelope, faInstagram, faLinkedin, faWhatsapp)
 
 export default FontAwesomeIcon

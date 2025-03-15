@@ -1,16 +1,11 @@
 @use 'colors' as *;
-@import url('https://fonts.googleapis.com/css2?family=Jolly+Lodger&display=swap');
-
-@font-face {
-    font-family: 'BlackFlag';
-    src: url(@/assets/fonts/BlackFlag.ttf);
-}
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Syne+Mono&display=swap');
 
 //
 // FONT FAMILY
 //
-$font-family-base: 'Jolly Lodger', 'Roboto', sans-serif;
-$font-family-heading: 'BlackFlag', 'Arial', sans-serif;
+$font-family-base: 'Montserrat', 'Roboto', sans-serif;
+$font-family-heading: 'Syne Mono', 'Arial', sans-serif;
 
 //
 // FONT SIZES

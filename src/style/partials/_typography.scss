@@ -1,11 +1,11 @@
-@use 'colors' as *;
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Syne+Mono&display=swap');
+@use "colors" as *;
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Syne+Mono&display=swap");
 
 //
 // FONT FAMILY
 //
-$font-family-base: 'Montserrat', 'Roboto', sans-serif;
-$font-family-heading: 'Syne Mono', 'Arial', sans-serif;
+$font-family-base: "Montserrat", "Roboto", sans-serif;
+$font-family-heading: "Syne Mono", "Arial", sans-serif;
 
 //
 // FONT SIZES
@@ -61,6 +61,6 @@ $text-color-muted-inverted: $cool-darker-20;
 $text-color-accent: $chocolate;
 $text-color-accent-inverted: $madder;
 
-$heading-color: $chocolate;
+$heading-color: $cool;
 $background-color: $night;
 $background-color-inverted: $ghost;

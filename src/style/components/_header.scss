@@ -1,25 +1,32 @@
-@use '../partials/variables' as *;
-@use '../partials/mixins' as *;
+@use "../partials/variables" as *;
+@use "../partials/mixins" as *;
 
 header {
-    .navMenu {
-        height: 100%;
-        width: 30%;
-        padding: $padding-md 0;
+  .navMenu {
+    height: 100%;
+    width: 30%;
+    padding: $padding-md 0;
 
-        ul {
-            @include fullDimensions;
-            @include flexRightCenter;
-            gap: 2rem;
+    ul {
+      @include fullDimensions;
+      @include flexRowRight;
+      gap: 2rem;
+
+      .navLink {
+        @include relative;
+        .label {
+          @include absolute(0, 3rem, 0, 0);
         }
-
-        @media screen and (min-width: $breakpoint-sm) {
-            @include dimensions(100%, 30%);
-            padding: 0 $padding-md;
-
-            ul {
-                @include flexBottomCenter;
-            }
-        }
+      }
     }
+
+    @media screen and (min-width: $breakpoint-sm) {
+      @include dimensions(100%, 30%);
+      padding: 0 $padding-md;
+
+      ul {
+        @include flexColumnBottom;
+      }
+    }
+  }
 }

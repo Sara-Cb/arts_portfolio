@@ -1,127 +1,217 @@
-@use './variables' as *;
-@use './colors' as *;
-@use './typography' as *;
+@use "./variables" as *;
+@use "./colors" as *;
+@use "./typography" as *;
 
 //
 // DISPLAY
 //
 
 @mixin dimensions($width: 100%, $height: 100%) {
-    @if $width !=null {
-        width: $width;
-    }
+  @if $width !=null {
+    width: $width;
+  }
 
-    @if $height !=null {
-        height: $height;
-    }
+  @if $height !=null {
+    height: $height;
+  }
 }
 
 @mixin fullDimensions() {
-    width: 100%;
-    height: 100%;
-    margin: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
 }
 
 @mixin fullScreen() {
-    width: 100vw;
-    height: 100vh;
-    min-width: 100%;
-    min-height: 100%;
-    margin: 0;
-    padding: 0;
+  width: 100vw;
+  height: 100vh;
+  min-width: 100%;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+@mixin fullPage() {
+  @include dimensions(100vw, calc(100vh - $header-size));
+
+  & {
+    @media screen and (min-width: $breakpoint-sm) {
+      @include dimensions(calc(100vw - $header-size), 100vh);
+    }
+  }
 }
 
 @mixin flexCenter() {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 @mixin fullCenter() {
-    @include fullDimensions;
-    @include flexCenter;
+  @include fullDimensions;
+  @include flexCenter;
 }
 
-@mixin flexTopCenter() {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
+@mixin flexRow() {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
 }
 
-@mixin flexBottomCenter() {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-end;
+@mixin flexRowTop() {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
 }
 
-@mixin flexRightCenter() {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-end;
+@mixin flexRowBottom() {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: center;
 }
 
+@mixin flexRowLeft() {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+}
 
-@mixin flexRowCenter() {
-    @include flexCenter;
-    flex-direction: row;
+@mixin flexRowRight() {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+@mixin flexRowTopLeft() {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-end;
+}
+
+@mixin flexRowTopRight() {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-end;
+}
+
+@mixin flexRowBottomLeft() {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: flex-start;
+}
+
+@mixin flexRowBottomRight() {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: flex-end;
+}
+
+@mixin flexRowStretch() {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: center;
 }
 
 @mixin flexRowSpaceBetween() {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
 }
 
-@mixin flexColumnCenter() {
-    @include flexCenter;
-    flex-direction: column;
+@mixin flexColumn() {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
-@mixin flexColumnSpaceBetween() {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+@mixin flexColumnTop() {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+@mixin flexColumnBottom() {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
 }
 
 @mixin flexColumnLeft() {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+@mixin flexColumnRight() {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+@mixin flexColumnTopLeft() {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+@mixin flexColumnTopRight() {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-start;
+}
+
+@mixin flexColumnBottomLeft() {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+}
+
+@mixin flexColumnBottomRight() {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-end;
+}
+
+@mixin flexColumnStretch() {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+}
+
+@mixin flexColumnSpaceBetween() {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
 }
 
 @mixin container() {
-    // Includi le dichiarazioni subito
-    @include dimensions(100%, auto);
-    @include flexTopCenter;
-    gap: $margin-lg;
-    margin: 0 auto;
-    @include containerPadding;
-}
-
-@mixin containerPadding() {
-    padding: $padding-sm 0;
-
-    @media screen and (min-width: $breakpoint-sm) {
-        padding: $padding-md 0;
-    }
-
-    @media screen and (min-width: $breakpoint-md) {
-        padding: $padding-lg 0;
-    }
-
-    @media screen and (min-width: $breakpoint-lg) {
-        padding: $padding-xl 0;
-    }
-
-    @media screen and (min-width: $breakpoint-xl) {
-        gap: $margin-lg;
-        padding: 0;
-        max-width: 1200px;
-    }
+  @include fullDimensions;
+  @include flexColumnTop;
+  gap: $margin-lg;
+  margin: 0 auto;
+  @include containerPadding;
 }
 
 //
@@ -129,113 +219,111 @@
 //
 
 @mixin absoluteCenter() {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translateY(-50%) translateX(-50%);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateY(-50%) translateX(-50%);
 }
 
 @mixin absolute($top: 0, $left: 0, $right: 0, $bottom: 0) {
-    position: absolute;
-    top: $top;
-    left: $left;
-    right: $right;
-    bottom: $bottom;
+  position: absolute;
+  top: $top;
+  left: $left;
+  right: $right;
+  bottom: $bottom;
 }
 
 @mixin fixed($top: 0, $left: 0, $right: 0, $bottom: 0) {
-    position: fixed;
-    top: $top;
-    left: $left;
-    right: $right;
-    bottom: $bottom;
+  position: fixed;
+  top: $top;
+  left: $left;
+  right: $right;
+  bottom: $bottom;
 }
 
 @mixin relative($top: 0, $left: 0, $right: 0, $bottom: 0) {
-    position: relative;
-    top: $top;
-    left: $left;
-    right: $right;
-    bottom: $bottom;
+  position: relative;
+  top: $top;
+  left: $left;
+  right: $right;
+  bottom: $bottom;
 }
 
 //
 // BUTTONS
 //
-@mixin button($variant: 'night', $transparent: false) {
+@mixin button($variant: "night", $transparent: false) {
+  $colors: (
+    "night": $night,
+    "cool": $cool,
+    "chocolate": $chocolate,
+    "madder": $madder,
+    "ghost": $ghost,
+  );
 
-    $colors: (
-        'night': $night,
-        'cool': $cool,
-        'chocolate': $chocolate,
-        'madder': $madder,
-        'ghost': $ghost
-    );
+  $opposites: (
+    "night": $ghost,
+    "cool": $night,
+    "chocolate": $ghost,
+    "madder": $ghost,
+    "ghost": $night,
+  );
 
-$opposites: (
-    'night': $ghost,
-    'cool': $night,
-    'chocolate': $ghost,
-    'madder': $ghost,
-    'ghost': $night
-);
-
-@if not map-has-key($colors, $variant) {
+  @if not map-has-key($colors, $variant) {
     @error 'Variant not found';
-}
+  }
 
-@if $transparent ==true {
+  @if $transparent ==true {
     background-color: transparent;
     color: map-get($colors, $variant);
     border-color: map-get($colors, $variant);
 
     &:hover {
-        color: map-get($opposites, $variant);
-        border-color: map-get($opposites, $variant);
+      color: map-get($opposites, $variant);
+      border-color: map-get($opposites, $variant);
     }
-}
+  }
 
-else {
+  else {
     background-color: map-get($colors, $variant);
     color: map-get($opposites, $variant);
     border-color: map-get($opposites, $variant);
 
     &:hover {
-        background-color: map-get($opposites, $variant);
-        color: map-get($colors, $variant);
-        border-color: map-get($colors, $variant);
+      background-color: map-get($opposites, $variant);
+      color: map-get($colors, $variant);
+      border-color: map-get($colors, $variant);
     }
-}
+  }
 
-border: 1px solid;
-padding: 0.5rem 1rem;
-border-radius: 0.5rem;
-cursor: pointer;
-transition: all 0.3s;
+  border: 1px solid;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s;
 }
 
 //
 // BORDERS
 //
-@mixin border($side: 'all', $color: $text-color, $width: 1px, $style: solid) {
+@mixin border($side: "all", $color: $text-color, $width: 1px, $style: solid) {
+  @if $side == "top" {
+    border-top: $width $style $color;
+  }
 
-    @if $side =='top' {
-        border-top: $width $style $color;
-    }
+  @if $side == "right" {
+    border-right: $width $style $color;
+  }
 
-    @if $side =='right' {
-        border-right: $width $style $color;
-    }
+  @if $side == "bottom" {
+    border-bottom: $width $style $color;
+  }
 
-    @if $side =='bottom' {
-        border-bottom: $width $style $color;
-    }
+  @if $side == "left" {
+    border-left: $width $style $color;
+  }
 
-    @if $side =='left' {
-        border-left: $width $style $color;
-    }
-
-    @if $side =='all' {
-        border: $width $style $color;
-    }
+  @if $side == "all" {
+    border: $width $style $color;
+  }
 }

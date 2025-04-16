@@ -4,102 +4,326 @@
 @use "@/style/partials/mixins" as *;
 
 .homePage {
-    .pageContainer {
-        gap: 3.5rem;
+  #raehm {
+    padding: 0;
+    @include relative;
+
+    .overlay,
+    .video {
+      @include absolute;
+      @include fullDimensions;
     }
 
-    .hero {
-        @include dimensions(100%, auto);
-        padding: 0;
-        @include flexColumnCenter;
+    .contentContainer {
+      z-index: 2;
+      gap: 2rem;
+      @include flexColumn;
 
-        .heroTitile {
-            position: relative;
-            width: 100%;
-            height: 15rem;
-            @include flexCenter;
+      .heroTitile {
+        position: relative;
+        width: 100%;
+        height: 15rem;
+        @include flexCenter;
 
-            .title,
-            .logo {
-                @include absoluteCenter;
-            }
-
-            .title {
-                color: $ghost;
-            }
+        .title,
+        .logo {
+          @include absoluteCenter;
         }
 
-        .heroText {
-            .bio {
-                color: $cool;
-                font-size: $font-size-lg;
-                width: 80%;
-                margin: 0 auto;
-                text-align: center;
-            }
+        .title {
+          color: $ghost;
+          font-size: 8rem;
         }
+      }
+
+      .heroText {
+        width: 90%;
+        margin-bottom: 2rem;
+        .bio {
+          color: $cool;
+          margin: 0 auto;
+          text-align: center;
+          line-height: 1.8rem;
+          b {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+          }
+        }
+      }
+    }
+
+    .overlay {
+      background-color: $night-trans-50;
+      z-index: 1;
+    }
+
+    .video {
+      overflow: hidden;
+      z-index: 0;
+
+      .video-bg {
+        @include fullDimensions;
+        object-fit: cover;
+        object-position: center;
+        pointer-events: none;
+      }
+    }
+  }
+
+  #projects {
+    @include flexColumnTop;
+
+    .sectionTitle {
+      @include dimensions(100%, 6.5rem);
+      @include flexCenter;
+
+      h2 {
+        width: auto;
+        text-align: center;
+      }
     }
 
     .categories {
-        width: 100%;
-        display: flex;
-        justify-content: stretch;
-        align-items: center;
+      @include fullDimensions;
+      flex-grow: 1;
+      display: grid;
+      grid-template-columns: repeat(1, 100%);
+      grid-template-rows: repeat(4, 25%);
 
+      .category {
+        @include relative;
+        overflow: hidden;
+
+        .background {
+          @include absolute;
+          z-index: 0;
+          img {
+            @include fullDimensions;
+            object-fit: cover;
+            object-position: center;
+          }
+        }
+
+        .text {
+          @include relative;
+          @include fullDimensions;
+          @include flexColumnTopLeft;
+          z-index: 1;
+          padding: 1.5rem;
+          gap: 0.5rem;
+          background-color: $night-trans-10;
+          transition: background-color 1s ease-in-out;
+
+          .title,
+          .subtitle,
+          .description,
+          .alias {
+            margin: 0;
+          }
+
+          .title {
+            font-size: 1.5rem;
+            font-weight: 600;
+          }
+          .subtitle {
+            font-family: $font-family-heading;
+            font-size: 1rem;
+            font-weight: 300;
+          }
+          .description {
+            font-size: 0.7rem;
+          }
+          .cta {
+            color: $cool;
+            font-size: 0.8rem;
+            font-style: italic;
+            opacity: 0;
+            @include absolute(auto, auto, 1rem, 0.5rem);
+            translate: 100%;
+            transition: all 0.6s ease-in-out;
+          }
+          @media screen and (max-width: $breakpoint-md) {
+            background-color: $night-trans-50;
+          }
+
+          &:hover {
+            background-color: $night-trans-50;
+            transition: background-color 1s ease-out;
+
+            .cta {
+              opacity: 1;
+              translate: 0;
+              transition: all 0.6s ease-out;
+            }
+          }
+        }
+        &.materical .text:hover {
+          background-color: $night-trans-30;
+        }
+      }
+    }
+
+    @media screen and (min-width: $breakpoint-md) {
+      .categories {
+        grid-template-columns: repeat(2, 50%);
+        grid-template-rows: repeat(2, 50%);
         .category {
-            position: relative;
-            width: 30%;
-            height: 15rem;
-            flex-grow: 1;
-            @include flexCenter;
-
-            .img {
-                @include fullDimensions;
-                position: relative;
-
-                img {
-                    @include fullDimensions;
-                    object-fit: cover;
-                }
-
-                &::after {
-                    content: "";
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    background-color: $night-trans-30;
-                    z-index: 2;
-                    transition: background-color 0.3s ease-in;
-                }
-            }
-
-            &:hover .img::after {
-                background-color: $night-trans-50;
-                transition: background-color 0.3s ease-out;
-            }
-
-            .label {
-                color: $cool;
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                z-index: 3;
-            }
+          .text {
+            @include flexColumnLeft;
+          }
         }
+      }
+    }
+  }
+
+  #visit-card {
+    @include flexColumnStretch;
+    background-color: $cool;
+    background-image: linear-gradient(
+      to bottom,
+      $night-trans-50 0%,
+      transparent 15%
+    );
+    color: $night;
+
+    .mirror,
+    .contacts {
+      padding: 2.5rem 1.2rem;
     }
 
-    @media screen and (max-width: $breakpoint-md) {
+    .mirror {
+      @include border("bottom");
+      border-image: linear-gradient(to right, $chocolate, $cool) 1;
 
-        .categories {
-            flex-direction: column;
-            align-items: center;
+      .contentContainer {
+        @include flexRowRight;
+        gap: 1rem;
+      }
 
-            .category {
-                width: 100%;
-            }
+      .profile {
+        @include dimensions(6rem, 6rem);
+        min-width: 6rem;
+        min-height: 6rem;
+        @include border("all", $chocolate);
+        border-radius: 50%;
+        overflow: hidden;
+      }
+
+      .names {
+        @include dimensions(100%, auto);
+        @include flexColumnLeft;
+        gap: 0.5rem;
+
+        .alias,
+        .name {
+          color: $chocolate;
         }
+
+        .alias {
+          font-size: 2.5rem;
+          font-weight: 600;
+        }
+        .name {
+          font-size: 1.2rem;
+          font-weight: 300;
+        }
+      }
     }
+
+    .contacts {
+      flex-grow: 1;
+      margin-bottom: 3rem;
+
+      .contentContainer {
+        @include flexColumnStretch;
+        gap: 2rem;
+      }
+
+      .callToAction {
+        @include dimensions(100%, auto);
+        @include flexCenter;
+        flex-grow: 1;
+
+        h6 {
+          color: $night;
+          font-size: 1rem;
+          font-weight: 600;
+          text-align: center;
+        }
+      }
+
+      .contactList {
+        @include dimensions(100%, auto);
+        @include flexColumnRight;
+        gap: 0.5rem;
+        flex-grow: 2;
+
+        .contact {
+          padding-right: 1rem;
+          margin-left: auto;
+          @include flexRow;
+          gap: 1rem;
+          .icon {
+            color: $chocolate;
+            margin-top: 0.2rem;
+            font-size: 1.4rem;
+          }
+        }
+      }
+    }
+
+    footer {
+      @include dimensions(100%, 3rem);
+      background-color: $chocolate;
+      color: $ghost;
+      padding: 1.2rem;
+      font-size: 0.8rem;
+      font-weight: 400;
+
+      .contentContainer {
+        @include flexRowSpaceBetween;
+      }
+    }
+
+    @media screen and (min-width: $breakpoint-md) {
+      .mirror {
+        padding: 3rem;
+        padding-top: 3.5rem;
+      }
+      .contacts {
+        padding: 4rem 3rem;
+        padding-top: 3.5rem;
+      }
+
+      .mirror {
+        .profile {
+          @include dimensions(8rem, 8rem);
+          min-width: 8rem;
+          min-height: 8rem;
+        }
+
+        .names {
+          .alias {
+            font-size: 3rem;
+          }
+          .name {
+            font-size: 1.2rem;
+          }
+        }
+      }
+
+      .contacts {
+        margin-bottom: 0;
+        .callToAction {
+          h6 {
+            font-size: 1.5rem;
+          }
+        }
+      }
+
+      footer {
+        padding: 1rem 3rem;
+      }
+    }
+  }
 }

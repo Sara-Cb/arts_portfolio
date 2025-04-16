@@ -1,22 +1,19 @@
 <script setup>
-import TitleHero from '@/components/home/TitleHero.vue';
-import { useCategoriesStore } from '@/stores/categories';
-import { storeToRefs } from 'pinia';
+import { useSnapScroll } from "@/composables/useSnapScroll.js";
+import { useScrollToHashOrId } from "@/composables/useScrollToHash";
+import Hero from "@/views/components/home/Hero.vue";
+import Projects from "@/views/components/home/Projects.vue";
+import VisitCard from "@/views/components/home/VisitCard.vue";
 
-const store = useCategoriesStore();
-const { categories } = storeToRefs(store);
+useSnapScroll();
 
+useScrollToHashOrId();
 </script>
 
 <template>
-    <div class="pageContainer">
-        <TitleHero />
-        <div class="categories">
-            <RouterLink v-for="(cat) in categories" :to="'/projects/' + cat.type" class="category" :class="cat.type"
-                :key="cat.type">
-                <div class="img"><img :src="cat.img" alt="photo"></div>
-                <h5 class="label">{{ cat.title }}</h5>
-            </RouterLink>
-        </div>
-    </div>
+  <div class="scrollContainer">
+    <section id="raehm" class="snapSection"><Hero /></section>
+    <section id="projects" class="snapSection"><Projects /></section>
+    <section id="visit-card" class="snapSection"><VisitCard /></section>
+  </div>
 </template>

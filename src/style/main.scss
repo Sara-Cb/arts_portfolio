@@ -1,66 +1,59 @@
-@use './partials/colors' as *;
-@use './partials/typography' as *;
-@use './partials/variables' as *;
-@use './partials/mixins' as *;
-@forward './components/about';
-@forward './components/header';
-@forward './components/home';
-@forward './components/projects';
-@forward './components/scrollbar';
+@use "./partials/colors" as *;
+@use "./partials/typography" as *;
+@use "./partials/variables" as *;
+@use "./partials/mixins" as *;
+@forward "./components/header";
+@forward "./components/home";
+@forward "./components/scrollbar";
 
 *,
 *::before,
 *::after {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 html,
 body,
 #app {
-    font-family: $font-family-base;
-    font-size: $font-size-base;
-    line-height: $line-height-base;
-    color: $text-color;
-    background-color: $background-color;
-    @include fullScreen;
-    overflow: hidden;
+  font-family: $font-family-base;
+  font-size: $font-size-base;
+  line-height: $line-height-base;
+  color: $text-color;
+  background-color: $background-color;
+  @include fullScreen;
+  overflow: hidden;
 }
 
 header {
-    @include dimensions(100vw, $header-size);
-    @include fixed(0, 0, 0, auto);
-    @include flexRowSpaceBetween;
-    gap: 1rem;
-    padding: 0 1rem;
-    background-color: $background-color;
-    @include border('bottom');
-    z-index: 1000;
+  @include dimensions(100vw, $header-size);
+  @include fixed(0, 0, 0, auto);
+  @include flexRowSpaceBetween;
+  gap: 1rem;
+  padding: 0 1rem;
+  background-color: $background-color;
+  @include border("bottom");
+  z-index: 1000;
 }
 
 main {
-    @include absolute($header-size, 0, 0, 0);
-    @include dimensions(100vw, calc(100vh - $header-size));
-    @include flexTopCenter;
-    //background: url('../assets/imgs/background.jpg') no-repeat center center fixed;
-    //background-size: cover;
-    background-color: $background-color;
+  @include absolute($header-size, 0, 0, 0);
+  @include flexColumnTop;
+  @include fullPage;
 }
 
 @media screen and (min-width: $breakpoint-sm) {
-    header {
-        @include fixed(0, 0, auto, 0);
-        @include dimensions($header-size, 100vh);
-        @include flexColumnSpaceBetween;
-        padding: 1rem 0;
-        border-bottom: none;
-        @include border('right');
-    }
+  header {
+    @include fixed(0, 0, auto, 0);
+    @include dimensions($header-size, 100vh);
+    @include flexColumnSpaceBetween;
+    padding: 1rem 0;
+    border-bottom: none;
+    @include border("right");
+  }
 
-    main {
-        @include absolute(0, $header-size, 0, 0);
-        @include dimensions(calc(100vw - $header-size), 100vh);
-    }
-
+  main {
+    @include absolute(0, $header-size, 0, 0);
+  }
 }
 
 h1,
@@ -69,62 +62,144 @@ h3,
 h4,
 h5,
 h6 {
-    font-family: $font-family-heading;
-    line-height: $line-height-heading;
-    color: $heading-color;
+  font-family: $font-family-heading;
+  line-height: $line-height-heading;
+  color: $heading-color;
 }
 
 h1 {
-    font-size: $heading-h1-size;
+  font-size: $heading-h1-size;
 }
 
 h2 {
-    font-size: $heading-h2-size;
+  font-size: $heading-h2-size;
 }
 
 h3 {
-    font-size: $heading-h3-size;
+  font-size: $heading-h3-size;
 }
 
 h4 {
-    font-size: $heading-h4-size;
+  font-size: $heading-h4-size;
 }
 
 h5 {
-    font-size: $heading-h5-size;
+  font-size: $heading-h5-size;
 }
 
 h6 {
-    font-size: $heading-h6-size;
+  font-size: $heading-h6-size;
 }
 
 @media screen and (max-width: $breakpoint-md) {
-    h1 {
-        font-size: $heading-h1-size-sm;
-    }
+  h1 {
+    font-size: $heading-h1-size-sm;
+  }
 
-    h2 {
-        font-size: $heading-h2-size-sm;
-    }
+  h2 {
+    font-size: $heading-h2-size-sm;
+  }
 
-    h3 {
-        font-size: $heading-h3-size-sm;
-    }
+  h3 {
+    font-size: $heading-h3-size-sm;
+  }
 
-    h4 {
-        font-size: $heading-h4-size-sm;
-    }
+  h4 {
+    font-size: $heading-h4-size-sm;
+  }
 
-    h5 {
-        font-size: $heading-h5-size-sm;
-    }
+  h5 {
+    font-size: $heading-h5-size-sm;
+  }
 
-    h6 {
-        font-size: $heading-h6-size-sm;
-    }
-
+  h6 {
+    font-size: $heading-h6-size-sm;
+  }
 }
 
-.pageContainer {
-    @include container;
+b {
+  font-weight: 600;
+}
+
+.scrollContainer {
+  overflow-x: hidden;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  @include fullPage;
+
+  .snapSection {
+    scroll-snap-align: start;
+    overflow: hidden;
+    @include fullPage;
+  }
+}
+
+.night {
+  color: $night;
+}
+
+.ghost {
+  color: $ghost;
+}
+
+.cool {
+  color: $cool;
+}
+
+.madder {
+  color: $madder;
+}
+
+.chocolate {
+  color: $chocolate;
+}
+
+.nightBg {
+  background-color: $night;
+}
+
+.ghostBg {
+  background-color: $ghost;
+}
+
+.coolBg {
+  background-color: $cool;
+}
+
+.madderBg {
+  background-color: $madder;
+}
+
+.chocolateBg {
+  background-color: $chocolate;
+}
+
+svg .night {
+  fill: $night;
+}
+
+svg .ghost {
+  fill: $ghost;
+}
+
+svg .cool {
+  fill: $cool;
+}
+
+svg .madder {
+  fill: $madder;
+}
+
+svg .chocolate {
+  fill: $chocolate;
+}
+
+svg .transparent {
+  fill: transparent;
+}
+
+.contentContainer {
+  @include fullDimensions;
+  max-width: 1200px;
+  margin: 0 auto;
 }

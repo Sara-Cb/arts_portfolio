@@ -2,7 +2,7 @@
 // COLORI PRINCIPALI
 // ------------------------------------
 $night: #151413;
-$cool: #a09fa8;
+$cool: #d0cccc;
 $chocolate: #490818;
 $madder: #a2021c;
 $ghost: #f7f3f7;
@@ -12,15 +12,16 @@ $ghost: #f7f3f7;
 // ------------------------------------
 $night-lighter-20: #444342; // 80% #151413 + 20% #ffffff
 $night-darker-20: #11100f; // 80% #151413 + 20% #000000
+$night-trans-10: rgba(#151413, 0.9); // 30% trasparenza
 $night-trans-30: rgba(#151413, 0.7); // 30% trasparenza
 $night-trans-50: rgba(#151413, 0.5); // 30% trasparenza
 
 // ------------------------------------
 // COOL (Gray)
 // ------------------------------------
-$cool-lighter-20: #b3b2b9; // 80% #a09fa8 + 20% #ffffff
-$cool-darker-20: #807f86; // 80% #a09fa8 + 20% #000000
-$cool-trans-30: rgba(#a09fa8, 0.7);
+$cool-lighter-20: #e4dedc; // 80% #d0cccc + 20% #ffffff
+$cool-darker-20: #b8b3b1; // 80% #d0cccc + 20% #000000
+$cool-trans-30: rgba(#d0cccc, 0.7);
 
 // ------------------------------------
 // CHOCOLATE
@@ -28,6 +29,7 @@ $cool-trans-30: rgba(#a09fa8, 0.7);
 $chocolate-lighter-20: #6d3946; // 80% #490818 + 20% #ffffff
 $chocolate-darker-20: #3a0613; // 80% #490818 + 20% #000000
 $chocolate-trans-30: rgba(#490818, 0.7);
+$chocolate-trans-50: rgba(#490818, 0.5);
 
 // ------------------------------------
 // MADDER
@@ -35,6 +37,7 @@ $chocolate-trans-30: rgba(#490818, 0.7);
 $madder-lighter-20: #b53549; // 80% #a2021c + 20% #ffffff
 $madder-darker-20: #820216; // 80% #a2021c + 20% #000000
 $madder-trans-30: rgba(#a2021c, 0.7);
+$madder-trans-50: rgba(#a2021c, 0.5);
 
 // ------------------------------------
 // GHOST

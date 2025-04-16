@@ -1,26 +1,42 @@
-import { ref, computed } from 'vue'
-import { defineStore } from 'pinia'
+import { ref } from "vue";
+import { defineStore } from "pinia";
 
-
-export const useCategoriesStore = defineStore('categories', () => {
-
-  const sculpture = {
-    type: 'sculpture',
-    title: 'Sculpture',
-    img: 'https://via.assets.so/game.png?id=1&q=95&w=360&h=360&fit=fill',
-  }
-  const photography = {
-    type: 'photography',
-    title: 'Photography',
-    img: 'https://via.assets.so/game.png?id=2&q=95&w=360&h=360&fit=fill',
-  }
+export const useCategoriesStore = defineStore("categories", () => {
+  const materical = {
+    type: "materical",
+    title: "Materical",
+    subtitle: "Voids stuck in raw matter.",
+    description:
+      "Transformation, density, and silence — hands carve out dimensions.",
+    cta: "Explore the works",
+    src: "/images/cat_materical.jpg",
+  };
+  const visual = {
+    type: "visual",
+    title: "Visual",
+    subtitle: "Fragments of visions.",
+    description: "Dark moods, lost rituals, and the beauty of distortion.",
+    cta: "See the stories",
+    src: "/images/cat_visual.jpg",
+  };
   const performance = {
-    type: 'performance',
-    title: 'Performance',
-    img: 'https://via.assets.so/game.png?id=3&q=95&w=360&h=360&fit=fill',
-  }
+    type: "performance",
+    title: "Performance",
+    subtitle: "Body, flame and rhythm — the now becomes spell.",
+    description: "A celebration of chaos and liberation.",
+    cta: "Enter the ritual",
+    src: "/images/cat_performance.jpg",
+  };
+  const music = {
+    type: "music",
+    title: "Music",
+    subtitle: "Rhythm that moves beneath perception.",
+    description: "A ritual of vibration — echoing through the body and beyond.",
+    cta: "Listen and dissolve",
+    src: "/images/cat_music.jpg",
+  };
 
-  const categories = ref([sculpture, photography, performance])
+  const categories = ref([materical, visual, performance, music]);
 
-  return { categories }
-})
+  return { categories };
+});

@@ -20,6 +20,8 @@ import {
   faVolumeXmark,
   faVolumeLow,
   faVolumeHigh,
+  faChartSimple,
+  faPlay,
 } from "@fortawesome/free-solid-svg-icons";
 
 import {
@@ -48,6 +50,8 @@ library.add(
   faVolumeXmark,
   faVolumeLow,
   faVolumeHigh,
+  faChartSimple,
+  faPlay,
   faInstagram,
   faLinkedin,
   faTelegram,

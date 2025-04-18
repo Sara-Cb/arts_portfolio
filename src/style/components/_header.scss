@@ -1,15 +1,30 @@
 @use "../partials/variables" as *;
 @use "../partials/mixins" as *;
+@use "../partials/colors" as *;
 
 header {
+  .contentContainer {
+    @include flexRowSpaceBetween;
+    gap: 1rem;
+  }
+
+  .logo,
+  .navMenu,
+  .playerMenu {
+    @include flexCenter;
+  }
+
+  .logo,
+  .playerMenu {
+    @include dimensions(2rem, 2rem);
+  }
+
   .navMenu {
-    height: 100%;
-    width: 30%;
-    padding: $padding-md 0;
+    @include dimensions(100%, 2rem);
 
     ul {
       @include fullDimensions;
-      @include flexRowRight;
+      @include flexRow;
       gap: 2rem;
 
       .navLink {
@@ -19,13 +34,254 @@ header {
         }
       }
     }
+  }
 
-    @media screen and (min-width: $breakpoint-sm) {
-      @include dimensions(100%, 30%);
-      padding: 0 $padding-md;
+  .playerMenu {
+    gap: 1rem;
 
-      ul {
-        @include flexColumnBottom;
+    svg {
+      cursor: pointer;
+    }
+  }
+}
+
+.player {
+  @include absolute($header-size, 0, 0, 0);
+  background-color: $night;
+  @include fullPage;
+  .current {
+    @include dimensions(100%, 10rem);
+    @include flexColumn;
+    .waves {
+      @include flexRow;
+      @include dimensions(100%, 4em);
+      gap: 0.6rem;
+      .wave {
+        width: 0.2rem;
+        background-color: $cool;
+        border-radius: 5px;
+        opacity: 0.8;
+        animation: wavePulse 1.2s ease-in-out infinite;
+        animation-play-state: running;
+      }
+
+      .wave:nth-child(1) {
+        height: 40%;
+        animation-delay: 0s;
+      }
+      .wave:nth-child(2) {
+        height: 60%;
+        animation-delay: 0.2s;
+      }
+      .wave:nth-child(3) {
+        height: 100%;
+        animation-delay: 0.4s;
+      }
+      .wave:nth-child(4) {
+        height: 60%;
+        animation-delay: 0.6s;
+      }
+      .wave:nth-child(5) {
+        height: 40%;
+        animation-delay: 0.8s;
+      }
+    }
+
+    .waves.paused {
+      .wave {
+        animation-play-state: paused;
+      }
+    }
+
+    @keyframes wavePulse {
+      0%,
+      100% {
+        transform: scaleY(1);
+      }
+      50% {
+        transform: scaleY(0.2);
+      }
+    }
+
+    .title {
+      font-size: 1.5rem;
+      text-align: center;
+      color: $ghost;
+      padding: 0.5rem 0;
+      @include border("bottom");
+      border-image: linear-gradient(to right, transparent, $ghost, transparent)
+        1;
+    }
+    .controls {
+      @include flexRowSpaceBetween;
+      gap: 1rem;
+    }
+  }
+
+  .volumeController {
+    @include dimensions(100%, 6rem);
+    @include flexRow;
+    gap: 0.6rem;
+
+    svg {
+      @include dimensions(1.5rem, 1.5rem);
+    }
+
+    .volumeBar {
+      @include dimensions(50%, 100%);
+      min-width: 10rem;
+      @include flexCenter;
+      .bar,
+      .progress {
+        @include dimensions(100%, 0.2rem);
+      }
+
+      .bar {
+        @include relative;
+        background: $cool-trans-30;
+        cursor: pointer;
+        .progress,
+        .handle {
+          position: absolute;
+          left: 0;
+          top: 50%;
+          transform: translateY(-50%);
+          background: $ghost;
+        }
+
+        .handle {
+          z-index: 2;
+          @include dimensions(1rem, 1rem);
+          border-radius: 50%;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+
+  .trackList {
+    @include dimensions(100%, auto);
+    @include flexColumn;
+    padding: 2rem 1rem;
+    .list {
+      @include fullDimensions;
+      @include flexColumn;
+      gap: 1rem;
+      .track,
+      .spotify {
+        cursor: pointer;
+      }
+      .track {
+        color: $cool;
+        gap: 0.6rem;
+        padding: 0.2rem 0;
+        @include border("bottom");
+        border-image: linear-gradient(to right, transparent, $cool, transparent)
+          1;
+        svg {
+          width: 1.2rem;
+        }
+      }
+      .spotify {
+        margin-top: 0.5rem;
+        font-size: 0.8rem;
+        color: #1db954;
+      }
+    }
+  }
+}
+
+@media screen and (min-width: $breakpoint-sm) {
+  .contentContainer {
+    @include flexColumnSpaceBetween;
+  }
+
+  .navMenu {
+    @include dimensions(100%, 100%);
+
+    ul {
+      @include flexColumn;
+    }
+  }
+
+  .playerMenu {
+    @include dimensions(100%, 4rem);
+    @include flexColumnBottom;
+    .volumeBar {
+      @include relative(auto, 0, 0, 0.5rem);
+      @include dimensions(100%, 6rem);
+      @include flexColumnBottom;
+
+      .bar,
+      .progress {
+        @include dimensions(0.15rem, 100%);
+      }
+
+      .progress,
+      .handle {
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        background: $madder;
+      }
+
+      .bar {
+        background: $cool-darker-20;
+        cursor: pointer;
+      }
+
+      .handle {
+        z-index: 2;
+        @include dimensions(0.7rem, 0.7rem);
+        border-radius: 50%;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .trackList {
+    @include dimensions(auto, 14rem);
+    @include absolute(auto, $header-size, calc(100% - 20rem), 0);
+    @include flexColumnLeft;
+    background-color: $night-trans-10;
+    padding: 1.2rem;
+    .list {
+      @include fullDimensions;
+      @include flexColumnLeft;
+      gap: 0.6rem;
+      .track,
+      .spotify {
+        cursor: pointer;
+      }
+      .track {
+        @include flexRowLeft;
+        font-size: 0.9rem;
+        color: $cool;
+        gap: 0.6rem;
+        padding: 0.2rem 0;
+        @include border("bottom");
+        border-image: linear-gradient(to right, transparent, $cool, transparent)
+          1;
+        &.active {
+          color: $ghost;
+          border-image: linear-gradient(
+              to right,
+              transparent,
+              $ghost,
+              transparent
+            )
+            1;
+        }
+        svg {
+          width: 1.2rem;
+        }
+      }
+
+      .spotify {
+        margin-top: 0.5rem;
+        font-size: 0.8rem;
+        color: #1db954;
       }
     }
   }

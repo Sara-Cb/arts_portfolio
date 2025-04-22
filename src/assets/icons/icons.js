@@ -29,6 +29,7 @@ import {
   faLinkedin,
   faTelegram,
   faYoutube,
+  faSpotify,
 } from "@fortawesome/free-brands-svg-icons";
 
 library.add(
@@ -55,7 +56,8 @@ library.add(
   faInstagram,
   faLinkedin,
   faTelegram,
-  faYoutube
+  faYoutube,
+  faSpotify
 );
 
 export default FontAwesomeIcon;

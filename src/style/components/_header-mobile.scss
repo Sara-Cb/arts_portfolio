@@ -47,11 +47,34 @@ header {
 
 .player {
   @include absolute($header-size, 0, 0, 0);
-  background-color: $night;
   @include fullPage;
-  .current {
-    @include dimensions(100%, 10rem);
+
+  .video {
+    @include absolute;
+    @include fullDimensions;
+    overflow: hidden;
+    z-index: 0;
+    .video-bg {
+      @include fullDimensions;
+      object-fit: cover;
+      object-position: center;
+      pointer-events: none;
+    }
+  }
+
+  .content {
+    @include relative;
+    @include fullDimensions;
     @include flexColumn;
+    gap: 1.5rem;
+    padding-bottom: 10rem;
+    background-color: $night-trans-30;
+  }
+
+  .current {
+    @include dimensions(100%, auto);
+    @include flexColumn;
+    gap: 2rem;
     .waves {
       @include flexRow;
       @include dimensions(100%, 4em);
@@ -164,14 +187,15 @@ header {
     @include dimensions(100%, auto);
     @include flexColumn;
     padding: 2rem 1rem;
+    .next {
+      font-size: 0.7rem;
+      color: $cool;
+      margin-bottom: 1rem;
+    }
     .list {
       @include fullDimensions;
       @include flexColumn;
       gap: 1rem;
-      .track,
-      .spotify {
-        cursor: pointer;
-      }
       .track {
         color: $cool;
         gap: 0.6rem;
@@ -179,94 +203,8 @@ header {
         @include border("bottom");
         border-image: linear-gradient(to right, transparent, $cool, transparent)
           1;
-        svg {
-          width: 1.2rem;
-        }
-      }
-      .spotify {
-        margin-top: 0.5rem;
-        font-size: 0.8rem;
-        color: #1db954;
-      }
-    }
-  }
-}
-
-@media screen and (min-width: $breakpoint-sm) {
-  header {
-    .contentContainer {
-      @include flexColumnSpaceBetween;
-    }
-
-    .navMenu {
-      @include dimensions(100%, 100%);
-
-      ul {
-        @include flexColumn;
-      }
-    }
-
-    .playerMenu {
-      @include dimensions(100%, 4rem);
-      @include flexColumnBottom;
-      .volumeBar {
-        @include relative(auto, 0, 0, 0.5rem);
-        @include dimensions(100%, 6rem);
-        @include flexColumnBottom;
-
-        .bar,
-        .progress {
-          @include dimensions(3.5px, 100%);
-        }
-
-        .progress,
-        .handle {
-          position: absolute;
-          bottom: 0;
-          left: 50%;
-          transform: translateX(-50%);
-          background: $madder;
-        }
-
-        .bar {
-          background: $cool-darker-20;
-          cursor: pointer;
-        }
-
-        .handle {
-          z-index: 2;
-          @include dimensions(0.7rem, 0.7rem);
-          border-radius: 50%;
-          cursor: pointer;
-        }
-      }
-    }
-  }
-
-  .trackList {
-    @include dimensions(auto, 14rem);
-    @include absolute(auto, $header-size, calc(100% - 20rem), 0);
-    @include flexColumnLeft;
-    background-color: $night-trans-10;
-    padding: 1.2rem;
-    .list {
-      @include fullDimensions;
-      @include flexColumnLeft;
-      gap: 0.6rem;
-      .track,
-      .spotify {
         cursor: pointer;
-      }
-      .track {
-        @include flexRowLeft;
-        font-size: 0.9rem;
-        color: $cool;
-        gap: 0.6rem;
-        padding: 0.2rem 0;
-        @include border("bottom");
-        border-image: linear-gradient(to right, transparent, $cool, transparent)
-          1;
-        &.active {
+        &:hover {
           color: $ghost;
           border-image: linear-gradient(
               to right,
@@ -276,16 +214,26 @@ header {
             )
             1;
         }
-        svg {
-          width: 1.2rem;
-        }
       }
+    }
+  }
 
-      .spotify {
-        margin-top: 0.5rem;
-        font-size: 0.8rem;
-        color: #1db954;
-      }
+  .socials {
+    @include flexColumn;
+    @include dimensions(100%, 8rem);
+    @include absolute(auto, 0, 0, 0);
+    gap: 0.6rem;
+    .spotify:hover,
+    .youtube:hover {
+      text-decoration: underline;
+    }
+    .spotify:hover {
+      color: #1db954;
+      text-decoration-color: #1db954;
+    }
+    .youtube:hover {
+      color: #ff0000;
+      text-decoration-color: #ff0000;
     }
   }
 }

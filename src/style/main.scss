@@ -2,7 +2,8 @@
 @use "./partials/typography" as *;
 @use "./partials/variables" as *;
 @use "./partials/mixins" as *;
-@forward "./components/header";
+@forward "./components/header-mobile";
+@forward "./components/header-desktop";
 @forward "./components/home";
 @forward "./components/scrollbar";
 
@@ -140,7 +141,7 @@ b {
 
 .scrollContainer {
   overflow-x: hidden;
-  overflow-y: scroll;
+  overflow-y: auto;
   scroll-snap-type: y mandatory;
   @include fullPage;
 

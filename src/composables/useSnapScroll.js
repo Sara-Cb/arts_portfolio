@@ -6,6 +6,7 @@ export function useSnapScroll(
   scrollDelay = 700
 ) {
   const currentIndex = ref(0);
+  const scrollEnabled = ref(true); // ⬅️ NEW
   let isScrolling = false;
   let sections = [];
 
@@ -26,6 +27,7 @@ export function useSnapScroll(
   const scrollPrev = () => scrollToSection(currentIndex.value - 1);
 
   const handleWheel = (e) => {
+    if (!scrollEnabled.value) return; // ⬅️ Only run if scrollEnabled
     e.preventDefault();
     if (isScrolling) return;
     if (e.deltaY > 50) scrollNext();
@@ -33,6 +35,7 @@ export function useSnapScroll(
   };
 
   const handleKeyDown = (e) => {
+    if (!scrollEnabled.value) return;
     e.preventDefault();
     if (isScrolling) return;
     if (e.key === "ArrowDown") scrollNext();
@@ -40,11 +43,13 @@ export function useSnapScroll(
   };
 
   const handleTouchStart = (e) => {
+    if (!scrollEnabled.value) return;
     e.preventDefault();
     touchStartY = e.changedTouches[0].screenY;
   };
 
   const handleTouchEnd = (e) => {
+    if (!scrollEnabled.value) return;
     e.preventDefault();
     touchEndY = e.changedTouches[0].screenY;
     const delta = touchStartY - touchEndY;
@@ -79,5 +84,6 @@ export function useSnapScroll(
   return {
     scrollToSection,
     currentIndex,
+    scrollEnabled,
   };
 }

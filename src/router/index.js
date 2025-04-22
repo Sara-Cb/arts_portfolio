@@ -23,7 +23,7 @@ const router = createRouter({
     {
       path: "/visit-card",
       redirect: { path: "/", hash: "#visit-card" },
-    },
+    } /*
     {
       path: "/performance",
       name: "performance",
@@ -56,7 +56,7 @@ const router = createRouter({
       name: "materical-project",
       component: MatericalView,
       props: true,
-    },
+    },*/,
     {
       path: "/:pathMatch(.*)*",
       name: "not-found",

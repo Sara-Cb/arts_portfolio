@@ -131,6 +131,7 @@ header {
       @include dimensions(50%, 100%);
       min-width: 10rem;
       @include flexCenter;
+
       .bar,
       .progress {
         @include dimensions(100%, 0.2rem);
@@ -192,50 +193,52 @@ header {
 }
 
 @media screen and (min-width: $breakpoint-sm) {
-  .contentContainer {
-    @include flexColumnSpaceBetween;
-  }
-
-  .navMenu {
-    @include dimensions(100%, 100%);
-
-    ul {
-      @include flexColumn;
+  header {
+    .contentContainer {
+      @include flexColumnSpaceBetween;
     }
-  }
 
-  .playerMenu {
-    @include dimensions(100%, 4rem);
-    @include flexColumnBottom;
-    .volumeBar {
-      @include relative(auto, 0, 0, 0.5rem);
-      @include dimensions(100%, 6rem);
+    .navMenu {
+      @include dimensions(100%, 100%);
+
+      ul {
+        @include flexColumn;
+      }
+    }
+
+    .playerMenu {
+      @include dimensions(100%, 4rem);
       @include flexColumnBottom;
+      .volumeBar {
+        @include relative(auto, 0, 0, 0.5rem);
+        @include dimensions(100%, 6rem);
+        @include flexColumnBottom;
 
-      .bar,
-      .progress {
-        @include dimensions(0.15rem, 100%);
-      }
+        .bar,
+        .progress {
+          @include dimensions(3.5px, 100%);
+        }
 
-      .progress,
-      .handle {
-        position: absolute;
-        bottom: 0;
-        left: 50%;
-        transform: translateX(-50%);
-        background: $madder;
-      }
+        .progress,
+        .handle {
+          position: absolute;
+          bottom: 0;
+          left: 50%;
+          transform: translateX(-50%);
+          background: $madder;
+        }
 
-      .bar {
-        background: $cool-darker-20;
-        cursor: pointer;
-      }
+        .bar {
+          background: $cool-darker-20;
+          cursor: pointer;
+        }
 
-      .handle {
-        z-index: 2;
-        @include dimensions(0.7rem, 0.7rem);
-        border-radius: 50%;
-        cursor: pointer;
+        .handle {
+          z-index: 2;
+          @include dimensions(0.7rem, 0.7rem);
+          border-radius: 50%;
+          cursor: pointer;
+        }
       }
     }
   }

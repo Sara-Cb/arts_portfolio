@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from "vue";
+import { ref, onMounted, onBeforeUnmount, watch } from "vue";
 import { usePlayerStore } from "@/stores/player";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
@@ -46,7 +46,6 @@ function updateVolume(e) {
   let clientX = e.clientX;
   let clientY = e.clientY;
 
-  // Supporto per touch
   if (e.touches && e.touches.length) {
     clientX = e.touches[0].clientX;
     clientY = e.touches[0].clientY;
@@ -66,6 +65,13 @@ function updateVolume(e) {
   sliderValue.value = percent;
   player.setVolume(percent / 100);
 }
+
+watch(
+  () => player.volume,
+  (newVolume) => {
+    sliderValue.value = newVolume * 100;
+  }
+);
 
 onMounted(() => {
   window.addEventListener("resize", () => {

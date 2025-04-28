@@ -1,13 +1,15 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount, watch } from "vue";
+import { storeToRefs } from "pinia";
 import { usePlayerStore } from "@/stores/player";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { useEnvironmentStore } from "@/stores/environment";
 
 const player = usePlayerStore();
 
 const showVolume = ref(false);
 const sliderValue = ref(player.volume * 100);
-const isMobile = ref(window.innerWidth <= 576);
+const { isMobile } = storeToRefs(useEnvironmentStore());
 let dragging = false;
 
 function toggleMute() {
@@ -74,9 +76,6 @@ watch(
 );
 
 onMounted(() => {
-  window.addEventListener("resize", () => {
-    isMobile.value = window.innerWidth <= 576;
-  });
   sliderValue.value = player.volume * 100;
 });
 

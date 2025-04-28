@@ -1,11 +1,14 @@
 <script setup>
-import { useSnapScroll } from "@/composables/useSnapScroll.js";
+import { ref } from "vue";
+import { useSnapScroll } from "@/composables/useSnapScroll";
 import { useScrollToHashOrId } from "@/composables/useScrollToHash";
 import Hero from "@/views/components/home/Hero.vue";
 import Projects from "@/views/components/home/Projects.vue";
 import VisitCard from "@/views/components/home/VisitCard.vue";
 
-useSnapScroll();
+const snapEnabled = ref(true); // interruttore condiviso
+
+useSnapScroll({ externalEnabled: snapEnabled });
 useScrollToHashOrId();
 </script>
 

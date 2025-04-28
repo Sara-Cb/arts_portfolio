@@ -8,9 +8,6 @@ const { categories } = storeToRefs(store);
 </script>
 
 <template>
-  <div class="sectionTitle">
-    <h2>Projects</h2>
-  </div>
   <div class="categories">
     <RouterLink
       v-for="cat in categories"

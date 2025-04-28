@@ -1,15 +1,12 @@
 <script setup>
-import { ref } from "vue";
-import Logo from "@/assets/logo/Logo.vue";
-import Player from "@/views/components/player/Player.vue";
+import { storeToRefs } from "pinia";
 import { RouterLink } from "vue-router";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { useEnvironmentStore } from "@/stores/environment";
+import Logo from "@/assets/logo/Logo.vue";
+import Player from "@/views/components/player/Player.vue";
 
-const isMobile = ref(window.innerWidth <= 576);
-
-window.addEventListener("resize", () => {
-  isMobile.value = window.innerWidth <= 576;
-});
+const { isMobile } = storeToRefs(useEnvironmentStore());
 </script>
 
 <template>

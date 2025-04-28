@@ -71,17 +71,7 @@
   }
 
   #projects {
-    @include flexColumnTop;
-
-    .sectionTitle {
-      @include dimensions(100%, 6.5rem);
-      @include flexCenter;
-
-      h2 {
-        width: auto;
-        text-align: center;
-      }
-    }
+    @include flexColumn;
 
     .categories {
       @include fullDimensions;

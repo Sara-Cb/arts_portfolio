@@ -1,4 +1,3 @@
-// composables/useScrollToHash.js
 import { onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
 
@@ -11,6 +10,8 @@ export function useScrollToHashOrId(customId = null, delay = 300) {
       const target = document.querySelector(targetSelector);
       if (target) {
         target.scrollIntoView({ behavior: "smooth" });
+
+        window.history.replaceState(history.state, "", "/");
       }
     }
   };
@@ -19,7 +20,6 @@ export function useScrollToHashOrId(customId = null, delay = 300) {
     setTimeout(scroll, delay);
   });
 
-  // utile se cambia hash dinamicamente
   if (!customId) {
     watch(
       () => route.hash,

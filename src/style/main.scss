@@ -40,6 +40,16 @@ main {
   @include fullPage;
 }
 
+.page {
+  overflow: hidden;
+  @include fullPage;
+}
+
+.page > section {
+  overflow: hidden;
+  @include fullPage;
+}
+
 @media screen and (min-width: $breakpoint-sm) {
   header {
     @include fixed(0, 0, auto, 0);

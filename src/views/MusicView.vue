@@ -7,7 +7,7 @@ useRouteScroller(metaStore.sectionMap);
 </script>
 
 <template>
-  <div class="page projectPage" id="performance">
+  <div class="page projectPage" id="music">
     <RouterView v-slot="{ Component }">
       <component :is="Component" />
     </RouterView>

@@ -8,7 +8,7 @@ const { categories } = storeToRefs(store);
 </script>
 
 <template>
-  <div class="categories">
+  <section id="projectCategories">
     <RouterLink
       v-for="cat in categories"
       :to="'/' + cat.type"
@@ -26,5 +26,5 @@ const { categories } = storeToRefs(store);
         <img :src="cat.src" :alt="cat.title" />
       </div>
     </RouterLink>
-  </div>
+  </section>
 </template>

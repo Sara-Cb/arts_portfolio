@@ -8,6 +8,9 @@ export function useRouteScroller() {
   const metaStore = useRouteMetaStore();
   const sectionMap = metaStore.sectionMap;
   const isTransitioning = ref(false);
+  const delay = 2000;
+  let scrolling = false;
+  let lastScrollTime = ref(0);
 
   const getRouteList = () => {
     const page = route.name?.split("-")[0];
@@ -17,10 +20,11 @@ export function useRouteScroller() {
   const getCurrentIndex = () => getRouteList().indexOf(route.name);
 
   const next = () => {
-    if (isTransitioning.value) return;
+    if (scrolling || isTransitioning.value) return;
     const list = getRouteList();
     const idx = getCurrentIndex();
     if (idx < list.length - 1) {
+      scrolling = true;
       isTransitioning.value = true;
       router.push({ name: list[idx + 1] });
       unlockAfterDelay();
@@ -28,10 +32,11 @@ export function useRouteScroller() {
   };
 
   const prev = () => {
-    if (isTransitioning.value) return;
+    if (scrolling || isTransitioning.value) return;
     const list = getRouteList();
     const idx = getCurrentIndex();
     if (idx > 0) {
+      scrolling = true;
       isTransitioning.value = true;
       router.push({ name: list[idx - 1] });
       unlockAfterDelay();
@@ -41,7 +46,8 @@ export function useRouteScroller() {
   const unlockAfterDelay = () => {
     setTimeout(() => {
       isTransitioning.value = false;
-    }, 500); // match transition time in App.vue
+      scrolling = false;
+    }, delay);
   };
 
   const handleKey = (e) => {
@@ -60,6 +66,7 @@ export function useRouteScroller() {
     touchStartY = e.changedTouches[0].screenY;
   };
   const handleTouchEnd = (e) => {
+    if (scrolling || isTransitioning.value) return;
     const delta = touchStartY - e.changedTouches[0].screenY;
     if (Math.abs(delta) > 50) {
       delta > 0 ? next() : prev();
@@ -67,16 +74,19 @@ export function useRouteScroller() {
   };
 
   const handleWheel = (e) => {
-    if (isTransitioning.value) return;
+    e.preventDefault();
+    const now = Date.now();
+    if (scrolling || isTransitioning.value) return;
+    if (now - lastScrollTime.value < delay) return;
     if (Math.abs(e.deltaY) < 50) return;
 
-    e.preventDefault();
+    lastScrollTime.value = now;
     e.deltaY > 0 ? next() : prev();
   };
 
   onMounted(() => {
     window.addEventListener("keydown", handleKey);
-    window.addEventListener("touchstart", handleTouchStart, { passive: true });
+    window.addEventListener("touchstart", handleTouchStart, { passive: false });
     window.addEventListener("touchend", handleTouchEnd, { passive: false });
     window.addEventListener("wheel", handleWheel, { passive: false });
   });

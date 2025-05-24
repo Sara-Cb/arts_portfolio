@@ -38,6 +38,7 @@ main {
   @include absolute($header-size, 0, 0, 0);
   @include flexColumnTop;
   @include fullPage;
+  z-index: 0;
 }
 
 .page {
@@ -149,17 +150,9 @@ b {
   font-weight: 600;
 }
 
-.scrollContainer {
-  overflow-x: hidden;
-  overflow-y: auto;
-  scroll-snap-type: y mandatory;
-  @include fullPage;
-
-  .snapSection {
-    scroll-snap-align: start;
-    overflow: hidden;
-    @include fullPage;
-  }
+.section-title {
+  @include absoluteCenter;
+  z-index: 0;
 }
 
 .contentContainer {

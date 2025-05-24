@@ -1,86 +1,106 @@
+// App.vue
 <script setup>
-import { RouterView, useRoute } from "vue-router";
-import { watch, ref, onMounted } from "vue";
-import HeaderComp from "@/views/components/HeaderComponent.vue";
+import { useRoute } from "vue-router";
 import { useRouteMetaStore } from "@/stores/routeMeta";
+import { useRouteScroller } from "@/composables/useRouteScroller";
+import { computed } from "vue";
+import HeaderComponent from "./views/components/HeaderComponent.vue";
 import ScrollIndicator from "./views/components/ScrollIndicator.vue";
 
 const route = useRoute();
-const routeMetaStore = useRouteMetaStore();
-const transitionName = ref("fade");
+const metaStore = useRouteMetaStore();
+useRouteScroller(metaStore.sectionMap);
 
-watch(
-  () => route.fullPath,
-  () => {
-    routeMetaStore.updateMetaFromRoute(route);
+// TODO: Add method to determine project titles by their slug
+// and update the section title accordingly when navigating to a project.
+const sectionTitles = {
+  0: "Welcome",
+  1: "Projects",
+  2: "Visit Card",
+};
 
-    const { transitionType, transitionDirection } = routeMetaStore;
-    if (transitionType.value === "vertical") {
-      transitionName.value =
-        transitionDirection.value === "down" ? "scroll-down" : "scroll-up";
-    } else {
-      transitionName.value =
-        transitionDirection.value === "forward"
-          ? "slide-forward"
-          : "slide-backward";
-    }
-  },
-  { immediate: true }
+const sectionTitle = computed(
+  () => sectionTitles[metaStore.currentSectionIndex] || ""
 );
 
-onMounted(() => {
-  console.log(
-    `Hello curious friend!\nI am Sara.cb and I wrote this code, if you like this portfolio, check out my github profile! \n- https://github.com/Sara-Cb`
-  );
+const transitionName = computed(() => {
+  if (metaStore.transitionType === "horizontal") {
+    return metaStore.transitionDirection === "forward"
+      ? "slide-left"
+      : "slide-right";
+  }
+
+  if (metaStore.transitionType === "vertical") {
+    return metaStore.transitionDirection === "down" ? "slide-down" : "slide-up";
+  }
+
+  return null;
 });
 </script>
 
 <template>
-  <HeaderComp />
-  <ScrollIndicator />
-  <main>
-    <RouterView v-slot="{ Component }">
-      <Transition :name="transitionName" mode="out-in">
-        <component :is="Component" />
-      </Transition>
-    </RouterView>
-  </main>
+  <div id="app">
+    <HeaderComponent />
+    <ScrollIndicator />
+    <main>
+      <RouterView v-slot="{ Component }">
+        <div class="view-wrapper">
+          <Transition :name="transitionName" mode="out-in">
+            <component :is="Component" :key="route.name" />
+          </Transition>
+        </div>
+      </RouterView>
+      <h2 class="section-title">{{ sectionTitle }}</h2>
+    </main>
+  </div>
 </template>
 
-<style scoped>
-/* Vertical scroll */
-.scroll-down-enter-active,
-.scroll-up-enter-active {
-  transition: opacity 0.4s ease, transform 0.4s ease;
+<style>
+/* Transizioni orizzontali */
+.slide-left-enter-active,
+.slide-left-leave-active,
+.slide-right-enter-active,
+.slide-right-leave-active,
+.slide-down-enter-active,
+.slide-down-leave-active,
+.slide-up-enter-active,
+.slide-up-leave-active {
+  transition: transform 0.5s ease;
+  position: absolute;
+  width: 100%;
+  z-index: 1;
 }
-.scroll-down-enter-from {
-  opacity: 0;
-  transform: translateY(60px);
+.slide-left-enter-from {
+  transform: translateX(100%);
 }
-.scroll-up-enter-from {
-  opacity: 0;
-  transform: translateY(-60px);
+.slide-left-leave-to {
+  transform: translateX(-100%);
 }
-.scroll-down-leave-to,
-.scroll-up-leave-to {
-  opacity: 0;
+.slide-right-enter-from {
+  transform: translateX(-100%);
+}
+.slide-right-leave-to {
+  transform: translateX(100%);
 }
 
-/* Horizontal slide */
-.slide-forward-enter-active,
-.slide-backward-enter-active {
-  transition: opacity 0.4s ease, transform 0.4s ease;
+/* Transizioni verticali */
+.slide-down-enter-from {
+  transform: translateY(100%);
 }
-.slide-forward-enter-from {
-  opacity: 0;
-  transform: translateX(60px);
+.slide-down-leave-to {
+  transform: translateY(-100%);
 }
-.slide-backward-enter-from {
-  opacity: 0;
-  transform: translateX(-60px);
+.slide-up-enter-from {
+  transform: translateY(-100%);
 }
-.slide-forward-leave-to,
-.slide-backward-leave-to {
-  opacity: 0;
+.slide-up-leave-to {
+  transform: translateY(100%);
+}
+
+.view-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
 }
 </style>

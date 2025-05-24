@@ -1,15 +1,11 @@
 <script setup>
-import { useRouteScroller } from "@/composables/useRouteScroller";
-import { useRouteMetaStore } from "@/stores/routeMeta";
-
-const metaStore = useRouteMetaStore();
-useRouteScroller(metaStore.sectionMap);
+import { RouterView } from "vue-router";
 </script>
 
 <template>
   <div class="page" id="home">
     <RouterView v-slot="{ Component }">
-      <component :is="Component" />
+      <component :is="Component" :key="Component?.__name" />
     </RouterView>
   </div>
 </template>

@@ -23,15 +23,21 @@ export const useRouteMetaStore = defineStore("routeMeta", () => {
     const sectionIndex = route.meta.sectionIndex;
 
     if (pageIndex != null && sectionIndex != null) {
-      transitionType.value =
-        pageIndex === lastPageIndex ? "vertical" : "horizontal";
-
-      if (transitionType.value === "vertical") {
-        transitionDirection.value =
-          sectionIndex > lastSectionIndex ? "down" : "up";
+      // PRIMA INVOCAZIONE: nessuna transizione
+      if (lastPageIndex === null && lastSectionIndex === null) {
+        transitionType.value = "none";
+        transitionDirection.value = "forward";
       } else {
-        transitionDirection.value =
-          pageIndex > lastPageIndex ? "forward" : "backward";
+        transitionType.value =
+          pageIndex === lastPageIndex ? "vertical" : "horizontal";
+
+        if (transitionType.value === "vertical") {
+          transitionDirection.value =
+            sectionIndex > lastSectionIndex ? "down" : "up";
+        } else {
+          transitionDirection.value =
+            pageIndex > lastPageIndex ? "forward" : "backward";
+        }
       }
 
       currentPageIndex.value = pageIndex;

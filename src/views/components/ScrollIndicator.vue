@@ -31,13 +31,13 @@ const activeIndex = computed(() => sections.value.indexOf(route.name));
   display: flex;
   flex-direction: column;
   gap: 8px;
-  z-index: 200;
+  z-index: 500;
 }
 
 .dot {
   width: 5px;
   height: 16px;
-  background-color: #888;
+  background-color: #f02020;
   border-radius: 2px;
   opacity: 0.3;
   transition: opacity 0.3s, background-color 0.3s;
@@ -45,7 +45,7 @@ const activeIndex = computed(() => sections.value.indexOf(route.name));
 
 .dot.active {
   opacity: 1;
-  background-color: #111;
+  background-color: #6e0000;
 }
 
 @media (hover: hover) {

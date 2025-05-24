@@ -1,4 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
+import { useRouteMetaStore } from "@/stores/routeMeta";
+import { useRouteScroller } from "@/composables/useRouteScroller";
 
 // views
 import HomeView from "@/views/HomeView.vue";
@@ -125,6 +127,13 @@ const router = createRouter({
       component: () => import("@/views/NotFoundView.vue"),
     },
   ],
+});
+
+router.beforeEach((to, from, next) => {
+  if (useRouteScroller.isTransitioning) return;
+  const metaStore = useRouteMetaStore();
+  metaStore.updateMetaFromRoute(to);
+  next();
 });
 
 export default router;

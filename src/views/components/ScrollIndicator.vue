@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from "vue";
-import { useRoute } from "vue-router";
+import { RouterLink, useRoute } from "vue-router";
 import { useRouteMetaStore } from "@/stores/routeMeta";
 
 const route = useRoute();
@@ -13,12 +13,8 @@ const activeIndex = computed(() => sections.value.indexOf(route.name));
 
 <template>
   <div class="scrollbar">
-    <div
-      v-for="(section, index) in sections"
-      :key="section"
-      class="dot"
-      :class="{ active: index === activeIndex }"
-    />
+    <div v-for="(section, index) in sections" :key="section" class="dot" :class="{ active: index === activeIndex }">
+    </div>
   </div>
 </template>
 
@@ -26,12 +22,18 @@ const activeIndex = computed(() => sections.value.indexOf(route.name));
 .scrollbar {
   position: fixed;
   top: 50%;
-  right: 1rem;
+  right: 0.7rem;
   transform: translateY(-50%);
   display: flex;
   flex-direction: column;
   gap: 8px;
   z-index: 500;
+}
+
+@media screen and (min-width: 576px) {
+  .scrollbar {
+    right: 1rem;
+  }
 }
 
 .dot {

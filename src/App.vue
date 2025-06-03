@@ -3,7 +3,7 @@
 import { useRoute } from "vue-router";
 import { useRouteMetaStore } from "@/stores/routeMeta";
 import { useRouteScroller } from "@/composables/useRouteScroller";
-import { computed } from "vue";
+import { computed, onMounted } from "vue";
 import HeaderComponent from "./views/components/HeaderComponent.vue";
 import ScrollIndicator from "./views/components/ScrollIndicator.vue";
 
@@ -35,6 +35,12 @@ const transitionName = computed(() => {
   }
 
   return null;
+});
+
+onMounted(() => {
+  console.log(
+    `Hello curious friend!\nI am Sara.cb and I wrote this code, if you like this portfolio, check out my github profile! \n- https://github.com/Sara-Cb`
+  );
 });
 </script>
 
@@ -70,15 +76,19 @@ const transitionName = computed(() => {
   width: 100%;
   z-index: 1;
 }
+
 .slide-left-enter-from {
   transform: translateX(100%);
 }
+
 .slide-left-leave-to {
   transform: translateX(-100%);
 }
+
 .slide-right-enter-from {
   transform: translateX(-100%);
 }
+
 .slide-right-leave-to {
   transform: translateX(100%);
 }
@@ -87,12 +97,15 @@ const transitionName = computed(() => {
 .slide-down-enter-from {
   transform: translateY(100%);
 }
+
 .slide-down-leave-to {
   transform: translateY(-100%);
 }
+
 .slide-up-enter-from {
   transform: translateY(-100%);
 }
+
 .slide-up-leave-to {
   transform: translateY(100%);
 }

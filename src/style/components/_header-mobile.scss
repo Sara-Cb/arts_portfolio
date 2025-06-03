@@ -47,6 +47,7 @@ header {
 
 .player {
   @include absolute($header-size, 0, 0, 0);
+  @include flexColumnTop;
   @include fullPage;
 
   .video {
@@ -63,11 +64,10 @@ header {
   }
 
   .content {
-    @include relative;
     @include fullDimensions;
     @include flexColumn;
-    gap: 1.5rem;
-    padding-bottom: 10rem;
+    gap: 1rem;
+    padding-bottom: 5rem;
     background-color: $night-trans-30;
   }
 
@@ -142,9 +142,10 @@ header {
   }
 
   .volumeController {
-    @include dimensions(100%, 6rem);
+    @include dimensions(100%, 4rem);
     @include flexRow;
     gap: 0.6rem;
+    padding-bottom: 1rem;
 
     svg {
       @include dimensions(1.5rem, 1.5rem);
@@ -186,7 +187,7 @@ header {
   .trackList {
     @include dimensions(100%, auto);
     @include flexColumn;
-    padding: 2rem 1rem;
+    padding: 1rem;
     .next {
       font-size: 0.7rem;
       color: $cool;
@@ -219,10 +220,11 @@ header {
   }
 
   .socials {
-    @include flexColumn;
-    @include dimensions(100%, 8rem);
+    @include flexRow;
+    @include dimensions(100%, 6rem);
     @include absolute(auto, 0, 0, 0);
-    gap: 0.6rem;
+    gap: 1.2rem;
+    font-size: 0.8rem;
     .spotify:hover,
     .youtube:hover {
       text-decoration: underline;

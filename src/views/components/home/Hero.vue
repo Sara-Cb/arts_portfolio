@@ -17,11 +17,8 @@ import Logo from "@/assets/logo/Logo.vue";
       </div>
       <div class="heroText">
         <p class="bio">
-          <b
-            >Art as a threshold — between matter and symbol, presence and
-            echo.</b
-          >
-          <br />
+          <b>Art as a threshold — between matter and symbol, presence and
+            echo.</b>
           Explorations of transformation through texture, image, and movement.
           <br />
           Fragments, gestures, and rituals emerge — cryptic, sensorial, and

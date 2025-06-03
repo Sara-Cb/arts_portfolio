@@ -22,7 +22,7 @@
       .heroTitle {
         position: relative;
         width: 100%;
-        height: 15rem;
+        height: 8rem;
         @include flexCenter;
 
         .title,
@@ -32,21 +32,22 @@
 
         .title {
           color: $ghost;
-          font-size: 8rem;
+          font-size: 4rem;
         }
       }
 
       .heroText {
-        width: 90%;
+        width: 80%;
         margin-bottom: 2rem;
         .bio {
           color: $cool;
           margin: 0 auto;
           text-align: center;
-          line-height: 1.8rem;
+          font-size: 0.9rem;
           b {
-            font-size: 1.2rem;
-            margin-bottom: 1.5rem;
+            display: block;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
           }
         }
       }
@@ -66,6 +67,52 @@
         object-fit: cover;
         object-position: center;
         pointer-events: none;
+      }
+    }
+
+    @media screen and (min-width: $breakpoint-sm) {
+      .contentContainer {
+        .heroTitle {
+          height: 12rem;
+
+          .title {
+            font-size: 6rem;
+          }
+        }
+
+        .heroText {
+          .bio {
+            line-height: 1.6rem;
+            font-size: 1rem;
+            b {
+              font-size: 1.2rem;
+              margin-bottom: 1.2rem;
+            }
+          }
+        }
+      }
+    }
+
+    @media screen and (min-width: $breakpoint-md) {
+      .contentContainer {
+        .heroTitle {
+          height: 15rem;
+
+          .title {
+            font-size: 8rem;
+          }
+        }
+
+        .heroText {
+          .bio {
+            line-height: 1.8rem;
+            font-size: 1rem;
+            b {
+              font-size: 1.2rem;
+              margin-bottom: 1.5rem;
+            }
+          }
+        }
       }
     }
   }
@@ -94,11 +141,11 @@
       .text {
         @include relative;
         @include fullDimensions;
-        @include flexColumnTopLeft;
+        @include flexColumnLeft;
         z-index: 1;
-        padding: 1.5rem;
+        padding: 1rem 1.6rem 1.6rem;
         gap: 0.5rem;
-        background-color: $night-trans-10;
+        background-color: $night-trans-50;
         transition: background-color 1s ease-in-out;
 
         .title,
@@ -109,12 +156,12 @@
         }
 
         .title {
-          font-size: 1.5rem;
+          font-size: 1rem;
           font-weight: 600;
         }
         .subtitle {
           font-family: $font-family-heading;
-          font-size: 1rem;
+          font-size: 0.8rem;
           font-weight: 300;
         }
         .description {
@@ -122,30 +169,30 @@
         }
         .cta {
           color: $cool;
-          font-size: 0.8rem;
+          font-size: 0.6rem;
           font-style: italic;
-          opacity: 0;
-          @include absolute(auto, auto, 1rem, 0.5rem);
-          translate: 100%;
-          transition: all 0.6s ease-in-out;
-        }
-        @media screen and (max-width: $breakpoint-md) {
-          background-color: $night-trans-50;
-        }
-
-        &:hover {
-          background-color: $night-trans-50;
-          transition: background-color 1s ease-out;
-
-          .cta {
-            opacity: 1;
-            translate: 0;
-            transition: all 0.6s ease-out;
-          }
+          @include absolute(auto, auto, 1.8rem, 0.3rem);
+          margin: 0;
         }
       }
-      &.materical .text:hover {
-        background-color: $night-trans-30;
+    }
+
+    @media screen and (min-width: $breakpoint-sm) {
+      .category {
+        .text {
+          padding: 1.2rem 1.8rem 1.6rem;
+
+          .title {
+            font-size: 1.2rem;
+          }
+          .subtitle {
+            font-size: 0.9rem;
+          }
+          .cta {
+            font-size: 0.7rem;
+            @include absolute(auto, auto, 1.8rem, 0.5rem);
+          }
+        }
       }
     }
 
@@ -155,6 +202,38 @@
       .category {
         .text {
           @include flexColumnLeft;
+          background-color: $night-trans-10;
+          .title {
+            font-size: 1.8rem;
+          }
+          .subtitle {
+            font-size: 1.2rem;
+          }
+          .description {
+            font-size: 0.9rem;
+          }
+          .cta {
+            font-size: 1rem;
+            opacity: 0;
+            @include absolute(auto, auto, 2rem, 1.2rem);
+            translate: 100%;
+            transition: all 0.6s ease-in-out;
+          }
+
+          &:hover {
+            background-color: $night-trans-50;
+            transition: background-color 1s ease-out;
+
+            .cta {
+              opacity: 1;
+              translate: 0;
+              transition: all 0.6s ease-out;
+            }
+          }
+        }
+
+        &.materical .text:hover {
+          background-color: $night-trans-30;
         }
       }
     }
@@ -172,7 +251,7 @@
 
     .mirror,
     .contacts {
-      padding: 2.5rem 1.2rem;
+      padding: 1.2rem;
     }
 
     .mirror {
@@ -216,11 +295,10 @@
 
     .contacts {
       flex-grow: 1;
-      margin-bottom: 3rem;
 
       .contentContainer {
         @include flexColumnStretch;
-        gap: 2rem;
+        gap: 1rem;
       }
 
       .callToAction {
@@ -238,7 +316,7 @@
 
       .contactList {
         @include dimensions(100%, auto);
-        @include flexColumnRight;
+        @include flexColumnTopRight;
         gap: 0.5rem;
         flex-grow: 2;
 
@@ -247,10 +325,14 @@
           margin-left: auto;
           @include flexRow;
           gap: 1rem;
+          .info {
+            font-size: 1rem;
+            margin: 0.6rem 0;
+          }
           .icon {
             color: $chocolate;
             margin-top: 0.2rem;
-            font-size: 1.4rem;
+            font-size: 1.2rem;
           }
         }
       }
@@ -275,15 +357,7 @@
 
     @media screen and (min-width: $breakpoint-md) {
       .mirror {
-        padding: 3rem;
-        padding-top: 3.5rem;
-      }
-      .contacts {
-        padding: 4rem 3rem;
-        padding-top: 3.5rem;
-      }
-
-      .mirror {
+        padding: 2rem 1.2rem;
         .profile {
           @include dimensions(8rem, 8rem);
           min-width: 8rem;
@@ -305,6 +379,18 @@
         .callToAction {
           h6 {
             font-size: 1.5rem;
+          }
+        }
+
+        .contactList {
+          @include flexColumnRight;
+          .contact {
+            .info {
+              font-size: 1.1rem;
+            }
+            .icon {
+              font-size: 1.4rem;
+            }
           }
         }
       }

@@ -35,20 +35,27 @@ header {
 }
 
 main {
+  z-index: 0;
   @include absolute($header-size, 0, 0, 0);
   @include flexColumnTop;
   @include fullPage;
-  z-index: 0;
 }
 
 .page {
   overflow: hidden;
+  background-color: $background-color;
   @include fullPage;
 }
 
 .page > section {
   overflow: hidden;
   @include fullPage;
+}
+
+.contentContainer {
+  @include fullDimensions;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 @media screen and (min-width: $breakpoint-sm) {
@@ -64,6 +71,11 @@ main {
   main {
     @include absolute(0, $header-size, 0, 0);
   }
+}
+
+.section-title {
+  @include absoluteCenter;
+  z-index: 0;
 }
 
 h1,
@@ -148,17 +160,6 @@ h6 {
 
 b {
   font-weight: 600;
-}
-
-.section-title {
-  @include absoluteCenter;
-  z-index: 0;
-}
-
-.contentContainer {
-  @include fullDimensions;
-  max-width: 1200px;
-  margin: 0 auto;
 }
 
 .night {

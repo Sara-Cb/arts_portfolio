@@ -8,7 +8,7 @@ export function useRouteScroller() {
   const metaStore = useRouteMetaStore();
   const sectionMap = metaStore.sectionMap;
   const isTransitioning = ref(false);
-  const delay = 2000;
+  const delay = 1500;
   let scrolling = false;
   let lastScrollTime = ref(0);
 
@@ -68,7 +68,7 @@ export function useRouteScroller() {
   const handleTouchEnd = (e) => {
     if (scrolling || isTransitioning.value) return;
     const delta = touchStartY - e.changedTouches[0].screenY;
-    if (Math.abs(delta) > 50) {
+    if (Math.abs(delta) > 20) {
       delta > 0 ? next() : prev();
     }
   };

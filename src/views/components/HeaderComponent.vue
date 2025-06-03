@@ -19,7 +19,7 @@ const { isMobile } = storeToRefs(useEnvironmentStore());
       <nav class="navMenu">
         <ul>
           <li>
-            <RouterLink to="/raehm" class="navLink">
+            <RouterLink to="/" class="navLink">
               <FontAwesomeIcon :icon="['fas', 'home']" />
             </RouterLink>
           </li>

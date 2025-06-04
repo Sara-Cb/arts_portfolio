@@ -118,7 +118,6 @@
   }
 
   #projectCategories {
-    @include fullDimensions;
     flex-grow: 1;
     display: grid;
     grid-template-columns: repeat(1, 100%);
@@ -165,7 +164,7 @@
           font-weight: 300;
         }
         .description {
-          font-size: 0.7rem;
+          display: none;
         }
         .cta {
           color: $cool;
@@ -187,6 +186,10 @@
           }
           .subtitle {
             font-size: 0.9rem;
+          }
+          .description {
+            display: block;
+            font-size: 0.8rem;
           }
           .cta {
             font-size: 0.7rem;

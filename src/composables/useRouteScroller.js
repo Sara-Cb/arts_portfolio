@@ -78,7 +78,7 @@ export function useRouteScroller() {
     const now = Date.now();
     if (scrolling || isTransitioning.value) return;
     if (now - lastScrollTime.value < delay) return;
-    if (Math.abs(e.deltaY) < 50) return;
+    if (Math.abs(e.deltaY) < 20) return;
 
     lastScrollTime.value = now;
     e.deltaY > 0 ? next() : prev();

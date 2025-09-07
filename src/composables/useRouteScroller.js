@@ -64,7 +64,6 @@ export function useRouteScroller() {
 
   let touchStartY = 0;
   const handleTouchStart = (e) => {
-    e.preventDefault();
     touchStartY = e.changedTouches[0].screenY;
   };
   const handleTouchEnd = (e) => {

@@ -39,11 +39,11 @@ header {
 
 main {
   z-index: 0;
+  touch-action: manipulation;
+  overscroll-behavior: none;
   @include absolute($header-size, 0, 0, 0);
   @include flexColumnTop;
   @include fullPage;
-  touch-action: none;
-  overscroll-behavior: contain;
 }
 
 .page,

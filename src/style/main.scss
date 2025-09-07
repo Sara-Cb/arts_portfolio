@@ -14,7 +14,10 @@
 }
 
 html,
-body,
+body {
+  @include fullDimensions;
+}
+
 #app {
   font-family: $font-family-base;
   font-size: $font-size-base;
@@ -39,17 +42,18 @@ main {
   @include absolute($header-size, 0, 0, 0);
   @include flexColumnTop;
   @include fullPage;
+  touch-action: none;
+  overscroll-behavior: contain;
+}
+
+.page,
+.page>section {
+  overflow: hidden;
+  @include fullDimensions;
 }
 
 .page {
-  overflow: hidden;
   background-color: $background-color;
-  @include fullPage;
-}
-
-.page > section {
-  overflow: hidden;
-  @include fullPage;
 }
 
 .contentContainer {
@@ -92,6 +96,7 @@ button,
 input,
 textarea {
   user-select: none;
+
   * {
     user-select: none;
   }

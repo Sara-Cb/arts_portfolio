@@ -45,7 +45,6 @@ onMounted(() => {
 </script>
 
 <template>
-  <div id="app">
     <HeaderComponent />
     <ScrollIndicator />
     <main>
@@ -58,7 +57,6 @@ onMounted(() => {
       </RouterView>
       <h2 class="section-title">{{ sectionTitle }}</h2>
     </main>
-  </div>
 </template>
 
 <style>

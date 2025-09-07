@@ -7,6 +7,7 @@ export function useRouteScroller() {
   const route = useRoute();
   const metaStore = useRouteMetaStore();
   const sectionMap = metaStore.sectionMap;
+
   const isTransitioning = ref(false);
   const delay = 1500;
   let scrolling = false;
@@ -63,6 +64,7 @@ export function useRouteScroller() {
 
   let touchStartY = 0;
   const handleTouchStart = (e) => {
+    e.preventDefault();
     touchStartY = e.changedTouches[0].screenY;
   };
   const handleTouchEnd = (e) => {
@@ -78,24 +80,36 @@ export function useRouteScroller() {
     const now = Date.now();
     if (scrolling || isTransitioning.value) return;
     if (now - lastScrollTime.value < delay) return;
-    if (Math.abs(e.deltaY) < 20) return;
+    if (Math.abs(e.deltaY) < 2) return;
 
     lastScrollTime.value = now;
     e.deltaY > 0 ? next() : prev();
   };
 
   onMounted(() => {
+    const container = document.querySelector("main");
+
+    // Tastiera sempre su window
     window.addEventListener("keydown", handleKey);
-    window.addEventListener("touchstart", handleTouchStart, { passive: false });
-    window.addEventListener("touchend", handleTouchEnd, { passive: false });
-    window.addEventListener("wheel", handleWheel, { passive: false });
+
+    // Gesti su <main>
+    if (container) {
+      container.addEventListener("touchstart", handleTouchStart, { passive: false, capture: true });
+      container.addEventListener("touchend", handleTouchEnd, { passive: false, capture: true });
+      container.addEventListener("wheel", handleWheel, { passive: false, capture: true });
+    }
   });
 
   onBeforeUnmount(() => {
+    const container = document.querySelector("main");
+
     window.removeEventListener("keydown", handleKey);
-    window.removeEventListener("touchstart", handleTouchStart);
-    window.removeEventListener("touchend", handleTouchEnd);
-    window.removeEventListener("wheel", handleWheel);
+
+    if (container) {
+      container.removeEventListener("touchstart", handleTouchStart, true);
+      container.removeEventListener("touchend", handleTouchEnd, true);
+      container.removeEventListener("wheel", handleWheel, true);
+    }
   });
 
   return { next, prev, isTransitioning };

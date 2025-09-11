@@ -1,0 +1,68 @@
+[
+    {
+        "id": "blue-neon",
+        "type": "visual",
+        "title": "Blue Neon",
+        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam auctor, nunc nec"
+    },
+    {
+        "id": "dark-movement",
+        "type": "visual",
+        "title": "Dark Movement",
+        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam auctor, nunc nec"
+    },
+    {
+        "id": "disappearance",
+        "type": "visual",
+        "title": "Disappearance",
+        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam auctor, nunc nec"
+    },
+    {
+        "id": "hot-tribal",
+        "type": "visual",
+        "title": "Hot Tribal",
+        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam auctor, nunc nec"
+    },
+    {
+        "id": "kitsune",
+        "type": "visual",
+        "title": "Kitsune",
+        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam auctor, nunc nec"
+    },
+    {
+        "id": "lumen",
+        "type": "visual",
+        "title": "Lumen",
+        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam auctor, nunc nec"
+    },
+    {
+        "id": "purple-unhuman",
+        "type": "visual",
+        "title": "Purple Unhuman",
+        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam auctor, nunc nec"
+    },
+    {
+        "id": "red-movement",
+        "type": "visual",
+        "title": "Red Movement",
+        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam auctor, nunc nec"
+    },
+    {
+        "id": "self-portrait",
+        "type": "visual",
+        "title": "Self Portrait",
+        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam auctor, nunc nec"
+    },
+    {
+        "id": "shadow-face",
+        "type": "visual",
+        "title": "Shadow Face",
+        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam auctor, nunc nec"
+    },
+    {
+        "id": "unpersonalization",
+        "type": "visual",
+        "title": "Unpersonalization",
+        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam auctor, nunc nec"
+    }
+]

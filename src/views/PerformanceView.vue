@@ -9,7 +9,7 @@ useRouteScroller(metaStore.sectionMap);
 <template>
   <div class="page projectPage" id="performance">
     <RouterView v-slot="{ Component }">
-      <component :is="Component" />
+      <component :is="Component" :key="Component?.__name"/>
     </RouterView>
   </div>
 </template>

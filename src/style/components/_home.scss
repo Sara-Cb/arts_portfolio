@@ -39,11 +39,13 @@
       .heroText {
         width: 80%;
         margin-bottom: 2rem;
+
         .bio {
           color: $cool;
           margin: 0 auto;
           text-align: center;
           font-size: 0.9rem;
+
           b {
             display: block;
             font-size: 1.1rem;
@@ -84,6 +86,7 @@
           .bio {
             line-height: 1.6rem;
             font-size: 1rem;
+
             b {
               font-size: 1.2rem;
               margin-bottom: 1.2rem;
@@ -107,6 +110,7 @@
           .bio {
             line-height: 1.8rem;
             font-size: 1rem;
+
             b {
               font-size: 1.2rem;
               margin-bottom: 1.5rem;
@@ -130,6 +134,7 @@
       .background {
         @include absolute;
         z-index: 0;
+
         img {
           @include fullDimensions;
           object-fit: cover;
@@ -158,19 +163,22 @@
           font-size: 1rem;
           font-weight: 600;
         }
+
         .subtitle {
           font-family: $font-family-heading;
           font-size: 0.8rem;
           font-weight: 300;
         }
+
         .description {
           display: none;
         }
+
         .cta {
           color: $cool;
           font-size: 0.6rem;
           font-style: italic;
-          @include absolute(auto, auto, 1.8rem, 0.3rem);
+          @include absolute(auto, auto, 1.8rem, 1rem);
           margin: 0;
         }
       }
@@ -184,16 +192,18 @@
           .title {
             font-size: 1.2rem;
           }
+
           .subtitle {
             font-size: 0.9rem;
           }
+
           .description {
             display: block;
             font-size: 0.8rem;
           }
+
           .cta {
             font-size: 0.7rem;
-            @include absolute(auto, auto, 1.8rem, 0.5rem);
           }
         }
       }
@@ -202,23 +212,28 @@
     @media screen and (min-width: $breakpoint-md) {
       grid-template-columns: repeat(2, 50%);
       grid-template-rows: repeat(2, 50%);
+
       .category {
         .text {
           @include flexColumnLeft;
           background-color: $night-trans-10;
+
           .title {
             font-size: 1.8rem;
           }
+
           .subtitle {
             font-size: 1.2rem;
           }
+
           .description {
             font-size: 0.9rem;
           }
+
           .cta {
             font-size: 1rem;
             opacity: 0;
-            @include absolute(auto, auto, 2rem, 1.2rem);
+            @include absolute(auto, auto, 2.4rem, 1.6rem);
             translate: 100%;
             transition: all 0.6s ease-in-out;
           }
@@ -245,11 +260,9 @@
   #visitCard {
     @include flexColumnStretch;
     background-color: $cool;
-    background-image: linear-gradient(
-      to bottom,
-      $night-trans-50 0%,
-      transparent 15%
-    );
+    background-image: linear-gradient(to bottom,
+        $night-trans-50 0%,
+        transparent 15%);
     color: $night;
 
     .mirror,
@@ -289,6 +302,7 @@
           font-size: 2.5rem;
           font-weight: 600;
         }
+
         .name {
           font-size: 1.2rem;
           font-weight: 300;
@@ -328,10 +342,12 @@
           margin-left: auto;
           @include flexRow;
           gap: 1rem;
+
           .info {
             font-size: 1rem;
             margin: 0.6rem 0;
           }
+
           .icon {
             color: $chocolate;
             margin-top: 0.2rem;
@@ -361,6 +377,7 @@
     @media screen and (min-width: $breakpoint-md) {
       .mirror {
         padding: 2rem 1.2rem;
+
         .profile {
           @include dimensions(8rem, 8rem);
           min-width: 8rem;
@@ -371,6 +388,7 @@
           .alias {
             font-size: 3rem;
           }
+
           .name {
             font-size: 1.2rem;
           }
@@ -379,6 +397,7 @@
 
       .contacts {
         margin-bottom: 0;
+
         .callToAction {
           h6 {
             font-size: 1.5rem;
@@ -387,10 +406,12 @@
 
         .contactList {
           @include flexColumnRight;
+
           .contact {
             .info {
               font-size: 1.1rem;
             }
+
             .icon {
               font-size: 1.4rem;
             }

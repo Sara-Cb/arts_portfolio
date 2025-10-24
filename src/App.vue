@@ -9,7 +9,7 @@ import ScrollIndicator from "./views/components/ScrollIndicator.vue";
 
 const route = useRoute();
 const metaStore = useRouteMetaStore();
-useRouteScroller(metaStore.sectionMap);
+useRouteScroller({ mode: "programmatic", containerSelector: "main" });
 
 // TODO: Add method to determine project titles by their slug
 // and update the section title accordingly when navigating to a project.
@@ -45,18 +45,22 @@ onMounted(() => {
 </script>
 
 <template>
-    <HeaderComponent />
-    <ScrollIndicator />
-    <main>
-      <RouterView v-slot="{ Component }">
-        <div class="view-wrapper">
-          <Transition :name="transitionName" mode="out-in">
-            <component :is="Component" :key="route.name" />
-          </Transition>
-        </div>
-      </RouterView>
-      <h2 class="section-title">{{ sectionTitle }}</h2>
-    </main>
+  <HeaderComponent />
+  <ScrollIndicator />
+  <main>
+    <RouterView v-slot="{ Component }">
+      <div class="view-wrapper">
+        <Transition :name="transitionName || ''" mode="out-in">
+          <!-- wrapper garantisce un root element animabile -->
+          <div class="route-page" :key="route.fullPath">
+            <component :is="Component" />
+          </div>
+        </Transition>
+      </div>
+    </RouterView>
+
+    <h2 class="section-title">{{ sectionTitle }}</h2>
+  </main>
 </template>
 
 <style>

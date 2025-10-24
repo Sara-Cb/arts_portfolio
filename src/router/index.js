@@ -85,22 +85,14 @@ const router = createRouter({
     },
     {
       path: "/materical",
-      component: MatericalView,
-      children: [
-        {
-          path: "",
-          name: "materical",
-          component: MatericalDetail,
-          meta: { pageIndex: 3, sectionIndex: 0 },
-        },
-        {
-          path: ":slug",
-          name: "materical-project",
-          component: MatericalDetail,
-          props: true,
-          meta: { pageIndex: 3, sectionIndex: 1 },
-        },
-      ],
+      name: "materical",
+      component: () => import("@/views/MatericalView.vue"),
+    },
+    {
+      path: "/materical/:slug",
+      name: "materical-project",
+      component: () => import("@/views/MatericalView.vue"),
+      props: true,
     },
     {
       path: "/music",

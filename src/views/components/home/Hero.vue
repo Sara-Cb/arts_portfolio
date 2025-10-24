@@ -3,7 +3,7 @@ import Logo from "@/assets/logo/Logo.vue";
 </script>
 
 <template>
-  <section id="hero">
+  <section id="hero" class="snapSection">
     <div class="video">
       <video autoplay muted loop playsinline class="video-bg">
         <source src="@/assets/media/video/hero.mp4" type="video/mp4" />
@@ -17,8 +17,10 @@ import Logo from "@/assets/logo/Logo.vue";
       </div>
       <div class="heroText">
         <p class="bio">
-          <b>Art as a threshold — between matter and symbol, presence and
-            echo.</b>
+          <b
+            >Art as a threshold — between matter and symbol, presence and
+            echo.</b
+          >
           Explorations of transformation through texture, image, and movement.
           <br />
           Fragments, gestures, and rituals emerge — cryptic, sensorial, and

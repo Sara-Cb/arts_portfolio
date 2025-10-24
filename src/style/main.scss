@@ -46,8 +46,9 @@ main {
   @include fullPage;
 }
 
+.route-page,
 .page,
-.page>section {
+.page > section.snapSection {
   overflow: hidden;
   @include fullDimensions;
 }
@@ -80,6 +81,12 @@ main {
 .section-title {
   @include absoluteCenter;
   z-index: 0;
+}
+
+.snapSection {
+  scroll-snap-align: start;
+  scroll-snap-stop: always; /* evita il salto di due sezioni */
+  min-height: 100svh;
 }
 
 h1,

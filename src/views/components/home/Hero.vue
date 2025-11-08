@@ -3,7 +3,7 @@ import Logo from "@/assets/logo/Logo.vue";
 </script>
 
 <template>
-  <section id="hero" class="snapSection">
+  <section id="hero" class="sectionInner">
     <div class="video">
       <video autoplay muted loop playsinline class="video-bg">
         <source src="@/assets/media/video/hero.mp4" type="video/mp4" />

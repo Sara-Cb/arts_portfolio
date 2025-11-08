@@ -46,15 +46,40 @@ main {
   @include fullPage;
 }
 
-.route-page,
-.page,
-.page > section.snapSection {
+.view-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
-  @include fullDimensions;
+}
+
+.route-page {
+  position: absolute;
+  inset: 0;
 }
 
 .page {
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+  -webkit-overflow-scrolling: touch;
   background-color: $background-color;
+}
+
+/* Ogni sezione è un pannello a scatto di 100vh, non scrolla internamente */
+.page > section.snapSection {
+  min-height: 100vh; /* o 100svh se preferisci */
+  height: 100vh;
+  overflow: hidden;
+  scroll-snap-align: start;
+  scroll-snap-stop: always; /* evita salti multipli */
+  background-color: $background-color;
+  z-index: 1;
+}
+
+.sectionInner {
+  @include fullDimensions;
 }
 
 .contentContainer {
@@ -83,10 +108,51 @@ main {
   z-index: 0;
 }
 
-.snapSection {
-  scroll-snap-align: start;
-  scroll-snap-stop: always; /* evita il salto di due sezioni */
-  min-height: 100svh;
+.slide-left-enter-active,
+.slide-left-leave-active,
+.slide-right-enter-active,
+.slide-right-leave-active,
+.slide-down-enter-active,
+.slide-down-leave-active,
+.slide-up-enter-active,
+.slide-up-leave-active {
+  transition: transform 0.5s ease;
+  position: absolute;
+  width: 100%;
+  z-index: 1;
+}
+
+.slide-left-enter-from {
+  transform: translateX(100%);
+}
+
+.slide-left-leave-to {
+  transform: translateX(-100%);
+}
+
+.slide-right-enter-from {
+  transform: translateX(-100%);
+}
+
+.slide-right-leave-to {
+  transform: translateX(100%);
+}
+
+/* Transizioni verticali */
+.slide-down-enter-from {
+  transform: translateY(100%);
+}
+
+.slide-down-leave-to {
+  transform: translateY(-100%);
+}
+
+.slide-up-enter-from {
+  transform: translateY(-100%);
+}
+
+.slide-up-leave-to {
+  transform: translateY(100%);
 }
 
 h1,

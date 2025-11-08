@@ -8,7 +8,7 @@ const { categories } = storeToRefs(store);
 </script>
 
 <template>
-  <section id="projectCategories" class="snapSection">
+  <section id="projectCategories" class="sectionInner">
     <RouterLink
       v-for="cat in categories"
       :to="'/' + cat.type"

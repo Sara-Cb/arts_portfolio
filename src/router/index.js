@@ -1,118 +1,58 @@
+// src/router/index.js
 import { createRouter, createWebHistory } from "vue-router";
-import { useRouteMetaStore } from "@/stores/routeMeta";
-import { useRouteScroller } from "@/composables/useRouteScroller";
+import { useUiStore } from "@/stores/ui";
 
-// views
+// Views
 import HomeView from "@/views/HomeView.vue";
-import PerformanceView from "@/views/PerformanceView.vue";
-import VisualView from "@/views/VisualView.vue";
 import MatericalView from "@/views/MatericalView.vue";
+import VisualView from "@/views/VisualView.vue";
+import PerformanceView from "@/views/PerformanceView.vue";
 import MusicView from "@/views/MusicView.vue";
-
-// components
-import Hero from "@/views/components/home/Hero.vue";
-import Projects from "@/views/components/home/Projects.vue";
-import VisitCard from "@/views/components/home/VisitCard.vue";
-import PerformanceDetail from "@/views/components/projects/PerformanceDetail.vue";
-import VisualDetail from "@/views/components/projects/VisualDetail.vue";
-import MatericalDetail from "@/views/components/projects/MatericalDetail.vue";
-import MusicDetail from "@/views/components/projects/MusicDetail.vue";
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
-    {
-      path: "/",
-      component: HomeView,
-      children: [
-        {
-          path: "",
-          name: "home-default",
-          component: Hero,
-          meta: { pageIndex: 0, sectionIndex: 0 },
-        },
-        {
-          path: "projects",
-          name: "home-projects",
-          component: Projects,
-          meta: { pageIndex: 0, sectionIndex: 1 },
-        },
-        {
-          path: "visit-card",
-          name: "home-visit",
-          component: VisitCard,
-          meta: { pageIndex: 0, sectionIndex: 2 },
-        },
-      ],
-    },
-    {
-      path: "/performance",
-      component: PerformanceView,
-      children: [
-        {
-          path: "",
-          name: "performance",
-          component: PerformanceDetail,
-          meta: { pageIndex: 1, sectionIndex: 0 },
-        },
-        {
-          path: ":slug",
-          name: "performance-project",
-          component: PerformanceDetail,
-          props: true,
-          meta: { pageIndex: 1, sectionIndex: 1 },
-        },
-      ],
-    },
-    {
-      path: "/visual",
-      component: VisualView,
-      children: [
-        {
-          path: "",
-          name: "visual",
-          component: VisualDetail,
-          meta: { pageIndex: 2, sectionIndex: 0 },
-        },
-        {
-          path: ":slug",
-          name: "visual-project",
-          component: VisualDetail,
-          props: true,
-          meta: { pageIndex: 2, sectionIndex: 1 },
-        },
-      ],
-    },
-    {
-      path: "/materical",
-      name: "materical",
-      component: () => import("@/views/MatericalView.vue"),
-    },
+    // HOME: 3 rotte, stessa view
+    { path: "/", name: "rahem", component: HomeView },
+    { path: "/projects", name: "projects", component: HomeView },
+    { path: "/visit-card", name: "visit-card", component: HomeView },
+
+    // MATERICAL: intro + progetto
+    { path: "/materical", name: "materical", component: MatericalView },
     {
       path: "/materical/:slug",
       name: "materical-project",
-      component: () => import("@/views/MatericalView.vue"),
+      component: MatericalView,
       props: true,
     },
+
+    // VISUAL (stessa logica di materical)
+    { path: "/visual", name: "visual", component: VisualView },
     {
-      path: "/music",
-      component: MusicView,
-      children: [
-        {
-          path: "",
-          name: "music",
-          component: MusicDetail,
-          meta: { pageIndex: 4, sectionIndex: 0 },
-        },
-        {
-          path: ":slug",
-          name: "music-project",
-          component: MusicDetail,
-          props: true,
-          meta: { pageIndex: 4, sectionIndex: 1 },
-        },
-      ],
+      path: "/visual/:slug",
+      name: "visual-project",
+      component: VisualView,
+      props: true,
     },
+
+    // PERFORMANCE
+    { path: "/performance", name: "performance", component: PerformanceView },
+    {
+      path: "/performance/:slug",
+      name: "performance-project",
+      component: PerformanceView,
+      props: true,
+    },
+
+    // MUSIC
+    { path: "/music", name: "music", component: MusicView },
+    {
+      path: "/music/:slug",
+      name: "music-project",
+      component: MusicView,
+      props: true,
+    },
+
     {
       path: "/:pathMatch(.*)*",
       name: "not-found",
@@ -122,9 +62,19 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  if (useRouteScroller.isTransitioning) return;
-  const metaStore = useRouteMetaStore();
-  metaStore.updateMetaFromRoute(to);
+  const ui = useUiStore();
+
+  const fromKey = ui.findPageKeyForRoute(from.name, from.params);
+  const toKey = ui.findPageKeyForRoute(to.name, to.params);
+
+  if (fromKey && toKey && fromKey !== toKey) {
+    const fi = ui.pageIndexOf(fromKey);
+    const ti = ui.pageIndexOf(toKey);
+    ui.setHorizontalDirection(ti > fi ? "left" : "right");
+    ui.setCrossPageTransition(true);
+  } else {
+    ui.setCrossPageTransition(false);
+  }
   next();
 });
 

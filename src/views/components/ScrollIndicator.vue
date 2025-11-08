@@ -1,23 +1,13 @@
 <script setup>
-import { computed } from "vue";
-import { useRouter, useRoute } from "vue-router";
-import { useRouteMetaStore } from "@/stores/routeMeta";
+import { computed, ref } from "vue";
+import { useRoute } from "vue-router";
+import { useUiStore } from "@/stores/ui";
 
 const route = useRoute();
-const router = useRouter();
-const metaStore = useRouteMetaStore();
+const ui = useUiStore();
 
-const page = computed(() => route.name?.split("-")[0]);
+const isAnimating = ref(false); // per smorzare l’hover durante lo scroll
 
-// Supporta sia stringhe (vecchio Home) sia oggetti {name, params} (Materical)
-const sections = computed(
-  () =>
-    metaStore.getSectionList?.(page.value) ??
-    metaStore.sectionMap[page.value] ??
-    []
-);
-
-// Helper per confrontare una entry con la route corrente
 const sameParams = (a = {}, b = {}) => {
   const ka = Object.keys(a),
     kb = Object.keys(b);
@@ -27,26 +17,54 @@ const sameParams = (a = {}, b = {}) => {
 const equalsRoute = (entry, r) =>
   typeof entry === "string"
     ? entry === r.name
-    : entry?.name === r.name && sameParams(entry.params, r.params);
+    : !!entry && entry.name === r.name && sameParams(entry.params, r.params);
 
-// Indice attivo
+// Trova la pageKey che contiene la rotta corrente
+const pageKey = computed(() => {
+  const map = ui.sectionMap?.value || ui.sectionMap || {};
+  for (const key of Object.keys(map)) {
+    const list = map[key] || [];
+    if (list.some((e) => equalsRoute(e, route))) return key;
+  }
+  return null;
+});
+
+// Sezioni della pagina corrente
+const sections = computed(() => ui.getSectionList(pageKey.value) || []);
+
+// Indice attivo (deriva dalla route, che viene aggiornata dall'IO del composable)
 const activeIndex = computed(() =>
   sections.value.findIndex((s) => equalsRoute(s, route))
 );
 
-// Push robusto
+// Smooth scroll al pannello target; l’IO farà router.replace() al momento giusto
 function goToSection(entry) {
-  if (typeof entry === "string") {
-    if (entry !== route.name) router.push({ name: entry });
-  } else if (entry && entry.name) {
-    // evita push identico
-    if (!equalsRoute(entry, route)) router.push(entry);
-  }
+  const list = sections.value;
+  const idx = list.findIndex(
+    (e) =>
+      equalsRoute(e, entry) ||
+      (typeof entry === "string"
+        ? e === entry
+        : e?.name === entry?.name && sameParams(e?.params, entry?.params))
+  );
+  if (idx < 0) return;
+
+  const pageEl = document.querySelector(".page"); // unica page montata
+  const panels = pageEl ? pageEl.querySelectorAll(":scope > .snapSection") : [];
+  const el = panels[idx];
+  if (!el) return;
+
+  isAnimating.value = true;
+  el.scrollIntoView({ block: "start", behavior: "smooth" });
+  // stop smorzamento hover dopo poco (tempo transizione/scroll)
+  setTimeout(() => {
+    isAnimating.value = false;
+  }, 600);
 }
 </script>
 
 <template>
-  <div class="scrollbar">
+  <div class="scrollbar" :class="{ animating: isAnimating }">
     <div
       v-for="(section, index) in sections"
       :key="
@@ -62,3 +80,25 @@ function goToSection(entry) {
     </div>
   </div>
 </template>
+
+<style scoped>
+/* esempio di stile anti-flicker (vedi punto 2) */
+.dot {
+  transition: opacity 150ms ease, transform 150ms ease;
+}
+.dot.active {
+  opacity: 1;
+  transform: scale(1);
+}
+.dot:not(.active) {
+  opacity: 0.5;
+}
+.dot:hover:not(.active) {
+  transform: scale(1.08);
+}
+
+/* durante lo scroll disattivo il bounce dell’hover */
+.scrollbar.animating .dot:hover:not(.active) {
+  transform: none;
+}
+</style>

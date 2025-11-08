@@ -1,41 +1,19 @@
-// App.vue
 <script setup>
-import { useRoute } from "vue-router";
-import { useRouteMetaStore } from "@/stores/routeMeta";
-import { useRouteScroller } from "@/composables/useRouteScroller";
+import { RouterView } from "vue-router";
 import { computed, onMounted } from "vue";
-import HeaderComponent from "./views/components/HeaderComponent.vue";
-import ScrollIndicator from "./views/components/ScrollIndicator.vue";
+import { useUiStore } from "@/stores/ui";
+import HeaderComponent from "@/views/components/HeaderComponent.vue";
+import ScrollIndicator from "@/views/components/ScrollIndicator.vue";
 
-const route = useRoute();
-const metaStore = useRouteMetaStore();
-useRouteScroller({ mode: "programmatic", containerSelector: "main" });
+const ui = useUiStore();
 
-// TODO: Add method to determine project titles by their slug
-// and update the section title accordingly when navigating to a project.
-const sectionTitles = {
-  0: "Welcome",
-  1: "Projects",
-  2: "Visit Card",
-};
-
-const sectionTitle = computed(
-  () => sectionTitles[metaStore.currentSectionIndex] || ""
-);
-
-const transitionName = computed(() => {
-  if (metaStore.transitionType === "horizontal") {
-    return metaStore.transitionDirection === "forward"
+const transitionName = computed(() =>
+  ui.isCrossPageTransition
+    ? ui.horizontalDirection === "left"
       ? "slide-left"
-      : "slide-right";
-  }
-
-  if (metaStore.transitionType === "vertical") {
-    return metaStore.transitionDirection === "down" ? "slide-down" : "slide-up";
-  }
-
-  return null;
-});
+      : "slide-right"
+    : ""
+);
 
 onMounted(() => {
   console.log(
@@ -48,74 +26,14 @@ onMounted(() => {
   <HeaderComponent />
   <ScrollIndicator />
   <main>
-    <RouterView v-slot="{ Component }">
+    <RouterView v-slot="{ Component, route }">
       <div class="view-wrapper">
-        <Transition :name="transitionName || ''" mode="out-in">
-          <!-- wrapper garantisce un root element animabile -->
+        <Transition :name="transitionName" mode="out-in">
           <div class="route-page" :key="route.fullPath">
             <component :is="Component" />
           </div>
         </Transition>
       </div>
     </RouterView>
-
-    <h2 class="section-title">{{ sectionTitle }}</h2>
   </main>
 </template>
-
-<style>
-/* Transizioni orizzontali */
-.slide-left-enter-active,
-.slide-left-leave-active,
-.slide-right-enter-active,
-.slide-right-leave-active,
-.slide-down-enter-active,
-.slide-down-leave-active,
-.slide-up-enter-active,
-.slide-up-leave-active {
-  transition: transform 0.5s ease;
-  position: absolute;
-  width: 100%;
-  z-index: 1;
-}
-
-.slide-left-enter-from {
-  transform: translateX(100%);
-}
-
-.slide-left-leave-to {
-  transform: translateX(-100%);
-}
-
-.slide-right-enter-from {
-  transform: translateX(-100%);
-}
-
-.slide-right-leave-to {
-  transform: translateX(100%);
-}
-
-/* Transizioni verticali */
-.slide-down-enter-from {
-  transform: translateY(100%);
-}
-
-.slide-down-leave-to {
-  transform: translateY(-100%);
-}
-
-.slide-up-enter-from {
-  transform: translateY(-100%);
-}
-
-.slide-up-leave-to {
-  transform: translateY(100%);
-}
-
-.view-wrapper {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-}
-</style>

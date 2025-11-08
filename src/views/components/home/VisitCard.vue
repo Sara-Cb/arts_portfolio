@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 </script>
 
 <template>
-  <section id="visitCard" class="snapSection">
+  <section id="visitCard" class="sectionInner">
     <div class="mirror">
       <div class="contentContainer">
         <div class="profile">

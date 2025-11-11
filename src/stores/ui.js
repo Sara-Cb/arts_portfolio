@@ -3,9 +3,8 @@ import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 
 export const useUiStore = defineStore("ui", () => {
-  // ------- ORDINAMENTO PAGINE (orizzontale tra view) -------
   const pageOrder = ref([
-    "rahem", // home = "/"
+    "rahem",
     "materical",
     "visual",
     "performance",
@@ -13,16 +12,13 @@ export const useUiStore = defineStore("ui", () => {
   ]);
   const pageIndexOf = (name) => pageOrder.value.indexOf(name);
 
-  // Direzione e flag per App.vue
-  const horizontalDirection = ref("left"); // 'left' | 'right'
+  const horizontalDirection = ref("left");
   const isCrossPageTransition = ref(false);
   const setHorizontalDirection = (dir) =>
     (horizontalDirection.value = dir === "right" ? "right" : "left");
   const setCrossPageTransition = (flag) =>
     (isCrossPageTransition.value = !!flag);
 
-  // ------- SEZIONI PER PAGINA (verticale nelle view) -------
-  // Esempio: 'rahem' → [{name:'rahem'},{name:'projects'},{name:'visit-card'}]
   const sectionMap = ref({});
   const setSectionList = (page, list) => {
     sectionMap.value[page] = Array.isArray(list) ? list : [];
@@ -32,7 +28,6 @@ export const useUiStore = defineStore("ui", () => {
     delete sectionMap.value[page];
   };
 
-  // ------- opzionale: player / snap lock -------
   const isPlayerOpen = ref(false);
   const isSnapLocked = ref(false);
   const snapScrollEnabled = computed(
@@ -43,44 +38,38 @@ export const useUiStore = defineStore("ui", () => {
   const lockSnap = () => (isSnapLocked.value = true);
   const unlockSnap = () => (isSnapLocked.value = false);
 
-  // ------- helpers per il guard orizzontale -------
-  function sameParams(a = {}, b = {}) {
-    const ak = Object.keys(a),
-      bk = Object.keys(b);
-    if (ak.length !== bk.length) return false;
-    return ak.every((k) => a[k] === b[k]);
-  }
-  function equalsEntry(entry, name, params) {
-    if (!entry) return false;
-    if (typeof entry === "string") return entry === name;
-    return entry.name === name && sameParams(entry.params || {}, params || {});
-  }
-  /** Trova la pageKey (chiave in sectionMap) che contiene la rotta {name, params} */
   function findPageKeyForRoute(name, params = {}) {
-    const map = sectionMap.value || {};
-    for (const key of Object.keys(map)) {
-      const list = map[key] || [];
-      if (list.some((e) => equalsEntry(e, name, params))) return key;
+    const sameParams = (a = {}, b = {}) => {
+      const ak = Object.keys(a).sort(),
+        bk = Object.keys(b).sort();
+      if (ak.length !== bk.length) return false;
+      return ak.every((k) => a[k] === b[k]);
+    };
+    for (const key of Object.keys(sectionMap.value || {})) {
+      const list = sectionMap.value[key] || [];
+      if (
+        list.some((e) =>
+          typeof e === "string"
+            ? e === name
+            : e?.name === name && sameParams(e.params || {}, params)
+        )
+      )
+        return key;
     }
-    return null;
+    return String(name).split("-")[0] || null;
   }
 
   return {
-    // orizzontale
     pageOrder,
     pageIndexOf,
     horizontalDirection,
     isCrossPageTransition,
     setHorizontalDirection,
     setCrossPageTransition,
-
-    // verticale
     sectionMap,
     setSectionList,
     getSectionList,
     clearSectionList,
-
-    // opzionale
     isPlayerOpen,
     isSnapLocked,
     snapScrollEnabled,
@@ -88,9 +77,6 @@ export const useUiStore = defineStore("ui", () => {
     closePlayer,
     lockSnap,
     unlockSnap,
-
-    // helpers per router guard / indicator
     findPageKeyForRoute,
-    // sameParams, equalsEntry,
   };
 });

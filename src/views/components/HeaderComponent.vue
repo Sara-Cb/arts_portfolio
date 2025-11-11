@@ -1,37 +1,89 @@
 <script setup>
 import { storeToRefs } from "pinia";
-import { RouterLink } from "vue-router";
+import { computed } from "vue";
+import { useRoute } from "vue-router";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { useEnvironmentStore } from "@/stores/environment";
+import { useUiStore } from "@/stores/ui";
+import { useVerticalNavigator } from "@/composables/useVerticalNavigator";
+import { useNavigator } from "@/composables/useNavigator"; // 👈 nuovo
 import Logo from "@/assets/logo/Logo.vue";
 import Player from "@/views/components/player/Player.vue";
 
 const { isMobile } = storeToRefs(useEnvironmentStore());
+const route = useRoute();
+const ui = useUiStore();
+const { navigateTo } = useNavigator();
+
+const pageKey = computed(
+  () => ui.findPageKeyForRoute(route.name, route.params) || null
+);
+
+const { pushToEntry, sectionId } = useVerticalNavigator({
+  pageKey,
+  containerSelector: ".page",
+  keydownEnabled: false,
+});
+
+async function goHomeSection(name) {
+  const entry = { name };
+  if (pageKey.value === "rahem") {
+    pushToEntry(entry);
+    requestAnimationFrame(() => {
+      const id = sectionId(entry);
+      document
+        .querySelector(`.page#home > .snapSection#${id}`)
+        ?.scrollIntoView({ block: "start", behavior: "smooth" });
+    });
+  } else {
+    await navigateTo(name, {}, { instantHome: true });
+  }
+}
 </script>
 
 <template>
   <header :class="{ mobile: isMobile }">
     <div class="contentContainer">
-      <RouterLink class="logo" to="/">
+      <button
+        class="logo"
+        type="button"
+        @click="goHomeSection('rahem')"
+        aria-label="Home"
+      >
         <Logo color="ghost" background="transparent" />
-      </RouterLink>
+      </button>
 
-      <nav class="navMenu">
+      <nav class="navMenu" aria-label="Home sections">
         <ul>
           <li>
-            <RouterLink to="/" class="navLink">
+            <button
+              class="navLink"
+              type="button"
+              @click="goHomeSection('rahem')"
+              aria-label="Hero"
+            >
               <FontAwesomeIcon :icon="['fas', 'home']" />
-            </RouterLink>
+            </button>
           </li>
           <li>
-            <RouterLink to="/projects" class="navLink">
+            <button
+              class="navLink"
+              type="button"
+              @click="goHomeSection('projects')"
+              aria-label="Projects"
+            >
               <FontAwesomeIcon :icon="['fas', 'folder']" />
-            </RouterLink>
+            </button>
           </li>
           <li>
-            <RouterLink to="/visit-card" class="navLink">
+            <button
+              class="navLink"
+              type="button"
+              @click="goHomeSection('visit-card')"
+              aria-label="Visit card"
+            >
               <FontAwesomeIcon :icon="['fas', 'address-card']" />
-            </RouterLink>
+            </button>
           </li>
         </ul>
       </nav>

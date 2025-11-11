@@ -61,11 +61,15 @@ const router = createRouter({
   ],
 });
 
+const rootName = (n) => String(n || "").split("-")[0];
+
 router.beforeEach((to, from, next) => {
   const ui = useUiStore();
 
-  const fromKey = ui.findPageKeyForRoute(from.name, from.params);
-  const toKey = ui.findPageKeyForRoute(to.name, to.params);
+  // Prova con la mappa sezioni; se non c'è ancora, ripiega sul root name
+  const fromKey =
+    ui.findPageKeyForRoute(from.name, from.params) ?? rootName(from.name);
+  const toKey = ui.findPageKeyForRoute(to.name, to.params) ?? rootName(to.name);
 
   if (fromKey && toKey && fromKey !== toKey) {
     const fi = ui.pageIndexOf(fromKey);

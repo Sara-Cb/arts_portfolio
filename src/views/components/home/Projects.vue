@@ -1,20 +1,26 @@
 <script setup>
 import { useCategoriesStore } from "@/stores/categories";
 import { storeToRefs } from "pinia";
-import { RouterLink } from "vue-router";
+import { useNavigator } from "@/composables/useNavigator";
 
 const store = useCategoriesStore();
 const { categories } = storeToRefs(store);
+const { navigateTo } = useNavigator();
+
+async function navigate(category) {
+  await navigateTo(category, {}, { instantHome: true });
+}
 </script>
 
 <template>
   <section id="projectCategories" class="sectionInner">
-    <RouterLink
+    <div
       v-for="cat in categories"
-      :to="'/' + cat.type"
+      :to="{ name: cat.type }"
       class="category"
       :class="cat.type"
       :key="cat.type"
+      @click="navigate(cat.type)"
     >
       <div class="text">
         <h5 class="title">{{ cat.title }}</h5>
@@ -25,6 +31,6 @@ const { categories } = storeToRefs(store);
       <div class="background">
         <img :src="cat.src" :alt="cat.title" />
       </div>
-    </RouterLink>
+    </div>
   </section>
 </template>

@@ -130,6 +130,7 @@
     .category {
       @include relative;
       overflow: hidden;
+      cursor: pointer;
 
       .background {
         @include absolute;
@@ -260,9 +261,11 @@
   #visitCard {
     @include flexColumnStretch;
     background-color: $cool;
-    background-image: linear-gradient(to bottom,
-        $night-trans-50 0%,
-        transparent 15%);
+    background-image: linear-gradient(
+      to bottom,
+      $night-trans-50 0%,
+      transparent 15%
+    );
     color: $night;
 
     .mirror,

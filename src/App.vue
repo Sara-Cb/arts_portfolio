@@ -1,10 +1,11 @@
 <script setup>
-import { RouterView } from "vue-router";
+import { RouterView, useRoute } from "vue-router";
 import { computed, onMounted } from "vue";
 import { useUiStore } from "@/stores/ui";
 import HeaderComponent from "@/views/components/HeaderComponent.vue";
 import ScrollIndicator from "@/views/components/ScrollIndicator.vue";
 
+const route = useRoute();
 const ui = useUiStore();
 
 const transitionName = computed(() =>
@@ -14,6 +15,12 @@ const transitionName = computed(() =>
       : "slide-right"
     : ""
 );
+
+const viewKey = computed(() => {
+  const key = ui.findPageKeyForRoute?.(route.name, route.params);
+  // fallback: primo record di matched (stessa view)
+  return key || route.matched[0]?.path || "view";
+});
 
 onMounted(() => {
   console.log(
@@ -29,7 +36,7 @@ onMounted(() => {
     <RouterView v-slot="{ Component, route }">
       <div class="view-wrapper">
         <Transition :name="transitionName" mode="out-in">
-          <div class="route-page" :key="route.fullPath">
+          <div class="route-page" :key="viewKey">
             <component :is="Component" />
           </div>
         </Transition>

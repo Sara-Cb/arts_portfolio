@@ -2,7 +2,6 @@
 import { computed, onMounted } from "vue";
 import { useUiStore } from "@/stores/ui";
 import { useProjectsStore } from "@/stores/projects";
-import { useSnapRouter } from "@/composables/useSnapRouter";
 import VisualDetail from "@/views/components/projects/VisualDetail.vue";
 
 const ui = useUiStore();
@@ -19,8 +18,6 @@ onMounted(async () => {
     })),
   ]);
 });
-
-useSnapRouter({ pageId: "visual", threshold: 0.75 });
 </script>
 
 <template>

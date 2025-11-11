@@ -3,7 +3,6 @@ import { computed, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { useUiStore } from "@/stores/ui";
 import { useProjectsStore } from "@/stores/projects";
-import { useSnapRouter } from "@/composables/useSnapRouter";
 import MatericalDetail from "@/views/components/projects/MatericalDetail.vue";
 
 const route = useRoute();
@@ -22,8 +21,6 @@ onMounted(async () => {
     })),
   ]);
 });
-
-useSnapRouter({ pageId: "materical", threshold: 0.75 });
 </script>
 
 <template>

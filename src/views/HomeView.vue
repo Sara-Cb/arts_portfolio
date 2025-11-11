@@ -1,28 +1,47 @@
 <script setup>
-import { onMounted } from "vue";
+import { onMounted, nextTick } from "vue";
+import { useRoute } from "vue-router";
 import { useUiStore } from "@/stores/ui";
-import { useSnapRouter } from "@/composables/useSnapRouter";
-
+import { useVerticalNavigator } from "@/composables/useVerticalNavigator";
 import Hero from "@/views/components/home/Hero.vue";
 import Projects from "@/views/components/home/Projects.vue";
 import VisitCard from "@/views/components/home/VisitCard.vue";
 
 const ui = useUiStore();
+const route = useRoute();
 
-// sezione list per Home (pageKey = 'rahem')
-onMounted(() => {
-  ui.setSectionList("rahem", [
-    { name: "rahem" },
-    { name: "projects" },
-    { name: "visit-card" },
-  ]);
-});
+ui.setSectionList("rahem", [
+  { name: "rahem" },
+  { name: "projects" },
+  { name: "visit-card" },
+]);
 
-// snap-router: pageKey 'rahem', container '.page#home'
-useSnapRouter({
+useVerticalNavigator({
   pageKey: "rahem",
   containerSelector: ".page#home",
-  threshold: 0.75,
+  keydownEnabled: true,
+  initialAlignFirst: false, // we'll do our own first align below
+  ioThreshold: 0.55,
+  debug: false,
+});
+
+onMounted(async () => {
+  await nextTick();
+
+  const hint = sessionStorage.getItem("homeInstantAlign");
+  if (hint === "projects" || hint === "visit-card") {
+    const el = document.querySelector(`.page#home > .snapSection#${hint}`);
+    el?.scrollIntoView({ block: "start", behavior: "auto" });
+    sessionStorage.removeItem("homeInstantAlign");
+    return;
+  }
+
+  if (route.name === "projects" || route.name === "visit-card") {
+    const el = document.querySelector(
+      `.page#home > .snapSection#${route.name}`
+    );
+    el?.scrollIntoView({ block: "start", behavior: "auto" });
+  }
 });
 </script>
 

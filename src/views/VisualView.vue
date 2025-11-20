@@ -21,7 +21,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="page" id="visual">
+  <div class="page page--projects" id="visual">
     <section class="snapSection" data-route="visual">
       <h1>Visual</h1>
     </section>

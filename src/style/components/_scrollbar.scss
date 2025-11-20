@@ -1,41 +1,36 @@
+@use "../partials/variables" as *;
+@use "@/style/partials/colors" as *;
+@use "@/style/partials/mixins" as *;
+
 // MAIN SCROLL HANDLER
 .scrollbar {
-  position: fixed;
-  top: 50%;
-  right: 0;
+  @include fixed(50%, auto, 0, auto);
   transform: translateY(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.3rem;
+  @include flexColumn;
+  gap: $padding-sm * 0.6;
   z-index: 500;
 }
 
-@media screen and (min-width: 576px) {
-  .scrollbar {
-    right: 0.5rem;
-  }
-}
-
 .dot {
-  width: 15px;
-  height: 26px;
-  padding: 5px;
+  @include dimensions(30px, 30px);
+  padding: $padding-sm * 0.7;
+  padding-right: $padding-sm;
+  @include flexCenter;
+  cursor: pointer;
 }
 
 .dot-inner {
-  height: 100%;
-  width: 100%;
-  background-color: #f02020;
+  @include dimensions(5px, 100%);
+  background-color: rgba($madder, 0.8); // base dot
   border-radius: 2px;
-  cursor: pointer;
   opacity: 0.3;
-  transition: opacity 0.3s, background-color 0.3s;
+  transition: opacity 0.3s, background-color 0.3s, box-shadow 0.3s;
 }
 
 .dot.active .dot-inner {
-  opacity: 1;
-  background-color: #6e0000;
+  opacity: 0.8;
+  background-color: $madder;
+  box-shadow: 0 0 5px rgba($chocolate, 0.8);
 }
 
 @media (hover: hover) {
@@ -44,14 +39,11 @@
   }
 }
 
-
-
 // GENERIC SCROLLBARS
 * {
   --sb-track-color: transparent;
-  --sb-thumb-color: #a09fa8;
+  --sb-thumb-color: rgba(#{$ghost}, 0.6);
   --sb-size: 3px;
-  z-index: 1000;
 
   &::-webkit-scrollbar {
     width: var(--sb-size);
@@ -70,5 +62,22 @@
 @supports not selector(::-webkit-scrollbar) {
   * {
     scrollbar-color: var(--sb-thumb-color) var(--sb-track-color);
+  }
+}
+
+// Nascondo la scrollbar solo sulle .page (ma lo scroll resta attivo)
+.page {
+  --sb-track-color: transparent;
+  --sb-thumb-color: transparent;
+  --sb-size: 0;
+
+  // Firefox + IE/Edge legacy
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  // WebKit
+  &::-webkit-scrollbar {
+    width: 0;
+    height: 0;
   }
 }

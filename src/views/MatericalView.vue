@@ -3,6 +3,7 @@ import { computed, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { useUiStore } from "@/stores/ui";
 import { useProjectsStore } from "@/stores/projects";
+import ProjectsNavbar from "@/views/components/projects/ProjectsNavbar.vue";
 import MatericalDetail from "@/views/components/projects/MatericalDetail.vue";
 
 const route = useRoute();
@@ -24,12 +25,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="page" id="materical">
-    <section class="snapSection" data-route="materical">
-      <!-- intro -->
-      <h1>Materical</h1>
-    </section>
-
+  <div class="page page--projects" id="materical">
     <section
       v-for="p in projects"
       :key="p.slug"

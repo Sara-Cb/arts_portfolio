@@ -263,69 +263,69 @@
     "ghost": $ghost,
   );
 
-$opposites: (
-  "night": $ghost,
-  "cool": $night,
-  "chocolate": $ghost,
-  "madder": $ghost,
-  "ghost": $night,
-);
+  $opposites: (
+    "night": $ghost,
+    "cool": $night,
+    "chocolate": $ghost,
+    "madder": $ghost,
+    "ghost": $night,
+  );
 
-@if not map-has-key($colors, $variant) {
-  @error 'Variant not found';
-}
-
-@if $transparent ==true {
-  background-color: transparent;
-  color: map-get($colors, $variant);
-  border-color: map-get($colors, $variant);
-
-  &:hover {
-    color: map-get($opposites, $variant);
-    border-color: map-get($opposites, $variant);
+  @if not map-has-key($colors, $variant) {
+    @error 'Variant not found';
   }
-}
 
-else {
-  background-color: map-get($colors, $variant);
-  color: map-get($opposites, $variant);
-  border-color: map-get($opposites, $variant);
-
-  &:hover {
-    background-color: map-get($opposites, $variant);
+  @if $transparent ==true {
+    background-color: transparent;
     color: map-get($colors, $variant);
     border-color: map-get($colors, $variant);
-  }
-}
 
-border: 1px solid;
-padding: 0.5rem 1rem;
-border-radius: 0.5rem;
-cursor: pointer;
-transition: all 0.3s;
+    &:hover {
+      color: map-get($opposites, $variant);
+      border-color: map-get($opposites, $variant);
+    }
+  }
+
+  else {
+    background-color: map-get($colors, $variant);
+    color: map-get($opposites, $variant);
+    border-color: map-get($opposites, $variant);
+
+    &:hover {
+      background-color: map-get($opposites, $variant);
+      color: map-get($colors, $variant);
+      border-color: map-get($colors, $variant);
+    }
+  }
+
+  border: 1px solid;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s;
 }
 
 //
 // BORDERS
 //
 @mixin border($side: "all", $color: $text-color, $width: 1px, $style: solid) {
-  @if $side =="top" {
+  @if $side == "top" {
     border-top: $width $style $color;
   }
 
-  @if $side =="right" {
+  @if $side == "right" {
     border-right: $width $style $color;
   }
 
-  @if $side =="bottom" {
+  @if $side == "bottom" {
     border-bottom: $width $style $color;
   }
 
-  @if $side =="left" {
+  @if $side == "left" {
     border-left: $width $style $color;
   }
 
-  @if $side =="all" {
+  @if $side == "all" {
     border: $width $style $color;
   }
 }

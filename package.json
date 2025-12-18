@@ -1,10 +1,12 @@
 {
-  "name": "bro_portf",
+  "name": "rahem",
   "version": "0.0.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "build:manifest": "node tools/build-images-manifest.mjs",
+    "dev": "npm run build:manifest && vite",
+    "prebuild": "npm run build:manifest",
     "build": "vite build",
     "preview": "vite preview"
   },
@@ -13,8 +15,6 @@
     "@fortawesome/free-brands-svg-icons": "^6.7.2",
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
     "@fortawesome/vue-fontawesome": "^3.0.8",
-    "bro_portf": "file:",
-    "magazine_demo": "file:",
     "pinia": "^2.3.1",
     "sass-reset": "^1.0.4",
     "vue": "^3.5.13",

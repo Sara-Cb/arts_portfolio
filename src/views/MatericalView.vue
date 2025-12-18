@@ -1,12 +1,9 @@
 <script setup>
 import { computed, onMounted } from "vue";
-import { useRoute } from "vue-router";
 import { useUiStore } from "@/stores/ui";
 import { useProjectsStore } from "@/stores/projects";
-import ProjectsNavbar from "@/views/components/projects/ProjectsNavbar.vue";
 import MatericalDetail from "@/views/components/projects/MatericalDetail.vue";
 
-const route = useRoute();
 const ui = useUiStore();
 const store = useProjectsStore();
 
@@ -15,7 +12,6 @@ const projects = computed(() => store.matericals);
 onMounted(async () => {
   await store.ensureLoaded();
   ui.setSectionList("materical", [
-    { name: "materical" },
     ...projects.value.map((p) => ({
       name: "materical-project",
       params: { slug: p.slug },

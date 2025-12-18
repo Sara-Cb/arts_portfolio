@@ -92,30 +92,41 @@
   }
 }
 
-/* mobile select + freccina */
+/* --- MOBILE: trigger + tendina custom --- */
 .pn-mobile {
   display: none;
 }
 
-.pn-select-wrap {
-  position: relative;
+@media screen and (max-width: $breakpoint-sm) {
+  .pn-desktop {
+    display: none;
+  }
+  .pn-mobile {
+    display: flex;
+    order: 1;
+    justify-self: flex-end;
+    position: relative;
+  }
 }
 
-.projects-navbar select {
-  appearance: none;
-  background-color: rgba($night, 0.6);
-  @include border("all", rgba($ghost, 0.22));
+/* bottone freccina */
+.pn-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.1rem;
+  height: 2.1rem;
   border-radius: 999px;
+  background-color: rgba($night, 0.35);
+  @include border("all", rgba($ghost, 0.22));
+  transition: transform 0.12s ease, background-color 0.12s ease,
+    border-color 0.12s ease, box-shadow 0.12s ease;
 
-  padding: 0.35rem 2rem 0.35rem 0.9rem;
-  min-width: 8.5rem;
-
-  color: inherit;
-  font: inherit;
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-
+  &:hover {
+    background-color: rgba($ghost, 0.08);
+    border-color: rgba($ghost, 0.3);
+    box-shadow: 0 4px 14px rgba($night, 0.7);
+  }
   &:focus-visible {
     outline: 2px solid $cool;
     outline-offset: 2px;
@@ -123,19 +134,68 @@
 }
 
 .pn-chevron {
-  position: absolute;
-  right: 0.7rem;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 1.1rem;
-  height: 1.1rem;
+  width: 1.15rem;
+  height: 1.15rem;
   fill: none;
   stroke: currentColor;
   stroke-width: 2;
-  pointer-events: none;
+  transition: transform 0.16s ease;
+}
+.pn-chevron.is-open {
+  transform: rotate(180deg);
 }
 
-/* utilità per label accessibile, se non l'hai già globale */
+/* popover tendina */
+.pn-popover {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.4rem);
+  min-width: 11rem;
+  padding: 0.35rem;
+  border-radius: 0.75rem;
+  background: color-mix(in srgb, var(--pn-bg, #{$night}) 82%, transparent);
+  border: 1px solid rgba($ghost, 0.18);
+  box-shadow: 0 12px 30px rgba($night, 0.6), 0 2px 6px rgba($night, 0.35);
+  backdrop-filter: blur(10px);
+  z-index: 120;
+}
+
+.pn-item {
+  width: 100%;
+  text-align: left;
+  padding: 0.55rem 0.7rem;
+  border-radius: 0.5rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: transparent;
+  color: $text-color;
+
+  transition: background-color 0.12s ease, transform 0.06s ease;
+  &:hover {
+    background-color: rgba($ghost, 0.08);
+  }
+  &:active {
+    transform: translateY(1px);
+  }
+  &:focus-visible {
+    outline: 2px solid $cool;
+    outline-offset: 2px;
+  }
+}
+
+/* transizione fade/drop */
+.pn-fade-enter-active,
+.pn-fade-leave-active {
+  transition: opacity 0.12s ease, transform 0.12s ease;
+}
+.pn-fade-enter-from,
+.pn-fade-leave-to {
+  opacity: 0;
+  transform: translateY(-4px);
+}
+
+/* utility se non già presente */
 .sr-only {
   position: absolute;
   width: 1px;

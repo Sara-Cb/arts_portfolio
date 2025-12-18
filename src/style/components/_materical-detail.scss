@@ -1,0 +1,146 @@
+@use "@/style/partials/colors" as *;
+@use "@/style/partials/typography" as *;
+@use "@/style/partials/variables" as *;
+@use "@/style/partials/mixins" as *;
+
+/* wrapper del dettaglio progetto */
+.materical-detail {
+  --gap: clamp(0.6rem, 1.5vw, 1rem);
+  --radius: 14px;
+
+  .md-head {
+    margin-bottom: calc(var(--gap) * 1.25);
+
+    .md-title {
+      font-family: $font-family-heading;
+      font-size: clamp(1.2rem, 1rem + 1.4vw, 2rem);
+      letter-spacing: 0.02em;
+      margin: 0 0 0.25rem 0;
+    }
+    .md-sub {
+      color: rgba($ghost, 0.75);
+      font-size: 0.95rem;
+      line-height: 1.4;
+      margin: 0;
+    }
+  }
+
+  /* slot generico */
+  .md-slot {
+    margin-bottom: calc(var(--gap) * 1.15);
+
+    img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: var(--radius);
+      background: rgba($night, 0.2);
+      @include border("all", rgba($ghost, 0.12));
+      /* evita CLS */
+      aspect-ratio: auto;
+    }
+  }
+
+  /* ---------------- hero ---------------- */
+  .md-slot.hero {
+    .hero-img {
+      width: 100%;
+      /* cover può essere molto larga: su desktop max larghezza, su mobile full width */
+      @media (min-width: $breakpoint-sm) {
+        /* opzionale: clamp per non riempire tutto */
+      }
+    }
+  }
+
+  /* --------------- grid-2 --------------- */
+  .md-slot .grid.grid-2 {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--gap);
+
+    @media (min-width: $breakpoint-sm) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  /* --------------- grid-3 --------------- */
+  .md-slot .grid.grid-3 {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--gap);
+
+    @media (min-width: $breakpoint-sm) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  /* ---------------- strip ---------------- */
+  .md-slot .strip {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 75%;
+    gap: var(--gap);
+    overflow-x: auto;
+    padding-bottom: 0.25rem;
+    scroll-snap-type: x mandatory;
+
+    img {
+      scroll-snap-align: start;
+    }
+
+    @media (min-width: $breakpoint-sm) {
+      grid-auto-columns: 33%;
+    }
+  }
+
+  /* -------------- left-big -------------- */
+  .md-slot.left-big {
+    display: grid;
+    gap: var(--gap);
+    grid-template-columns: 1fr;
+
+    @media (min-width: $breakpoint-sm) {
+      grid-template-columns: 2fr 1fr;
+      align-items: start;
+    }
+
+    /* se metti testo a destra in futuro, è già pronto lo spazio */
+  }
+
+  /* ---------------- stack ---------------- */
+  .md-slot .stack {
+    display: grid;
+    gap: var(--gap);
+    grid-template-columns: 1fr;
+
+    @media (min-width: $breakpoint-sm) {
+      grid-template-columns: 1fr;
+      /* volendo: ripeti due colonne se tante immagini */
+    }
+  }
+
+  /* --------------- masonry -------------- */
+  .md-slot .masonry {
+    column-count: 1;
+    column-gap: var(--gap);
+
+    @media (min-width: $breakpoint-sm) {
+      column-count: 2;
+    }
+    @media (min-width: $breakpoint-md) {
+      column-count: 3;
+    }
+
+    img {
+      width: 100%;
+      display: inline-block;
+      margin-bottom: var(--gap);
+      break-inside: avoid;
+    }
+  }
+}
+
+/* opzionale: piccoli helper per aspect ratio (se vuoi forzarli su certe classi)
+   .ratio-4x5 { aspect-ratio: 4 / 5; object-fit: cover; }
+   .ratio-3x2 { aspect-ratio: 3 / 2; object-fit: cover; }
+*/

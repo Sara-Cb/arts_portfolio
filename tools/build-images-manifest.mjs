@@ -1,11 +1,11 @@
 import { promises as fs } from "fs";
 import path from "path";
+import { imageSize } from "image-size"; // <-- nuovo
 
 const ROOT = process.cwd();
 const IMAGES_DIR = path.join(ROOT, "public", "images");
 const OUT_DIR = path.join(ROOT, "public", "projects");
 const OUT_FILE = path.join(OUT_DIR, "_images-manifest.json");
-
 const ALLOWED = new Set([".jpg", ".jpeg", ".png", ".webp", ".avif"]);
 
 function parseType(filename) {
@@ -43,18 +43,32 @@ async function walkCategory(category) {
     const projectId = dirent.name;
     const projDir = path.join(catDir, projectId);
     const files = await fs.readdir(projDir);
-    const items = files
-      .filter((f) => ALLOWED.has(path.extname(f).toLowerCase()))
-      .map((filename) => {
-        const meta = parseType(filename);
-        const url = `/images/${category}/${projectId}/${filename}`;
-        return { url, filename, ...meta };
-      })
-      .sort(sortItems);
 
+    const items = [];
+    for (const filename of files) {
+      const ext = path.extname(filename).toLowerCase();
+      if (!ALLOWED.has(ext)) continue;
+
+      const filePath = path.join(projDir, filename);
+      let width, height;
+      try {
+        const dim = imageSize(filePath);
+        width = dim?.width || undefined;
+        height = dim?.height || undefined;
+      } catch {
+        /* noop */
+      }
+
+      const meta = parseType(filename);
+      const url = `/images/${category}/${projectId}/${filename}`;
+      items.push({ url, filename, ...meta, width, height });
+    }
+
+    items.sort(sortItems);
     if (items.length) {
-      const cover = items.find((i) => i.type === "cover") || items[0];
-      result[projectId] = { cover: cover?.url || null, items };
+      const cover =
+        items.find((i) => i.type === "cover")?.url || items[0]?.url || null;
+      result[projectId] = { cover, items };
     }
   }
   return result;

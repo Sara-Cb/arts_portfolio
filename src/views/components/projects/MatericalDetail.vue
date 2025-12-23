@@ -1,8 +1,15 @@
 <script setup>
 import { computed } from "vue";
 import { chooseLayout } from "@/lib/layoutChooser";
+import { useGalleryStore } from "@/stores/gallery";
+import { useEnvironmentStore } from "@/stores/environment";
+import InlineGallery from "@/views/components/projects/InlineGallery.vue";
 
 const props = defineProps({ project: { type: Object, required: true } });
+const galleryStore = useGalleryStore();
+const env = useEnvironmentStore();
+
+const isMobile = computed(() => env.width < 576);
 
 const gallery = computed(
   () => props.project.gallery || { cover: null, items: [] }
@@ -11,10 +18,14 @@ const isReady = computed(
   () => Array.isArray(gallery.value.items) && gallery.value.items.length > 0
 );
 
-const textBlock = computed(() => {
-  const mats = Array.isArray(props.project.materials)
+const materialsString = computed(() => {
+  return Array.isArray(props.project.materials)
     ? props.project.materials.filter(Boolean).join(", ")
     : props.project.materials || "";
+});
+
+const textBlock = computed(() => {
+  const mats = materialsString.value;
   const desc = props.project.description || "";
   if (!mats && !desc) return null;
   const html = `
@@ -36,62 +47,96 @@ const layout = computed(() =>
       })
     : { name: "empty", slots: [] }
 );
+
+function openGallery(clickedImage) {
+  // Su mobile non apriamo la lightbox
+  if (isMobile.value) return;
+
+  if (!isReady.value || clickedImage.kind === "text") return;
+
+  const imageIndex = gallery.value.items.findIndex(
+    (img) => img.url === clickedImage.url
+  );
+
+  const materials = Array.isArray(props.project.materials)
+    ? props.project.materials.filter(Boolean).join(", ")
+    : props.project.materials || "";
+
+  galleryStore.openGallery(
+    gallery.value.items,
+    imageIndex >= 0 ? imageIndex : 0,
+    {
+      title: props.project.title,
+      materials: materials,
+      description: props.project.description || "",
+    }
+  );
+}
 </script>
 
 <template>
   <article class="materical-detail">
-    <div class="md-head">
-      <h2 class="md-title">{{ project.title }}</h2>
-      <p v-if="project.subtitle" class="md-sub">{{ project.subtitle }}</p>
-    </div>
+    <!-- Mobile: InlineGallery -->
+    <template v-if="isMobile">
+      <div v-if="!isReady" class="md-skeleton">
+        <div class="sk-hero"></div>
+        <div class="sk-row"></div>
+      </div>
 
-    <div v-if="!isReady" class="md-skeleton">
-      <div class="sk-hero"></div>
-      <div class="sk-row"></div>
-      <div class="sk-row"></div>
-    </div>
+      <InlineGallery
+        v-else
+        :images="gallery.items"
+        :project-title="project.title"
+        :project-materials="materialsString"
+        :project-description="project.description || ''"
+      />
+    </template>
 
+    <!-- Desktop: Layout a griglia -->
     <template v-else>
-      <section
-        v-for="(slot, idx) in layout.slots"
-        :key="idx"
-        :class="['md-slot', slot.kind]"
-      >
-        <div class="vf-wrap">
-          <template v-for="img in slot.images" :key="img.url || img.text">
-            <img
-              v-if="img.kind !== 'text'"
-              :src="img.url"
-              :alt="img.alt"
-              :class="img.classes"
-              :style="img.style"
-              loading="lazy"
-              decoding="async"
-            />
-            <div
-              v-else
-              :class="img.classes"
-              :style="img.style"
-              v-html="img.html"
-            />
-          </template>
-        </div>
-      </section>
+      <div class="md-head">
+        <h2 class="md-title">{{ project.title }}</h2>
+        <p v-if="project.subtitle" class="md-sub">{{ project.subtitle }}</p>
+      </div>
+
+      <div v-if="!isReady" class="md-skeleton">
+        <div class="sk-hero"></div>
+        <div class="sk-row"></div>
+        <div class="sk-row"></div>
+      </div>
+
+      <template v-else>
+        <section
+          v-for="(slot, idx) in layout.slots"
+          :key="idx"
+          :class="['md-slot', slot.kind]"
+        >
+          <div class="vf-wrap">
+            <template v-for="img in slot.images" :key="img.url || img.text">
+              <img
+                v-if="img.kind !== 'text'"
+                v-image-loader
+                :src="img.url"
+                :alt="img.alt"
+                :class="img.classes"
+                :style="{
+                  ...img.style,
+                  cursor: 'pointer',
+                }"
+                loading="lazy"
+                decoding="async"
+                @click="openGallery(img)"
+              />
+              <div
+                v-else
+                :class="img.classes"
+                :style="img.style"
+                v-html="img.html"
+              />
+            </template>
+          </div>
+        </section>
+      </template>
     </template>
   </article>
 </template>
-
-<style scoped>
-.md-skeleton .sk-hero {
-  height: 42vh;
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.06);
-  margin-bottom: 1rem;
-}
-.md-skeleton .sk-row {
-  height: 28vh;
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.05);
-  margin-bottom: 0.75rem;
-}
-</style>

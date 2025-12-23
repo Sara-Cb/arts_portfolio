@@ -1,7 +1,7 @@
 import { fileURLToPath, URL } from "node:url";
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
-import vueDevTools from "vite-plugin-vue-devtools";
+//import vueDevTools from "vite-plugin-vue-devtools";
 
 // export come funzione: per calcolare un BUILD_TIME a ogni avvio/build
 export default defineConfig(({ mode }) => {
@@ -11,7 +11,7 @@ export default defineConfig(({ mode }) => {
   return {
     // base: process.env.VITE_BASE || '/',
 
-    plugins: [vue(), vueDevTools()],
+    plugins: [vue()],
 
     resolve: {
       alias: {

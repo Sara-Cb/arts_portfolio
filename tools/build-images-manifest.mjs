@@ -1,6 +1,6 @@
 import { promises as fs } from "fs";
 import path from "path";
-import { imageSize } from "image-size"; // <-- nuovo
+import { imageSize } from "image-size";
 
 const ROOT = process.cwd();
 const IMAGES_DIR = path.join(ROOT, "public", "images");

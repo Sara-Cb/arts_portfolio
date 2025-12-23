@@ -1,10 +1,31 @@
 <script setup>
 import { computed, ref, onMounted, onBeforeUnmount } from "vue";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import { useUiStore } from "@/stores/ui";
+import { useProjectsStore } from "@/stores/projects";
+import { useEnvironmentStore } from "@/stores/environment";
 
 const props = defineProps({
   currentCategory: { type: String, required: true },
+});
+
+const route = useRoute();
+const projectsStore = useProjectsStore();
+const env = useEnvironmentStore();
+
+const isMobile = computed(() => env.width < 576);
+
+// Ottieni il progetto corrente dalla route
+const currentProject = computed(() => {
+  if (!route.params.slug) return null;
+
+  const category = props.currentCategory;
+  if (category === 'materical') return projectsStore.getMaterical(route.params.slug);
+  if (category === 'visual') return projectsStore.getVisual(route.params.slug);
+  if (category === 'performance') return projectsStore.getPerformance(route.params.slug);
+  if (category === 'music') return projectsStore.getMusic(route.params.slug);
+
+  return null;
 });
 
 const ui = useUiStore();
@@ -86,71 +107,79 @@ onBeforeUnmount(() =>
 
 <template>
   <nav class="projects-navbar" aria-label="Projects categories">
-    <!-- sinistra: categoria corrente -->
-    <div class="pn-left">
-      <span class="pn-current" :data-name="current">{{
-        labelOf(current)
-      }}</span>
-    </div>
+    <!-- Mobile: titolo progetto a sinistra, categoria + menu a destra -->
+    <template v-if="isMobile && currentProject">
+      <div class="pn-left">
+        <span class="pn-project-title">{{ currentProject.title }}</span>
+      </div>
 
-    <!-- destra desktop: link alle altre categorie -->
-    <ul class="pn-right pn-desktop" role="list">
-      <li v-for="c in others" :key="c">
+      <div class="pn-right-mobile">
+        <span class="pn-category-label">{{ labelOf(current) }}</span>
         <button
+          ref="triggerRef"
+          class="pn-trigger"
           type="button"
-          class="pn-link"
-          :aria-label="`Vai a ${labelOf(c)}`"
-          @click="goToCategory(c)"
+          :aria-expanded="isOpen ? 'true' : 'false'"
+          aria-haspopup="menu"
+          aria-controls="pn-menu"
+          @click="toggleMenu"
+          @keydown="onKeydownTrigger"
         >
-          {{ labelOf(c) }}
+          <span class="sr-only">Apri menù categorie</span>
+          <svg
+            class="pn-chevron"
+            :class="{ 'is-open': isOpen }"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <path d="M7 10l5 5 5-5" />
+          </svg>
         </button>
-      </li>
-    </ul>
 
-    <!-- mobile: solo freccina; al click apre menù con le altre categorie -->
-    <div class="pn-mobile">
-      <button
-        ref="triggerRef"
-        class="pn-trigger"
-        type="button"
-        :aria-expanded="isOpen ? 'true' : 'false'"
-        aria-haspopup="menu"
-        aria-controls="pn-menu"
-        @click="toggleMenu"
-        @keydown="onKeydownTrigger"
-      >
-        <span class="sr-only">Apri menù categorie</span>
-        <svg
-          class="pn-chevron"
-          :class="{ 'is-open': isOpen }"
-          viewBox="0 0 24 24"
-          aria-hidden="true"
-        >
-          <path d="M7 10l5 5 5-5" />
-        </svg>
-      </button>
+        <transition name="pn-fade">
+          <div
+            v-if="isOpen"
+            ref="menuRef"
+            id="pn-menu"
+            class="pn-popover"
+            role="menu"
+            @keydown="onKeydownMenu"
+          >
+            <button
+              v-for="c in others"
+              :key="c"
+              type="button"
+              class="pn-item"
+              role="menuitem"
+              @click="goToCategory(c)"
+            >
+              {{ labelOf(c) }}
+            </button>
+          </div>
+        </transition>
+      </div>
+    </template>
 
-      <transition name="pn-fade">
-        <div
-          v-if="isOpen"
-          ref="menuRef"
-          id="pn-menu"
-          class="pn-popover"
-          role="menu"
-          @keydown="onKeydownMenu"
-        >
+    <!-- Desktop: layout originale -->
+    <template v-else>
+      <div class="pn-left">
+        <span class="pn-current" :data-name="current">{{
+          labelOf(current)
+        }}</span>
+      </div>
+
+      <ul class="pn-right pn-desktop" role="list">
+        <li v-for="c in others" :key="c">
           <button
-            v-for="c in others"
-            :key="c"
             type="button"
-            class="pn-item"
-            role="menuitem"
+            class="pn-link"
+            :aria-label="`Vai a ${labelOf(c)}`"
             @click="goToCategory(c)"
           >
             {{ labelOf(c) }}
           </button>
-        </div>
-      </transition>
-    </div>
+        </li>
+      </ul>
+    </template>
   </nav>
 </template>

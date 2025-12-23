@@ -12,6 +12,8 @@ import {
   faA,
   faChevronDown,
   faChevronUp,
+  faChevronLeft,
+  faChevronRight,
   faQuoteLeft,
   faQuoteRight,
   faPhone,
@@ -22,6 +24,8 @@ import {
   faVolumeHigh,
   faChartSimple,
   faPlay,
+  faCircleInfo,
+  faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 
 import {
@@ -43,6 +47,8 @@ library.add(
   faA,
   faChevronDown,
   faChevronUp,
+  faChevronLeft,
+  faChevronRight,
   faQuoteLeft,
   faQuoteRight,
   faPhone,
@@ -53,6 +59,8 @@ library.add(
   faVolumeHigh,
   faChartSimple,
   faPlay,
+  faCircleInfo,
+  faXmark,
   faInstagram,
   faLinkedin,
   faTelegram,

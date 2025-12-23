@@ -29,7 +29,7 @@ async function navigate(category) {
         <p class="cta">[ {{ cat.cta }} ]</p>
       </div>
       <div class="background">
-        <img :src="cat.src" :alt="cat.title" />
+        <img v-image-loader :src="cat.src" :alt="cat.title" />
       </div>
     </div>
   </section>

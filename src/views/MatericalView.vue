@@ -3,6 +3,7 @@ import { computed, onMounted } from "vue";
 import { useUiStore } from "@/stores/ui";
 import { useProjectsStore } from "@/stores/projects";
 import MatericalDetail from "@/views/components/projects/MatericalDetail.vue";
+import { useVerticalNavigator } from "@/composables/useVerticalNavigator";
 
 const ui = useUiStore();
 const store = useProjectsStore();
@@ -32,11 +33,20 @@ onMounted(async () => {
     }))
   );
 });
+
+useVerticalNavigator({
+  pageKey: "materical",
+  containerSelector: ".page#materical",
+  keydownEnabled: true,
+  initialAlignFirst: true,
+  ioThreshold: 0.6,
+  debug: false,
+});
 </script>
 
 <template>
   <div class="page page--projects" id="materical">
-    <!-- LOADER a snap finché non abbiamo le gallery -->
+    <!-- LOADER a snap finché non ho le gallery -->
     <template v-if="!isReady">
       <section v-for="n in 3" :key="n" class="snapSection">
         <div class="md-skeleton">

@@ -9,6 +9,7 @@
   --content-w: min(1200px, 92vw);
   --vf-height: 74vh; /* regola se devi compensare header ecc. */
 
+  height: 100%;
   width: 100%;
   max-width: var(--content-w);
   margin-inline: auto;
@@ -122,9 +123,15 @@
     }
     .sk-hero {
       height: 42vh;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.06);
+      margin-bottom: 1rem;
     }
     .sk-row {
-      height: 22vh;
+      height: 28vh;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.05);
+      margin-bottom: 0.75rem;
     }
   }
 }

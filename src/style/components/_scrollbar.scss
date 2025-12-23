@@ -7,20 +7,28 @@
   @include fixed(50%, auto, 0, auto);
   transform: translateY(-50%);
   @include flexColumn;
-  gap: $padding-sm * 0.6;
+  gap: 0;
+  padding: 0.2rem 0; // Padding minimo totale
   z-index: 500;
 }
 
 .dot {
-  @include dimensions(30px, 30px);
-  padding: $padding-sm * 0.7;
-  padding-right: $padding-sm;
+  width: 30px;
+  // Altezza dinamica: da 12px (30%) a 30px (100%)
+  // Formula: min 12px + scala proporzionale fino a 30px
+  height: calc(12px + (var(--dot-height, 100) - 30) * 0.257px);
+  // Padding fisso, ridotto
+  padding: 0.25rem $padding-sm;
+  padding-left: calc($padding-sm * 0.7);
   @include flexCenter;
   cursor: pointer;
+  position: relative;
+  transition: height 0.3s ease;
 }
 
 .dot-inner {
-  @include dimensions(5px, 100%);
+  width: 5px;
+  height: 100%; // Occupa tutta l'altezza del dot
   background-color: rgba($madder, 0.8); // base dot
   border-radius: 2px;
   opacity: 0.3;
@@ -33,9 +41,41 @@
   box-shadow: 0 0 5px rgba($chocolate, 0.8);
 }
 
-@media (hover: hover) {
+// Tooltip styles (desktop only)
+.dot-tooltip {
+  position: absolute;
+  right: calc(100% + 0.5rem);
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 0.35rem 0.7rem;
+  background: rgba($night, 0.95);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba($ghost, 0.2);
+  border-radius: 0.4rem;
+  color: $ghost;
+  font-size: 0.8rem;
+  font-weight: 500;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: 10;
+}
+
+@media (hover: hover) and (min-width: 576px) {
+  .dot:hover .dot-tooltip {
+    opacity: 1;
+  }
+
   .dot:hover .dot-inner {
     opacity: 0.7;
+  }
+}
+
+// Hide tooltip on mobile
+@media (max-width: 575px) {
+  .dot-tooltip {
+    display: none;
   }
 }
 

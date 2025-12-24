@@ -6,6 +6,7 @@
   "scripts": {
     "build:manifest": "node tools/build-images-manifest.mjs",
     "optimize:images": "node tools/optimize-images.mjs",
+    "optimize:replace": "node tools/replace-optimized.mjs",
     "dev": "npm run build:manifest && vite",
     "prebuild": "npm run build:manifest",
     "build": "vite build",

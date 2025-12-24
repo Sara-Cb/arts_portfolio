@@ -87,21 +87,45 @@ async function optimizeImage(filePath) {
       }
     }
 
-    // Resize and optimize
-    await image
-      .resize(newWidth, newHeight, {
-        fit: 'inside',
-        withoutEnlargement: true,
-      })
-      .jpeg({ quality: 85, progressive: true })
-      .png({ quality: 85, compressionLevel: 9 })
-      .webp({ quality: 85 })
-      .toFile(filePath + '.tmp');
+    // Determine output format based on original
+    const outputPath = filePath + '.optimized' + extname(filePath);
 
-    // Replace original with optimized version
+    let pipeline = image.resize(newWidth, newHeight, {
+      fit: 'inside',
+      withoutEnlargement: true,
+    });
+
+    // Apply format-specific optimization
+    if (format === 'jpeg' || format === 'jpg') {
+      pipeline = pipeline.jpeg({ quality: 85, progressive: true });
+    } else if (format === 'png') {
+      pipeline = pipeline.png({ quality: 85, compressionLevel: 9 });
+    } else if (format === 'webp') {
+      pipeline = pipeline.webp({ quality: 85 });
+    }
+
+    await pipeline.toFile(outputPath);
+
+    // Replace original with optimized version (retry logic for Windows)
     const fs = await import('fs/promises');
-    await fs.unlink(filePath);
-    await fs.rename(filePath + '.tmp', filePath);
+    let retries = 3;
+    while (retries > 0) {
+      try {
+        await fs.unlink(filePath);
+        await fs.rename(outputPath, filePath);
+        break;
+      } catch (err) {
+        if (err.code === 'EPERM' && retries > 1) {
+          // Wait a bit and retry
+          await new Promise(resolve => setTimeout(resolve, 500));
+          retries--;
+        } else {
+          // If still fails, keep optimized file with different name
+          console.log(`  ⚠️  Could not replace original. Saved as: ${outputPath}`);
+          throw err;
+        }
+      }
+    }
 
     console.log(`✓ ${filePath} (${width}x${height} → ${newWidth}x${newHeight}) - resized & optimized`);
     processedCount++;

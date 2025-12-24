@@ -7,9 +7,21 @@
    npm install
    ```
 
-2. **Run the optimization script**:
+2. **Close any programs viewing/editing images** (including dev server, image viewers, etc.)
+
+3. **Run the optimization script**:
    ```bash
    npm run optimize:images
+   ```
+
+4. **Replace originals with optimized versions**:
+   ```bash
+   npm run optimize:replace
+   ```
+
+5. **Regenerate the manifest**:
+   ```bash
+   npm run build:manifest
    ```
 
 ## What it does

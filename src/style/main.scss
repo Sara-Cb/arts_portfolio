@@ -73,22 +73,22 @@ main {
 
 .page.page--projects {
   top: $projects-navbar-height;
-  min-height: calc(100vh - $projects-navbar-height);
-  height: calc(100vh - $projects-navbar-height);
+  min-height: calc(100dvh - $projects-navbar-height);
+  height: calc(100dvh - $projects-navbar-height);
 }
 
 @media screen and (max-width: $breakpoint-sm) {
   .page {
-    min-height: calc(100vh - $header-size);
-    height: calc(100vh - $header-size);
+    min-height: calc(100dvh - $header-size);
+    height: calc(100dvh - $header-size);
   }
   .page.page--projects {
-    min-height: calc(calc(100vh - $header-size) - $projects-navbar-height);
-    height: calc(calc(100vh - $header-size) - $projects-navbar-height);
+    min-height: calc(calc(100dvh - $header-size) - $projects-navbar-height);
+    height: calc(calc(100dvh - $header-size) - $projects-navbar-height);
   }
 }
 
-/* Ogni sezione è un pannello a scatto di 100vh, non scrolla internamente */
+/* Ogni sezione è un pannello a scatto di 100dvh, non scrolla internamente */
 .page > section.snapSection {
   min-height: 100%;
   height: 100%;
@@ -113,7 +113,7 @@ main {
 @media screen and (min-width: $breakpoint-sm) {
   header {
     @include fixed(0, 0, auto, 0);
-    @include dimensions($header-size, 100vh);
+    @include dimensions($header-size, 100dvh);
     @include flexColumnSpaceBetween;
     padding: 1rem 0;
     border-bottom: none;

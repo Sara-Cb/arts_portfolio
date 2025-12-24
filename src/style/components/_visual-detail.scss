@@ -5,13 +5,13 @@
 
 .visual-detail {
   width: 100%;
-  min-height: 100vh;
+  min-height: 100dvh;
 
   // Desktop layout
   .vd-container {
     display: flex;
     gap: 2rem;
-    min-height: 100vh;
+    min-height: 100dvh;
     padding: 2rem;
   }
 
@@ -23,7 +23,7 @@
     position: sticky;
     top: 2rem;
     align-self: flex-start;
-    max-height: calc(100vh - 4rem);
+    max-height: calc(100dvh - 4rem);
     overflow-y: auto;
   }
 

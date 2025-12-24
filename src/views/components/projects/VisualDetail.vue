@@ -134,15 +134,6 @@ function openGallery(clickedImage) {
                 @click="openGallery(img)"
               />
             </div>
-
-            <!-- Gradient overlay with "Open Gallery" text when > 4 media -->
-            <div
-              v-if="totalMediaCount > 4"
-              class="vd-grid-overlay"
-              @click="openGallery(sortedImages[0])"
-            >
-              <span class="vd-overlay-text">Open Gallery</span>
-            </div>
           </div>
         </section>
       </div>

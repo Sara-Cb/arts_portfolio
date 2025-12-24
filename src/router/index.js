@@ -66,7 +66,14 @@ const rootName = (n) => String(n || "").split("-")[0];
 router.beforeEach((to, from, next) => {
   const ui = useUiStore();
 
-  // Prova con la mappa sezioni; se non c'è ancora, ripiega sul root name
+  // Se navigazione verticale è stata preparata, assicurati che transizione sia OFF
+  if (ui.isNavigatingVertically) {
+    ui.setCrossPageTransition(false);
+    next();
+    return;
+  }
+
+  // Altrimenti calcola direzione per navigazioni dirette (URL manuale, browser back/forward)
   const fromKey =
     ui.findPageKeyForRoute(from.name, from.params) ?? rootName(from.name);
   const toKey = ui.findPageKeyForRoute(to.name, to.params) ?? rootName(to.name);
@@ -74,6 +81,7 @@ router.beforeEach((to, from, next) => {
   if (fromKey && toKey && fromKey !== toKey) {
     const fi = ui.pageIndexOf(fromKey);
     const ti = ui.pageIndexOf(toKey);
+    // ti > fi = vai a destra, quindi slide da left (stesso di prepareHorizontalNavigation)
     ui.setHorizontalDirection(ti > fi ? "left" : "right");
     ui.setCrossPageTransition(true);
   } else {

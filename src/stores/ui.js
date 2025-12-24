@@ -38,6 +38,36 @@ export const useUiStore = defineStore("ui", () => {
   const lockSnap = () => (isSnapLocked.value = true);
   const unlockSnap = () => (isSnapLocked.value = false);
 
+  // Flag per navigazione verticale (non aggiunge alla history)
+  const isNavigatingVertically = ref(false);
+
+  // Metodo centralizzato per navigazione verticale
+  // Usa replace per non inquinare history
+  function prepareVerticalNavigation() {
+    isNavigatingVertically.value = true;
+    setCrossPageTransition(false);
+    // Auto-reset dopo 100ms
+    setTimeout(() => {
+      isNavigatingVertically.value = false;
+    }, 100);
+  }
+
+  // Metodo centralizzato per calcolo direzione orizzontale
+  function prepareHorizontalNavigation(fromName, fromParams, toName, toParams) {
+    const fromKey = findPageKeyForRoute(fromName, fromParams);
+    const toKey = findPageKeyForRoute(toName, toParams);
+
+    if (fromKey && toKey && fromKey !== toKey) {
+      const fi = pageIndexOf(fromKey);
+      const ti = pageIndexOf(toKey);
+      // ti > fi = vai a destra, quindi slide da right (elemento entra da destra)
+      setHorizontalDirection(ti > fi ? "left" : "right");
+      setCrossPageTransition(true);
+    } else {
+      setCrossPageTransition(false);
+    }
+  }
+
   function findPageKeyForRoute(name, params = {}) {
     const sameParams = (a = {}, b = {}) => {
       const ak = Object.keys(a).sort(),
@@ -77,6 +107,9 @@ export const useUiStore = defineStore("ui", () => {
     closePlayer,
     lockSnap,
     unlockSnap,
+    isNavigatingVertically,
+    prepareVerticalNavigation,
+    prepareHorizontalNavigation,
     findPageKeyForRoute,
   };
 });

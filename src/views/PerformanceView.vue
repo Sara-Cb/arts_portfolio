@@ -8,6 +8,11 @@ const ui = useUiStore();
 const projectsStore = useProjectsStore();
 const projects = computed(() => projectsStore.getByCategory("performance"));
 
+// Genera ID sezione
+function sectionId(slug) {
+  return `performance-project-${slug}`.replace(/[^a-z0-9_-]+/gi, "-");
+}
+
 onMounted(async () => {
   await projectsStore.ensureLoaded();
   ui.setSectionList("performance", [
@@ -22,7 +27,7 @@ onMounted(async () => {
 
 <template>
   <div class="page page--projects" id="performance">
-    <section class="snapSection" data-route="performance">
+    <section class="snapSection" id="performance" data-route="performance">
       <h1>Performance</h1>
     </section>
 
@@ -30,6 +35,7 @@ onMounted(async () => {
       v-for="p in projects"
       :key="p.slug"
       class="snapSection"
+      :id="sectionId(p.slug)"
       :data-slug="p.slug"
     >
       <PerformanceDetail :project="p" />

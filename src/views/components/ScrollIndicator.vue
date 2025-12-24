@@ -1,12 +1,12 @@
 <!-- src/views/components/ScrollIndicator.vue -->
 <script setup>
 import { computed } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { useUiStore } from "@/stores/ui";
 import { useProjectsStore } from "@/stores/projects";
-import { useVerticalNavigator } from "@/composables/useVerticalNavigator";
 
 const route = useRoute();
+const router = useRouter();
 const ui = useUiStore();
 const projectsStore = useProjectsStore();
 
@@ -15,15 +15,42 @@ const pageKey = computed(
   () => ui.findPageKeyForRoute(route.name, route.params) || null
 );
 
-// Istanza "passiva": niente keydown qui
-const { sections, activeIndex, sectionId, pushToEntry } = useVerticalNavigator({
-  pageKey,
-  containerSelector: ".page", // la page attuale
-  keydownEnabled: false, // le frecce le gestiscono le view
+// Leggi sections direttamente dallo store (NO useVerticalNavigator per evitare doppio observer)
+const sections = computed(() => ui.getSectionList(pageKey.value) || []);
+
+// Calcola activeIndex confrontando route con sections
+const activeIndex = computed(() => {
+  const currentRouteKey = `${route.name}|${JSON.stringify(route.params || {})}`;
+  return sections.value.findIndex(section => {
+    const sectionName = typeof section === 'string' ? section : section.name;
+    const sectionParams = typeof section === 'string' ? {} : (section.params || {});
+    const sectionKey = `${sectionName}|${JSON.stringify(sectionParams)}`;
+    return sectionKey === currentRouteKey;
+  });
 });
 
+// Genera ID sezione (stesso pattern di useVerticalNavigator)
+function sectionId(entry) {
+  const sectionName = typeof entry === 'string' ? entry : entry.name;
+  const sectionParams = typeof entry === 'string' ? {} : (entry.params || {});
+  const slug = sectionParams.slug ? `-${sectionParams.slug}` : "";
+  return (sectionName + slug).replace(/[^a-z0-9_-]+/gi, "-");
+}
+
 function goToSection(entry) {
-  pushToEntry(entry); // cambia route; lo scroll lo farà la view
+  const sectionName = typeof entry === 'string' ? entry : entry.name;
+  const sectionParams = typeof entry === 'string' ? {} : (entry.params || {});
+
+  // Segnala navigazione verticale e usa replace per history pulita
+  ui.prepareVerticalNavigation();
+  router.replace({ name: sectionName, params: sectionParams });
+
+  // Scroll manuale alla sezione
+  requestAnimationFrame(() => {
+    const id = sectionId(entry);
+    const section = document.querySelector(`.snapSection#${id}`);
+    section?.scrollIntoView({ block: "start", behavior: "smooth" });
+  });
 }
 
 // Calcola l'altezza del dot in base alla distanza dall'active
@@ -69,6 +96,9 @@ function getSectionTitle(section) {
   // Altrimenti usa il nome della route
   return section.name || "";
 }
+
+// Mostra tooltip solo se NON siamo su home (rahem)
+const showTooltips = computed(() => pageKey.value !== "rahem");
 </script>
 
 <template>
@@ -84,7 +114,7 @@ function getSectionTitle(section) {
       @click="goToSection(section)"
     >
       <div class="dot-inner"></div>
-      <span class="dot-tooltip">{{ getSectionTitle(section) }}</span>
+      <span v-if="showTooltips" class="dot-tooltip">{{ getSectionTitle(section) }}</span>
     </div>
   </div>
 </template>

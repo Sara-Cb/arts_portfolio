@@ -1,17 +1,17 @@
 <script setup>
 import { storeToRefs } from "pinia";
 import { computed } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { useEnvironmentStore } from "@/stores/environment";
 import { useUiStore } from "@/stores/ui";
-import { useVerticalNavigator } from "@/composables/useVerticalNavigator";
-import { useNavigator } from "@/composables/useNavigator"; // 👈 nuovo
+import { useNavigator } from "@/composables/useNavigator";
 import Logo from "@/assets/logo/Logo.vue";
 import Player from "@/views/components/player/Player.vue";
 
 const { isMobile } = storeToRefs(useEnvironmentStore());
 const route = useRoute();
+const router = useRouter();
 const ui = useUiStore();
 const { navigateTo } = useNavigator();
 
@@ -19,23 +19,18 @@ const pageKey = computed(
   () => ui.findPageKeyForRoute(route.name, route.params) || null
 );
 
-const { pushToEntry, sectionId } = useVerticalNavigator({
-  pageKey,
-  containerSelector: ".page",
-  keydownEnabled: false,
-});
-
 async function goHomeSection(name) {
-  const entry = { name };
   if (pageKey.value === "rahem") {
-    pushToEntry(entry);
+    // Navigazione verticale dentro home: usa replace per history pulita
+    ui.prepareVerticalNavigation();
+    await router.replace({ name });
+    // Scroll manuale alla sezione
     requestAnimationFrame(() => {
-      const id = sectionId(entry);
-      document
-        .querySelector(`.page#home > .snapSection#${id}`)
-        ?.scrollIntoView({ block: "start", behavior: "smooth" });
+      const section = document.querySelector(`.snapSection[data-route="${name}"]`);
+      section?.scrollIntoView({ block: "start", behavior: "smooth" });
     });
   } else {
+    // Navigazione orizzontale da altra pagina: usa navigateTo
     await navigateTo(name, {}, { instantHome: true });
   }
 }

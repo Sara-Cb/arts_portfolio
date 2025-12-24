@@ -23,6 +23,11 @@ const isReady = computed(
     )
 );
 
+// Genera ID sezione (stesso pattern di useVerticalNavigator)
+function sectionId(slug) {
+  return `materical-project-${slug}`.replace(/[^a-z0-9_-]+/gi, "-");
+}
+
 onMounted(async () => {
   await store.ensureLoaded();
   ui.setSectionList(
@@ -63,6 +68,7 @@ useVerticalNavigator({
         v-for="p in projects"
         :key="p.slug"
         class="snapSection"
+        :id="sectionId(p.slug)"
         :data-slug="p.slug"
       >
         <MatericalDetail :project="p" />

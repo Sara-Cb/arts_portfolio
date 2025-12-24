@@ -47,8 +47,8 @@ onMounted(async () => {
 
 <template>
   <div class="page" id="home">
-    <section class="snapSection" data-route="rahem"><Hero /></section>
-    <section class="snapSection" data-route="projects"><Projects /></section>
-    <section class="snapSection" data-route="visit-card"><VisitCard /></section>
+    <section class="snapSection" id="rahem" data-route="rahem"><Hero /></section>
+    <section class="snapSection" id="projects" data-route="projects"><Projects /></section>
+    <section class="snapSection" id="visit-card" data-route="visit-card"><VisitCard /></section>
   </div>
 </template>

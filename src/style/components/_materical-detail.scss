@@ -87,6 +87,7 @@
       background: rgba($chocolate, 0.05);
       overflow: hidden;
       position: relative;
+      min-height: fit-content;
 
       .md-meta {
         width: 100%;

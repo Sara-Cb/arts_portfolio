@@ -7,6 +7,7 @@ import HeaderComponent from "@/views/components/HeaderComponent.vue";
 import ScrollIndicator from "@/views/components/ScrollIndicator.vue";
 import ProjectsNavbar from "@/views/components/projects/ProjectsNavbar.vue";
 import FullScreenGallery from "@/views/components/projects/FullScreenGallery.vue";
+import ContentWarning from "@/components/ContentWarning.vue";
 
 const route = useRoute();
 const ui = useUiStore();
@@ -48,6 +49,8 @@ onMounted(() => {
 </script>
 
 <template>
+  <ContentWarning />
+
   <HeaderComponent />
 
   <ProjectsNavbar

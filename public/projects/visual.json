@@ -1,68 +1,79 @@
 [
-    {
-        "id": "blue-neon",
-        "type": "visual",
-        "title": "Blue Neon",
-        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam auctor, nunc nec"
-    },
-    {
-        "id": "dark-movement",
-        "type": "visual",
-        "title": "Dark Movement",
-        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam auctor, nunc nec"
-    },
-    {
-        "id": "disappearance",
-        "type": "visual",
-        "title": "Disappearance",
-        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam auctor, nunc nec"
-    },
-    {
-        "id": "hot-tribal",
-        "type": "visual",
-        "title": "Hot Tribal",
-        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam auctor, nunc nec"
-    },
-    {
-        "id": "kitsune",
-        "type": "visual",
-        "title": "Kitsune",
-        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam auctor, nunc nec"
-    },
-    {
-        "id": "lumen",
-        "type": "visual",
-        "title": "Lumen",
-        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam auctor, nunc nec"
-    },
-    {
-        "id": "purple-unhuman",
-        "type": "visual",
-        "title": "Purple Unhuman",
-        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam auctor, nunc nec"
-    },
-    {
-        "id": "red-movement",
-        "type": "visual",
-        "title": "Red Movement",
-        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam auctor, nunc nec"
-    },
-    {
-        "id": "self-portrait",
-        "type": "visual",
-        "title": "Self Portrait",
-        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam auctor, nunc nec"
-    },
-    {
-        "id": "shadow-face",
-        "type": "visual",
-        "title": "Shadow Face",
-        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam auctor, nunc nec"
-    },
-    {
-        "id": "unpersonalization",
-        "type": "visual",
-        "title": "Unpersonalization",
-        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam auctor, nunc nec"
-    }
+  {
+    "id": "blue-neon",
+    "type": "visual",
+    "title": "Blue Neon",
+    "description": "Motion blur and blue light traces create ethereal atmospheres. A photographic exploration of movement frozen in electric glow.",
+    "date": "2024"
+  },
+  {
+    "id": "dark-movement",
+    "type": "visual",
+    "title": "Dark Movement",
+    "description": "Bodies in motion captured through darkness and shadow. Dance between visibility and obscurity.",
+    "date": "2024"
+  },
+  {
+    "id": "disappearance",
+    "type": "visual",
+    "title": "Disappearance",
+    "description": "Soft portraits exploring vulnerability and stillness. Moments of quiet introspection captured in delicate light.",
+    "date": "2024"
+  },
+  {
+    "id": "hot-tribal",
+    "type": "visual",
+    "title": "Hot Tribal",
+    "description": "Warm tones and primal energy. A visual journey through raw expression and ancestral echoes.",
+    "date": "2024"
+  },
+  {
+    "id": "kitsune",
+    "type": "visual",
+    "title": "Kitsune",
+    "description": "Mythological imagery meets contemporary vision. Figures emerging from nature's embrace, between reality and folklore.",
+    "date": "2024"
+  },
+  {
+    "id": "lumen",
+    "type": "visual",
+    "title": "Lumen",
+    "description": "Light as subject and medium. Experimental captures exploring luminosity, reflections and optical phenomena.",
+    "date": "2025"
+  },
+  {
+    "id": "purple-unhuman",
+    "type": "visual",
+    "title": "Purple Unhuman",
+    "description": "Violet hues and distorted forms challenge human representation. Identity dissolves into chromatic abstraction.",
+    "date": "2024"
+  },
+  {
+    "id": "red-movement",
+    "type": "visual",
+    "title": "Red Movement",
+    "description": "Kinetic energy captured in red. Motion studies where bodies become fluid gestures in space.",
+    "date": "2024"
+  },
+  {
+    "id": "self-portrait",
+    "type": "visual",
+    "title": "Self Portrait",
+    "description": "Double exposure and layered identity. The self fragmented, multiplied, seeking definition through the lens.",
+    "date": "2025"
+  },
+  {
+    "id": "shadow-face",
+    "type": "visual",
+    "title": "Shadow Face",
+    "description": "Faces half-hidden in shadow. Portraits that reveal through concealment, exploring the duality of presence.",
+    "date": "2024"
+  },
+  {
+    "id": "unpersonalization",
+    "type": "visual",
+    "title": "Unpersonalization",
+    "description": "The erasure of individual features. A study on anonymity and the dissolution of personal identity in the digital age.",
+    "date": "2024"
+  }
 ]

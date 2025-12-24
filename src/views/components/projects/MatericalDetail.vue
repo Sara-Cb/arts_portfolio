@@ -27,15 +27,13 @@ const materialsString = computed(() => {
 const textBlock = computed(() => {
   const mats = materialsString.value;
   const desc = props.project.description || "";
-  if (!mats && !desc) return null;
+  const date = props.project.date || "";
+  if (!mats && !desc && !date) return null;
   const html = `
     <div class="md-meta">
-      ${
-        mats
-          ? `<p class="md-materials"><strong>materiali</strong><br>${mats}</p>`
-          : ""
-      }
       ${desc ? `<p class="md-description">${desc}</p>` : ""}
+      ${mats ? `<p class="md-materials">${mats}</p>` : ""}
+      ${date ? `<p class="md-date">${date}</p>` : ""}
     </div>`;
   return { html, size: "md" };
 });

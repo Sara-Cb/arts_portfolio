@@ -103,36 +103,46 @@ function openGallery(clickedImage) {
             <div class="sk-row"></div>
           </div>
 
-          <div
-            v-else
-            class="vd-grid"
-            :data-image-count="totalMediaCount <= 9 ? totalMediaCount : null"
-            :data-many-images="totalMediaCount > 9 ? 'true' : null"
-          >
-            <!-- Videos -->
-            <video
-              v-for="(video, idx) in project?.videos || []"
-              :key="`video-${idx}`"
-              :src="video"
-              class="vd-grid-video"
-              controls
-              preload="metadata"
+          <div v-else class="vd-grid-wrapper">
+            <div
+              class="vd-grid"
+              :data-image-count="totalMediaCount <= 9 ? totalMediaCount : null"
+              :data-many-images="totalMediaCount > 9 ? 'true' : null"
             >
-              Il tuo browser non supporta il tag video.
-            </video>
+              <!-- Videos -->
+              <video
+                v-for="(video, idx) in project?.videos || []"
+                :key="`video-${idx}`"
+                :src="video"
+                class="vd-grid-video"
+                controls
+                preload="metadata"
+              >
+                Il tuo browser non supporta il tag video.
+              </video>
 
-            <!-- Images -->
-            <img
-              v-for="img in sortedImages"
-              :key="img.url"
-              v-image-loader
-              :src="img.url"
-              :alt="project?.title || ''"
-              class="vd-grid-image"
-              loading="lazy"
-              decoding="async"
-              @click="openGallery(img)"
-            />
+              <!-- Images -->
+              <img
+                v-for="img in sortedImages"
+                :key="img.url"
+                v-image-loader
+                :src="img.url"
+                :alt="project?.title || ''"
+                class="vd-grid-image"
+                loading="lazy"
+                decoding="async"
+                @click="openGallery(img)"
+              />
+            </div>
+
+            <!-- Gradient overlay with "Open Gallery" text when > 4 media -->
+            <div
+              v-if="totalMediaCount > 4"
+              class="vd-grid-overlay"
+              @click="openGallery(sortedImages[0])"
+            >
+              <span class="vd-overlay-text">Open Gallery</span>
+            </div>
           </div>
         </section>
       </div>

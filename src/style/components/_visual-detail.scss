@@ -63,6 +63,11 @@
     flex-direction: column;
   }
 
+  .vd-grid-wrapper {
+    position: relative;
+    width: 100%;
+  }
+
   .vd-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -111,6 +116,36 @@
 
   .vd-grid-video {
     max-height: 500px;
+  }
+
+  // Gradient overlay for "Open Gallery" when > 4 images
+  .vd-grid-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3rem;
+    background: linear-gradient(to top, $night, transparent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    pointer-events: all;
+    transition: opacity 0.3s ease;
+
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+
+  .vd-overlay-text {
+    font-family: $font-family-heading;
+    font-size: 0.85rem;
+    color: $ghost;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 500;
+    text-shadow: 0 1px 3px rgba($night, 0.8);
   }
 
   // Skeleton loader

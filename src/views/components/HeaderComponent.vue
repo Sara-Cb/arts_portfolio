@@ -39,6 +39,11 @@ async function goHomeSection(name) {
     await navigateTo(name, {}, { instantHome: true });
   }
 }
+
+// Active state per le icone
+const isActive = (sectionName) => {
+  return pageKey.value === "rahem" && route.name === sectionName;
+};
 </script>
 
 <template>
@@ -58,9 +63,11 @@ async function goHomeSection(name) {
           <li>
             <button
               class="navLink"
+              :class="{ active: isActive('rahem') }"
               type="button"
               @click="goHomeSection('rahem')"
               aria-label="Hero"
+              :aria-current="isActive('rahem') ? 'page' : undefined"
             >
               <FontAwesomeIcon :icon="['fas', 'home']" />
             </button>
@@ -68,9 +75,11 @@ async function goHomeSection(name) {
           <li>
             <button
               class="navLink"
+              :class="{ active: isActive('projects') }"
               type="button"
               @click="goHomeSection('projects')"
               aria-label="Projects"
+              :aria-current="isActive('projects') ? 'page' : undefined"
             >
               <FontAwesomeIcon :icon="['fas', 'folder']" />
             </button>
@@ -78,9 +87,11 @@ async function goHomeSection(name) {
           <li>
             <button
               class="navLink"
+              :class="{ active: isActive('visit-card') }"
               type="button"
               @click="goHomeSection('visit-card')"
               aria-label="Visit card"
+              :aria-current="isActive('visit-card') ? 'page' : undefined"
             >
               <FontAwesomeIcon :icon="['fas', 'address-card']" />
             </button>

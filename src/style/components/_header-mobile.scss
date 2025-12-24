@@ -29,6 +29,17 @@ header {
 
       .navLink {
         @include relative;
+        color: $cool;
+        transition: all 0.3s ease;
+
+        &:hover {
+          color: $ghost;
+        }
+
+        &.active {
+          color: $ghost;
+          filter: drop-shadow(0 0 8px $madder);
+        }
 
         .label {
           @include absolute(0, 3rem, 0, 0);

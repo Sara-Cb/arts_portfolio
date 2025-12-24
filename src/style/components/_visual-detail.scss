@@ -18,6 +18,8 @@
   // Left text column (27-33%)
   .vd-text-col {
     flex: 0 0 30%;
+    margin-top: auto;
+    margin-bottom: 3rem;
     display: flex;
     flex-direction: column;
     position: sticky;

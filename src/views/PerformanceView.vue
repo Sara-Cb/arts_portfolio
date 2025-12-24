@@ -28,17 +28,34 @@ onMounted(async () => {
 <template>
   <div class="page page--projects" id="performance">
     <section class="snapSection" id="performance" data-route="performance">
-      <h1>Performance</h1>
-    </section>
-
-    <section
-      v-for="p in projects"
-      :key="p.slug"
-      class="snapSection"
-      :id="sectionId(p.slug)"
-      :data-slug="p.slug"
-    >
-      <PerformanceDetail :project="p" />
+      <div class="wip-container">
+        <h1>Performance</h1>
+        <p class="wip-message">Work in progress...</p>
+      </div>
     </section>
   </div>
 </template>
+
+<style scoped lang="scss">
+@use "@/style/partials/colors" as *;
+
+.wip-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  gap: 2rem;
+
+  h1 {
+    font-size: 4rem;
+    color: $ghost;
+  }
+
+  .wip-message {
+    font-size: 1.5rem;
+    color: $cool;
+    font-style: italic;
+  }
+}
+</style>

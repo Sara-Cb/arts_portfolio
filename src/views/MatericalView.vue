@@ -6,14 +6,14 @@ import MatericalDetail from "@/views/components/projects/MatericalDetail.vue";
 import { useVerticalNavigator } from "@/composables/useVerticalNavigator";
 
 const ui = useUiStore();
-const store = useProjectsStore();
+const projectsStore = useProjectsStore();
 
-const projects = computed(() => store.matericals);
+const projects = computed(() => projectsStore.matericals);
 
-// pronto = store.loaded + ogni progetto ha gallery con items
+// pronto = projectsStore.loaded + ogni progetto ha gallery con items
 const isReady = computed(
   () =>
-    store.loaded &&
+    projectsStore.loaded &&
     projects.value.length > 0 &&
     projects.value.every(
       (p) =>
@@ -29,7 +29,7 @@ function sectionId(slug) {
 }
 
 onMounted(async () => {
-  await store.ensureLoaded();
+  await projectsStore.ensureLoaded();
   ui.setSectionList(
     "materical",
     projects.value.map((p) => ({

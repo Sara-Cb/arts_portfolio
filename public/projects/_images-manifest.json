@@ -114,27 +114,27 @@
         }
       ]
     },
-    "ereditarietà": {
-      "cover": "/images/materical/ereditarietà/cover.jpg",
+    "ereditarieta": {
+      "cover": "/images/materical/ereditarieta/cover.jpg",
       "items": [
         {
-          "url": "/images/materical/ereditarietà/cover.jpg",
+          "url": "/images/materical/ereditarieta/cover.jpg",
           "filename": "cover.jpg",
           "type": "cover"
         },
         {
-          "url": "/images/materical/ereditarietà/full.jpg",
+          "url": "/images/materical/ereditarieta/full.jpg",
           "filename": "full.jpg",
           "type": "full"
         },
         {
-          "url": "/images/materical/ereditarietà/dettaglio-1.jpg",
+          "url": "/images/materical/ereditarieta/dettaglio-1.jpg",
           "filename": "dettaglio-1.jpg",
           "type": "dettaglio",
           "order": 1
         },
         {
-          "url": "/images/materical/ereditarietà/dettaglio-2.jpg",
+          "url": "/images/materical/ereditarieta/dettaglio-2.jpg",
           "filename": "dettaglio-2.jpg",
           "type": "dettaglio",
           "order": 2
@@ -644,5 +644,5 @@
       ]
     }
   },
-  "_generatedAt": "2025-12-23T17:50:53.162Z"
+  "_generatedAt": "2025-12-24T00:49:48.331Z"
 }

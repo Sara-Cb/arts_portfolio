@@ -59,7 +59,8 @@ async function getAllImageFiles(dir) {
 
 async function optimizeImage(filePath) {
   try {
-    const image = sharp(filePath);
+    // Rotate based on EXIF orientation before processing
+    const image = sharp(filePath).rotate();
     const metadata = await image.metadata();
 
     const { width, height, format } = metadata;

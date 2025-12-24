@@ -33,54 +33,32 @@
         }
       ]
     },
-    "diavolo-catene": {
-      "cover": "/images/materical/diavolo-catene/cover.jpg",
+    "dreadful": {
+      "cover": "/images/materical/dreadful/cover.jpg",
       "items": [
         {
-          "url": "/images/materical/diavolo-catene/cover.jpg",
+          "url": "/images/materical/dreadful/cover.jpg",
           "filename": "cover.jpg",
           "type": "cover"
         },
         {
-          "url": "/images/materical/diavolo-catene/dettaglio-1.jpg",
-          "filename": "dettaglio-1.jpg",
-          "type": "dettaglio",
-          "order": 1
-        },
-        {
-          "url": "/images/materical/diavolo-catene/dettaglio-2.jpg",
-          "filename": "dettaglio-2.jpg",
-          "type": "dettaglio",
-          "order": 2
-        }
-      ]
-    },
-    "diavolo-dread": {
-      "cover": "/images/materical/diavolo-dread/cover.jpg",
-      "items": [
-        {
-          "url": "/images/materical/diavolo-dread/cover.jpg",
-          "filename": "cover.jpg",
-          "type": "cover"
-        },
-        {
-          "url": "/images/materical/diavolo-dread/profilo.jpg",
+          "url": "/images/materical/dreadful/profilo.jpg",
           "filename": "profilo.jpg",
           "type": "profilo"
         },
         {
-          "url": "/images/materical/diavolo-dread/full.jpg",
+          "url": "/images/materical/dreadful/full.jpg",
           "filename": "full.jpg",
           "type": "full"
         },
         {
-          "url": "/images/materical/diavolo-dread/dettaglio-1.jpg",
+          "url": "/images/materical/dreadful/dettaglio-1.jpg",
           "filename": "dettaglio-1.jpg",
           "type": "dettaglio",
           "order": 1
         },
         {
-          "url": "/images/materical/diavolo-dread/dettaglio-2.jpg",
+          "url": "/images/materical/dreadful/dettaglio-2.jpg",
           "filename": "dettaglio-2.jpg",
           "type": "dettaglio",
           "order": 2
@@ -135,6 +113,28 @@
         },
         {
           "url": "/images/materical/ereditarieta/dettaglio-2.jpg",
+          "filename": "dettaglio-2.jpg",
+          "type": "dettaglio",
+          "order": 2
+        }
+      ]
+    },
+    "free-evil": {
+      "cover": "/images/materical/free-evil/cover.jpg",
+      "items": [
+        {
+          "url": "/images/materical/free-evil/cover.jpg",
+          "filename": "cover.jpg",
+          "type": "cover"
+        },
+        {
+          "url": "/images/materical/free-evil/dettaglio-1.jpg",
+          "filename": "dettaglio-1.jpg",
+          "type": "dettaglio",
+          "order": 1
+        },
+        {
+          "url": "/images/materical/free-evil/dettaglio-2.jpg",
           "filename": "dettaglio-2.jpg",
           "type": "dettaglio",
           "order": 2
@@ -644,5 +644,5 @@
       ]
     }
   },
-  "_generatedAt": "2025-12-24T12:17:27.941Z"
+  "_generatedAt": "2025-12-24T12:42:51.075Z"
 }

@@ -1,7 +1,9 @@
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
+import { useRoute } from "vue-router";
 
 const STORAGE_KEY = "content-warning-accepted";
+const route = useRoute();
 
 const isVisible = ref(false);
 const ageConfirmed = ref(false);
@@ -9,10 +11,20 @@ const warningUnderstood = ref(false);
 
 const canEnter = computed(() => ageConfirmed.value && warningUnderstood.value);
 
+// Don't show modal on privacy page
+const isPrivacyPage = computed(() => route.path === "/privacy");
+
 onMounted(() => {
   const hasAccepted = localStorage.getItem(STORAGE_KEY);
-  if (!hasAccepted) {
+  if (!hasAccepted && !isPrivacyPage.value) {
     isVisible.value = true;
+  }
+});
+
+// Hide modal if user navigates to privacy page
+watch(isPrivacyPage, (newVal) => {
+  if (newVal && isVisible.value) {
+    isVisible.value = false;
   }
 });
 

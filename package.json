@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "build:manifest": "node tools/build-images-manifest.mjs",
+    "optimize:images": "node tools/optimize-images.mjs",
     "dev": "npm run build:manifest && vite",
     "prebuild": "npm run build:manifest",
     "build": "vite build",
@@ -23,6 +24,7 @@
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.2.1",
     "image-size": "^2.0.2",
+    "sharp": "^0.33.5",
     "vite": "^6.1.0",
     "vite-plugin-vue-devtools": "^7.7.2"
   }

@@ -34,6 +34,13 @@ const sortedImages = computed(() => {
   });
 });
 
+// Total media count (images + videos)
+const totalMediaCount = computed(() => {
+  const imageCount = sortedImages.value.length;
+  const videoCount = props.project?.videos?.length || 0;
+  return imageCount + videoCount;
+});
+
 function openGallery(clickedImage) {
   // Su mobile non apriamo la lightbox
   if (isMobile.value) return;
@@ -96,7 +103,12 @@ function openGallery(clickedImage) {
             <div class="sk-row"></div>
           </div>
 
-          <div v-else class="vd-grid">
+          <div
+            v-else
+            class="vd-grid"
+            :data-image-count="totalMediaCount <= 9 ? totalMediaCount : null"
+            :data-many-images="totalMediaCount > 9 ? 'true' : null"
+          >
             <!-- Videos -->
             <video
               v-for="(video, idx) in project?.videos || []"

@@ -68,6 +68,30 @@
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 1.5rem;
     width: 100%;
+
+    // Reduce gap when fewer images (< 4)
+    &[data-image-count="1"],
+    &[data-image-count="2"],
+    &[data-image-count="3"] {
+      gap: 1rem;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    }
+
+    // Reduce image size when many images (> 4)
+    &[data-image-count="5"],
+    &[data-image-count="6"],
+    &[data-image-count="7"],
+    &[data-image-count="8"],
+    &[data-image-count="9"] {
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1.2rem;
+    }
+
+    // Even more images (> 9)
+    &[data-many-images="true"] {
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1rem;
+    }
   }
 
   .vd-grid-image,

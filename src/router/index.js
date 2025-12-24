@@ -66,6 +66,12 @@ const rootName = (n) => String(n || "").split("-")[0];
 router.beforeEach((to, from, next) => {
   const ui = useUiStore();
 
+  if (from.name === undefined) {
+    ui.setCrossPageTransition(false);
+    next();
+    return;
+  }
+
   // Se navigazione verticale è stata preparata, assicurati che transizione sia OFF
   if (ui.isNavigatingVertically) {
     ui.setCrossPageTransition(false);

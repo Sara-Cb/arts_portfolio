@@ -74,8 +74,10 @@
   .vd-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-auto-rows: auto;
     gap: 1.5rem;
     width: 100%;
+    align-items: start;
 
     // Reduce gap when fewer images (< 4)
     &[data-image-count="1"],
@@ -106,7 +108,7 @@
   .vd-grid-video {
     width: 100%;
     height: auto;
-    object-fit: cover;
+    object-fit: contain;
     cursor: pointer;
     transition: transform 0.3s ease, opacity 0.3s ease;
     @include border("all", rgba($chocolate, 0.05));

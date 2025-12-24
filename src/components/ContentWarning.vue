@@ -18,7 +18,19 @@ onMounted(() => {
 
 function handleEnter() {
   if (!canEnter.value) return;
-  localStorage.setItem(STORAGE_KEY, "true");
+
+  // Track age gate acceptance (for analytics/compliance)
+  const acceptanceData = {
+    timestamp: new Date().toISOString(),
+    ageConfirmed: ageConfirmed.value,
+    warningUnderstood: warningUnderstood.value,
+  };
+
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(acceptanceData));
+
+  // Optional: Send to analytics if configured
+  // window.gtag?.('event', 'age_gate_accepted', { ...acceptanceData });
+
   isVisible.value = false;
 }
 </script>
@@ -58,6 +70,9 @@ function handleEnter() {
         </div>
 
         <div class="warning-footer">
+          <a href="/privacy" target="_blank" class="privacy-link">
+            Privacy Policy & Content Notice
+          </a>
           <button
             class="warning-button"
             :class="{ disabled: !canEnter }"
@@ -181,10 +196,24 @@ function handleEnter() {
 
 .warning-footer {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
   margin-top: 2rem;
   padding-top: 1.5rem;
   border-top: 1px solid rgba($ghost, 0.1);
+}
+
+.privacy-link {
+  color: rgba($ghost, 0.7);
+  text-decoration: none;
+  font-size: 0.85rem;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: $ghost;
+    text-decoration: underline;
+  }
 }
 
 .warning-button {

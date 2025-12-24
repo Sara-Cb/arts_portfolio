@@ -8,6 +8,7 @@ import MatericalView from "@/views/MatericalView.vue";
 import VisualView from "@/views/VisualView.vue";
 import PerformanceView from "@/views/PerformanceView.vue";
 import MusicView from "@/views/MusicView.vue";
+import PrivacyView from "@/views/PrivacyView.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -52,6 +53,9 @@ const router = createRouter({
       component: MusicView,
       props: true,
     },
+
+    // PRIVACY POLICY
+    { path: "/privacy", name: "privacy", component: PrivacyView },
 
     {
       path: "/:pathMatch(.*)*",

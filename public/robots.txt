@@ -1,0 +1,15 @@
+# Ræhm Portfolio - Mature Content (18+)
+# This website contains artistic nudity and mature themes
+
+User-agent: *
+Allow: /
+
+# Age-restricted content
+# This site is intended for adults only (18+)
+# Contains artistic works with nudity and mature themes
+
+# Sitemap
+Sitemap: https://yourdomain.com/sitemap.xml
+
+# Crawl-delay for respectful crawling
+Crawl-delay: 10

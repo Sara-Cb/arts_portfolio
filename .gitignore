@@ -13,10 +13,9 @@ dist
 dist-ssr
 coverage
 *.local
-.httaccess
-tools
-projects/_images-manifest.json
-claude.md
+.htaccess
+public/projects/_images-manifest.json
+CLAUDE.md
 
 
 /cypress/videos/
@@ -35,3 +34,5 @@ claude.md
 *.tsbuildinfo
 
 
+tools/
+.htaccess

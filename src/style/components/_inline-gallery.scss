@@ -5,7 +5,7 @@
 
 .inline-gallery {
   width: 100%;
-  height: 100%;
+  height: calc(100dvh - $header-size - $projects-navbar-height);
   display: flex;
   flex-direction: column;
 }
@@ -37,24 +37,24 @@
   transform: translate(-50%, -50%);
   display: flex;
   align-items: center;
-  gap: 1rem;
-  background: rgba($night, 0.7);
-  backdrop-filter: blur(8px);
-  padding: 1rem 1.5rem;
+  gap: 0.6rem;
+  background: rgba($night, 0.2);
+  backdrop-filter: blur(12px);
+  padding: 0.6rem 1rem;
   border-radius: 50px;
-  color: $ghost;
-  font-size: 1rem;
+  color: rgba($ghost, 0.7);
+  font-size: 0.8rem;
   pointer-events: none;
   z-index: 15;
 
   .hint-text {
-    font-weight: 500;
+    font-weight: 400;
     text-transform: lowercase;
   }
 
   .hint-arrow {
-    font-size: 1.2rem;
-    opacity: 0.8;
+    font-size: 0.9rem;
+    opacity: 0.6;
 
     &--left {
       animation: pulse-left 1.5s ease-in-out infinite;
@@ -193,31 +193,30 @@
 // Info panel (sotto l'immagine)
 .ig-info-panel {
   font-family: $font-family-base;
-  background: rgba($chocolate, 0.95);
-  backdrop-filter: blur(8px);
-  padding: 1.5rem 1rem;
+  background: rgba($chocolate, 0.05);
+  padding: clamp(0.9rem, 2vw, 1.5rem);
   color: $ghost;
   cursor: pointer;
-  border-top: 1px solid rgba($ghost, 0.1);
-
-  .info-materials {
-    margin: 0 0 1rem 0;
-    font-size: 0.9rem;
-    line-height: 1.4;
-
-    strong {
-      display: block;
-      margin-bottom: 0.25rem;
-      font-weight: 600;
-      text-transform: lowercase;
-    }
-  }
+  position: relative;
+  display: flex;
+  flex-direction: column;
 
   .info-description {
+    font-size: 0.95rem;
+    line-height: 1.45;
+    margin: 0 0 0.8rem 0;
+    order: 1;
+  }
+
+  .info-materials {
+    font-family: $font-family-heading;
+    font-size: 0.75rem;
+    font-weight: 300;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    opacity: 0.75;
+    order: 2;
     margin: 0;
-    font-size: 0.85rem;
-    line-height: 1.5;
-    opacity: 0.95;
   }
 }
 
@@ -232,13 +231,20 @@
   opacity: 0;
 }
 
-.info-slide-enter-active,
-.info-slide-leave-active {
-  transition: all 0.3s ease;
+.info-slide-enter-active {
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
-.info-slide-enter-from,
+.info-slide-leave-active {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.6, 1);
+}
+
+.info-slide-enter-from {
+  opacity: 0;
+  transform: translateY(100%);
+}
+
 .info-slide-leave-to {
   opacity: 0;
-  transform: translateY(-20px);
+  transform: translateY(100%);
 }

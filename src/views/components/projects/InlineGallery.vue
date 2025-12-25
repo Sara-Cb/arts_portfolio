@@ -17,21 +17,27 @@ const currentImage = computed(() => {
   return props.images[currentIndex.value];
 });
 
-// Touch swipe
-const touchStartX = ref(0);
-const touchEndX = ref(0);
+// Touch/Mouse swipe
+const startX = ref(0);
+const endX = ref(0);
+const isDragging = ref(false);
 const imageWrap = ref(null);
 
-function handleTouchStart(e) {
-  touchStartX.value = e.touches[0].clientX;
+function handleStart(e) {
+  isDragging.value = true;
+  startX.value = e.touches ? e.touches[0].clientX : e.clientX;
 }
 
-function handleTouchMove(e) {
-  touchEndX.value = e.touches[0].clientX;
+function handleMove(e) {
+  if (!isDragging.value) return;
+  endX.value = e.touches ? e.touches[0].clientX : e.clientX;
 }
 
-function handleTouchEnd() {
-  const diff = touchStartX.value - touchEndX.value;
+function handleEnd() {
+  if (!isDragging.value) return;
+  isDragging.value = false;
+
+  const diff = startX.value - endX.value;
   const threshold = 50; // minimo swipe di 50px
 
   if (Math.abs(diff) > threshold) {
@@ -49,8 +55,8 @@ function handleTouchEnd() {
     }
   }
 
-  touchStartX.value = 0;
-  touchEndX.value = 0;
+  startX.value = 0;
+  endX.value = 0;
 }
 
 function next() {
@@ -81,12 +87,20 @@ function toggleInfo() {
   showInfo.value = !showInfo.value;
 }
 
-// Auto-hide swipe hint dopo 2 secondi
+// Auto-hide swipe hint dopo 3 secondi, mostra solo la prima volta
 let hintTimeout;
 onMounted(() => {
-  hintTimeout = setTimeout(() => {
+  // Controlla se l'hint è già stato mostrato in questa sessione
+  const hintShown = sessionStorage.getItem('swipe-hint-shown');
+
+  if (hintShown) {
     showSwipeHint.value = false;
-  }, 2000);
+  } else {
+    sessionStorage.setItem('swipe-hint-shown', 'true');
+    hintTimeout = setTimeout(() => {
+      showSwipeHint.value = false;
+    }, 3000);
+  }
 });
 
 onBeforeUnmount(() => {
@@ -100,9 +114,13 @@ onBeforeUnmount(() => {
     <div
       ref="imageWrap"
       class="ig-image-wrap"
-      @touchstart="handleTouchStart"
-      @touchmove="handleTouchMove"
-      @touchend="handleTouchEnd"
+      @touchstart="handleStart"
+      @touchmove="handleMove"
+      @touchend="handleEnd"
+      @mousedown="handleStart"
+      @mousemove="handleMove"
+      @mouseup="handleEnd"
+      @mouseleave="handleEnd"
     >
       <img
         v-if="currentImage"
@@ -168,11 +186,11 @@ onBeforeUnmount(() => {
     <!-- Info panel (collapsible, sotto immagine) -->
     <Transition name="info-slide">
       <div v-if="showInfo" class="ig-info-panel" @click="toggleInfo">
-        <p v-if="projectMaterials" class="info-materials">
-          <strong>Materiali:</strong> {{ projectMaterials }}
-        </p>
         <p v-if="projectDescription" class="info-description">
           {{ projectDescription }}
+        </p>
+        <p v-if="projectMaterials" class="info-materials">
+          {{ projectMaterials }}
         </p>
       </div>
     </Transition>

@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, onBeforeUnmount, computed } from "vue";
+import { onMounted, onBeforeUnmount, computed, ref, watch } from "vue";
 import { useGalleryStore } from "@/stores/gallery";
 import { useEnvironmentStore } from "@/stores/environment";
 
@@ -7,6 +7,37 @@ const gallery = useGalleryStore();
 const env = useEnvironmentStore();
 
 const isMobile = computed(() => env.width < 576);
+
+// Drag/Swipe support
+const startX = ref(0);
+const endX = ref(0);
+const isDragging = ref(false);
+
+function handleStart(e) {
+  isDragging.value = true;
+  startX.value = e.touches ? e.touches[0].clientX : e.clientX;
+}
+
+function handleMove(e) {
+  if (!isDragging.value) return;
+  endX.value = e.touches ? e.touches[0].clientX : e.clientX;
+}
+
+function handleEnd() {
+  if (!isDragging.value) return;
+  isDragging.value = false;
+
+  const diff = startX.value - endX.value;
+  const threshold = 50;
+
+  if (Math.abs(diff) > threshold) {
+    if (diff > 0) gallery.next();
+    else gallery.prev();
+  }
+
+  startX.value = 0;
+  endX.value = 0;
+}
 
 // Keyboard navigation
 function handleKeydown(e) {
@@ -17,7 +48,7 @@ function handleKeydown(e) {
   else if (e.key === "ArrowRight") gallery.next();
 }
 
-// Click navigation areas (left 40%, right 40%, center 20%)
+// Click navigation areas (left 25%, center 50%, right 25%)
 function handleImageClick(e) {
   if (isMobile.value) return; // mobile usa solo frecce
 
@@ -26,9 +57,17 @@ function handleImageClick(e) {
   const width = rect.width;
   const zone = x / width;
 
-  if (zone < 0.4) gallery.prev();
-  else if (zone > 0.6) gallery.next();
+  if (zone < 0.25) gallery.prev();
+  else if (zone > 0.75) gallery.next();
+  else gallery.closeGallery(); // center zone closes
 }
+
+// Auto-close on resize to mobile
+watch(() => env.width, (newWidth, oldWidth) => {
+  if (gallery.isOpen && oldWidth >= 576 && newWidth < 576) {
+    gallery.closeGallery();
+  }
+});
 
 onMounted(() => {
   window.addEventListener("keydown", handleKeydown);
@@ -76,7 +115,17 @@ onBeforeUnmount(() => {
           </div>
 
           <!-- Image container -->
-          <div class="gallery-image-wrap" @click="handleImageClick">
+          <div
+            class="gallery-image-wrap"
+            @click="handleImageClick"
+            @touchstart="handleStart"
+            @touchmove="handleMove"
+            @touchend="handleEnd"
+            @mousedown="handleStart"
+            @mousemove="handleMove"
+            @mouseup="handleEnd"
+            @mouseleave="handleEnd"
+          >
             <img
               v-if="gallery.currentImage"
               v-image-loader

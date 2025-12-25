@@ -76,13 +76,13 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
     </div>
     <footer class="footer">
       <div class="contentContainer">
-        <span>© 2025 Ræhm. All rights reserved.</span>
-        <span class="madeBy">
-          Made with love by
-          <a class="sara" href="https://github.com/Sara-Cb/" target="_blank"
-            >sara.cb</a
-          >
-        </span>
+        <span
+          >© 2025 Marco Campobasso.
+          <small class="property">
+            All content is protected by intellectual property rights.</small
+          ></span
+        >
+        <a href="/privacy-policy">Privacy Policy</a>
       </div>
     </footer>
   </section>

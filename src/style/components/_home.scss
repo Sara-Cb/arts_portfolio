@@ -362,7 +362,7 @@
     }
 
     footer {
-      @include dimensions(100%, 3rem);
+      @include dimensions(100%, 5rem);
       background-color: $chocolate;
       color: $ghost;
       padding: 1.2rem;
@@ -371,9 +371,21 @@
 
       .contentContainer {
         @include flexRowSpaceBetween;
+        align-items: center;
+        gap: 1rem;
 
-        .madeBy {
-          text-align: right;
+        .property {
+          display: none;
+        }
+
+        a {
+          color: $ghost;
+          text-decoration: none;
+          transition: opacity 0.3s ease;
+
+          &:hover {
+            opacity: 0.7;
+          }
         }
       }
     }
@@ -424,8 +436,12 @@
       }
 
       footer {
+        @include dimensions(100%, 3rem);
         padding: 1rem 3rem;
         font-size: 0.8rem;
+        .contentContainer .property {
+          display: inline-block;
+        }
       }
     }
   }

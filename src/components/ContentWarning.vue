@@ -6,10 +6,9 @@ const STORAGE_KEY = "content-warning-accepted";
 const route = useRoute();
 
 const isVisible = ref(false);
-const ageConfirmed = ref(false);
-const warningUnderstood = ref(false);
+const acceptedConsent = ref(false);
 
-const canEnter = computed(() => ageConfirmed.value && warningUnderstood.value);
+const canEnter = computed(() => acceptedConsent.value);
 
 // Don't show modal on privacy page
 const isPrivacyPage = computed(() => route.path === "/privacy");
@@ -34,8 +33,7 @@ function handleEnter() {
   // Track age gate acceptance (for analytics/compliance)
   const acceptanceData = {
     timestamp: new Date().toISOString(),
-    ageConfirmed: ageConfirmed.value,
-    warningUnderstood: warningUnderstood.value,
+    accepted: acceptedConsent.value,
   };
 
   localStorage.setItem(STORAGE_KEY, JSON.stringify(acceptanceData));
@@ -71,12 +69,8 @@ function handleEnter() {
 
           <div class="warning-checkboxes">
             <label class="warning-checkbox">
-              <input type="checkbox" v-model="ageConfirmed" />
-              <span>I am 18 years of age or older</span>
-            </label>
-            <label class="warning-checkbox">
-              <input type="checkbox" v-model="warningUnderstood" />
-              <span>I understand and accept this warning</span>
+              <input type="checkbox" v-model="acceptedConsent" />
+              <span>I am 18 years of age or older and I understand and accept this warning</span>
             </label>
           </div>
         </div>
@@ -125,8 +119,11 @@ function handleEnter() {
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
 
   @media (max-width: 575px) {
-    padding: 1.5rem;
-    max-width: 95%;
+    padding: 1.2rem;
+    max-width: 100%;
+    width: 100%;
+    margin: 0;
+    border-radius: 0;
   }
 }
 
@@ -156,6 +153,11 @@ function handleEnter() {
   line-height: 1.6;
   color: rgba($ghost, 0.9);
   margin: 0 0 1rem 0;
+
+  @media (max-width: 575px) {
+    font-size: 0.85rem;
+    line-height: 1.5;
+  }
 }
 
 .warning-list {
@@ -167,6 +169,11 @@ function handleEnter() {
     font-size: 0.95rem;
     line-height: 1.8;
     color: rgba($ghost, 0.85);
+
+    @media (max-width: 575px) {
+      font-size: 0.8rem;
+      line-height: 1.6;
+    }
   }
 }
 
@@ -176,6 +183,12 @@ function handleEnter() {
   border-left: 3px solid rgba($ghost, 0.3);
   padding-left: 1rem;
   margin-top: 1.5rem;
+
+  @media (max-width: 575px) {
+    font-size: 0.85rem;
+    line-height: 1.5;
+    padding-left: 0.75rem;
+  }
 }
 
 .warning-checkboxes {
@@ -194,11 +207,24 @@ function handleEnter() {
   color: rgba($ghost, 0.9);
   font-size: 0.95rem;
 
+  @media (max-width: 575px) {
+    font-size: 0.8rem;
+    gap: 0.6rem;
+    align-items: flex-start;
+  }
+
   input[type="checkbox"] {
     width: 20px;
     height: 20px;
     cursor: pointer;
     accent-color: $ghost;
+    flex-shrink: 0;
+
+    @media (max-width: 575px) {
+      width: 18px;
+      height: 18px;
+      margin-top: 0.1rem;
+    }
   }
 
   &:hover {

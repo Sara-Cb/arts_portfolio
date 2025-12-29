@@ -11,10 +11,9 @@ node_modules
 .DS_Store
 dist
 dist-ssr
+tools
 coverage
 *.local
-.htaccess
-public/projects/_images-manifest.json
 CLAUDE.md
 
 
@@ -33,6 +32,7 @@ CLAUDE.md
 
 *.tsbuildinfo
 
-
-tools/
+# why not ignore?????
+tools
 .htaccess
+public/projects/_images-manifest.json

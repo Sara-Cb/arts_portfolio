@@ -6,15 +6,32 @@
 .page#home {
   #hero {
     padding: 0;
-    @include relative;
+    position: relative;
+    min-height: 100% !important;
+    height: 100% !important;
+    isolation: isolate;
 
-    .overlay,
+    .overlay {
+      @include absolute(0, 0, 0, 0);
+      width: 100%;
+      height: 100%;
+      background-color: rgba($night, 0.65);
+      z-index: 1;
+      pointer-events: none;
+      backface-visibility: hidden;
+      perspective: 1000px;
+    }
+
     .video {
-      @include absolute;
-      @include fullDimensions;
+      @include absolute(0, 0, 0, 0);
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      transform: translateZ(0);
     }
 
     .contentContainer {
+      position: relative;
       z-index: 2;
       gap: 2rem;
       @include flexColumn;
@@ -55,30 +72,21 @@
       }
     }
 
-    .overlay {
-      background-color: $night-trans-50;
-      z-index: 1;
-    }
-
     .video {
-      overflow: hidden;
-      z-index: 0;
       opacity: 0;
       transition: opacity 0.6s ease-in;
-      will-change: opacity;
+      overflow: hidden;
 
       &.loaded {
         opacity: 1;
       }
 
       .video-bg {
-        @include fullDimensions;
+        width: 100%;
+        height: 100%;
         object-fit: cover;
         object-position: center;
         pointer-events: none;
-        will-change: transform;
-        transform: translateZ(0);
-        backface-visibility: hidden;
       }
     }
 
@@ -227,7 +235,7 @@
       .category {
         .text {
           @include flexColumnLeft;
-          background-color: $night-trans-10;
+          background-color: rgba($night, 0.7);
 
           .title {
             font-size: 1.8rem;
@@ -250,7 +258,7 @@
           }
 
           &:hover {
-            background-color: $night-trans-50;
+            background-color: rgba($night, 0.3);
             transition: background-color 1s ease-out;
 
             .cta {
@@ -260,9 +268,11 @@
             }
           }
         }
-
-        &.materical .text:hover {
-          background-color: $night-trans-30;
+        &.materical .text {
+          background-color: rgba($night, 0.9);
+          &:hover {
+            background-color: rgba($night, 0.5);
+          }
         }
       }
     }

@@ -12,7 +12,7 @@ const route = useRoute();
 
 ui.setSectionList("rahem", [
   { name: "rahem" },
-  { name: "projects" },
+  { name: "works" },
   { name: "visit-card" },
 ]);
 
@@ -29,14 +29,14 @@ onMounted(async () => {
   await nextTick();
 
   const hint = sessionStorage.getItem("homeInstantAlign");
-  if (hint === "projects" || hint === "visit-card") {
+  if (hint === "works" || hint === "visit-card") {
     const el = document.querySelector(`.page#home > .snapSection#${hint}`);
     el?.scrollIntoView({ block: "start", behavior: "auto" });
     sessionStorage.removeItem("homeInstantAlign");
     return;
   }
 
-  if (route.name === "projects" || route.name === "visit-card") {
+  if (route.name === "works" || route.name === "visit-card") {
     const el = document.querySelector(
       `.page#home > .snapSection#${route.name}`
     );
@@ -50,7 +50,7 @@ onMounted(async () => {
     <section class="snapSection" id="rahem" data-route="rahem">
       <Hero />
     </section>
-    <section class="snapSection" id="projects" data-route="projects">
+    <section class="snapSection" id="works" data-route="works">
       <Projects />
     </section>
     <section class="snapSection" id="visit-card" data-route="visit-card">

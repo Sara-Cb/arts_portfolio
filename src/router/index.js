@@ -14,7 +14,7 @@ const router = createRouter({
     // ========== HOME ==========
     // Tre route verticali gestite dalla stessa view
     { path: "/", name: "rahem", component: HomeView },
-    { path: "/projects", name: "projects", component: HomeView },
+    { path: "/works", name: "works", component: HomeView },
     { path: "/visit-card", name: "visit-card", component: HomeView },
 
     // ========== MATERICAL ==========

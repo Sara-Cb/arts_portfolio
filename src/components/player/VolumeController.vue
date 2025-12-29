@@ -112,6 +112,11 @@ onBeforeUnmount(() => {
           : ['fas', 'volume-high']
       "
       @click="toggleMute"
+      role="button"
+      tabindex="0"
+      :aria-label="player.volume === 0 ? 'Unmute' : 'Mute'"
+      @keydown.enter="toggleMute"
+      @keydown.space.prevent="toggleMute"
     />
   </div>
 
@@ -126,6 +131,11 @@ onBeforeUnmount(() => {
           : ['fas', 'volume-high']
       "
       @click="toggleMute"
+      role="button"
+      tabindex="0"
+      :aria-label="player.volume === 0 ? 'Unmute' : 'Mute'"
+      @keydown.enter="toggleMute"
+      @keydown.space.prevent="toggleMute"
     />
     <div class="volumeBar">
       <div

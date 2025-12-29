@@ -38,9 +38,11 @@ function onVideoLoaded() {
   player.setVideoLoaded(true);
 }
 
-function startPlayer() {
-  if (player.volume === 0) {
-    player.setVolume(0.4);
+function togglePlayback() {
+  if (player.isPlaying) {
+    player.setVolume(0);
+  } else {
+    player.setVolume(player.volume === 0 ? 0.4 : player.volume);
   }
 }
 
@@ -96,8 +98,13 @@ watch(showPlayer, (open) => {
         <div class="current">
           <div
             class="waves"
-            @click="startPlayer"
+            @click="togglePlayback"
             :class="{ paused: player.isPlaying === false }"
+            role="button"
+            tabindex="0"
+            :aria-label="player.isPlaying ? 'Pause' : 'Play'"
+            @keydown.enter="togglePlayback"
+            @keydown.space.prevent="togglePlayback"
           >
             <div class="wave" v-for="i in 5" :key="i"></div>
           </div>

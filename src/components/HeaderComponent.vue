@@ -79,11 +79,11 @@ const isActive = (sectionName) => {
           <li>
             <button
               class="navLink"
-              :class="{ active: isActive('projects') }"
+              :class="{ active: isActive('works') }"
               type="button"
-              @click="goHomeSection('projects')"
-              aria-label="Projects"
-              :aria-current="isActive('projects') ? 'page' : undefined"
+              @click="goHomeSection('works')"
+              aria-label="Works"
+              :aria-current="isActive('works') ? 'page' : undefined"
             >
               <FontAwesomeIcon :icon="['fas', 'folder']" />
             </button>

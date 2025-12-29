@@ -124,6 +124,7 @@ header {
       @include flexRow;
       @include dimensions(100%, 4rem);
       gap: 0.6rem;
+      cursor: pointer;
 
       .wave {
         width: 0.2rem;
@@ -202,6 +203,7 @@ header {
 
     svg {
       @include dimensions(1.5rem, 1.5rem);
+      cursor: pointer;
     }
 
     .volumeBar {

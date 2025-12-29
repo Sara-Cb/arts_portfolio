@@ -59,21 +59,47 @@ header {
 
 .player {
   background-color: $night;
+  animation: playerSlideIn 0.3s ease-out;
+  will-change: transform, opacity;
+  z-index: 300;
   @include absolute($header-size, 0, 0, 0);
   @include flexColumnTop;
   @include fullPage;
+}
 
+@keyframes playerSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.player {
   .video {
     @include absolute;
     @include fullDimensions;
     overflow: hidden;
     z-index: 0;
+    opacity: 0;
+    transition: opacity 0.6s ease-in;
+    will-change: opacity;
+
+    &.loaded {
+      opacity: 1;
+    }
 
     .video-bg {
       @include fullDimensions;
       object-fit: cover;
       object-position: center;
       pointer-events: none;
+      will-change: transform;
+      transform: translateZ(0);
+      backface-visibility: hidden;
     }
   }
 
@@ -82,17 +108,21 @@ header {
     @include flexColumn;
     gap: 1rem;
     padding-bottom: 5rem;
-    background-color: $night-trans-30;
+    background-color: rgba(18, 18, 18, 0.65);
+    backdrop-filter: blur(2px);
+    position: relative;
+    z-index: 1;
   }
 
   .current {
     @include dimensions(100%, auto);
     @include flexColumn;
     gap: 2rem;
+    padding: 1rem;
 
     .waves {
       @include flexRow;
-      @include dimensions(100%, 4em);
+      @include dimensions(100%, 4rem);
       gap: 0.6rem;
 
       .wave {
@@ -137,7 +167,6 @@ header {
     }
 
     @keyframes wavePulse {
-
       0%,
       100% {
         transform: scaleY(1);
@@ -153,8 +182,10 @@ header {
       text-align: center;
       color: $ghost;
       padding: 0.5rem 0;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
       @include border("bottom");
-      border-image: linear-gradient(to right, transparent, $ghost, transparent) 1;
+      border-image: linear-gradient(to right, transparent, $ghost, transparent)
+        1;
     }
 
     .controls {
@@ -210,33 +241,47 @@ header {
   .trackList {
     @include dimensions(100%, auto);
     @include flexColumn;
-    padding: 1rem;
+    padding: 1rem 1.5rem;
+    flex: 1;
+    -webkit-overflow-scrolling: touch;
 
     .next {
       font-size: 0.7rem;
       color: $cool;
       margin-bottom: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      opacity: 0.8;
     }
 
     .list {
-      @include fullDimensions;
+      @include dimensions(100%, 100%);
       @include flexColumn;
       gap: 1rem;
+      overflow-y: auto;
 
       .track {
         color: $cool;
         gap: 0.6rem;
-        padding: 0.2rem 0;
+        padding: 0.5rem 0;
         @include border("bottom");
-        border-image: linear-gradient(to right, transparent, $cool, transparent) 1;
+        border-image: linear-gradient(to right, transparent, $cool, transparent)
+          1;
         cursor: pointer;
+        transition: all 0.3s ease;
+        text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
 
-        &:hover {
+        &:hover,
+        &:active {
           color: $ghost;
-          border-image: linear-gradient(to right,
+          border-image: linear-gradient(
+              to right,
               transparent,
               $ghost,
-              transparent) 1;
+              transparent
+            )
+            1;
+          transform: translateX(4px);
         }
       }
     }

@@ -5,6 +5,7 @@ import { useRoute, useRouter } from "vue-router";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { useEnvironmentStore } from "@/stores/environment";
 import { useUiStore } from "@/stores/ui";
+import { usePlayerStore } from "@/stores/player";
 import { useNavigator } from "@/composables/useNavigator";
 import Logo from "@/assets/logo/Logo.vue";
 import Player from "@/components/player/Player.vue";
@@ -13,6 +14,7 @@ const { isMobile } = storeToRefs(useEnvironmentStore());
 const route = useRoute();
 const router = useRouter();
 const ui = useUiStore();
+const playerStore = usePlayerStore();
 const { navigateTo } = useNavigator();
 
 const pageKey = computed(
@@ -20,6 +22,11 @@ const pageKey = computed(
 );
 
 async function goHomeSection(name) {
+  // Close player if open on mobile before navigating
+  if (isMobile.value && playerStore.showPlayer) {
+    playerStore.closePlayer();
+  }
+
   if (pageKey.value === "rahem") {
     // Navigazione verticale dentro home: usa replace per history pulita
     ui.prepareVerticalNavigation();

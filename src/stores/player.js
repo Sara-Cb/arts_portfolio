@@ -28,6 +28,8 @@ export const usePlayerStore = defineStore("player", {
         track: new Audio(weep),
       },
     },
+    isVideoLoaded: false,
+    showPlayer: false,
   }),
 
   actions: {
@@ -87,6 +89,22 @@ export const usePlayerStore = defineStore("player", {
       } else {
         this.playCurrent();
       }
+    },
+
+    togglePlayer() {
+      this.showPlayer = !this.showPlayer;
+    },
+
+    closePlayer() {
+      this.showPlayer = false;
+    },
+
+    openPlayer() {
+      this.showPlayer = true;
+    },
+
+    setVideoLoaded(loaded) {
+      this.isVideoLoaded = loaded;
     },
   },
 });

@@ -63,14 +63,18 @@ function handleEnter() {
             <li>Mature and sensitive content</li>
           </ul>
           <p class="warning-text warning-emphasis">
-            By entering, you confirm that you understand the nature of these works
-            and are of legal age to view such content in your jurisdiction.
+            By entering, you confirm that you understand the nature of these
+            works and are of legal age to view such content in your
+            jurisdiction.
           </p>
 
           <div class="warning-checkboxes">
             <label class="warning-checkbox">
               <input type="checkbox" v-model="acceptedConsent" />
-              <span>I am 18 years of age or older and I understand and accept this warning</span>
+              <span
+                >I am 18 years of age or older and I understand and accept this
+                warning</span
+              >
             </label>
           </div>
         </div>
@@ -100,7 +104,7 @@ function handleEnter() {
 .content-warning-overlay {
   position: fixed;
   inset: 0;
-  z-index: 10000;
+  z-index: 500;
   background: rgba(0, 0, 0, 0.95);
   backdrop-filter: blur(10px);
   display: flex;

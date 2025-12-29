@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted, watch } from "vue";
+import { computed, onMounted, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { usePlayerStore } from "@/stores/player";
 import { useUiStore } from "@/stores/ui";
@@ -11,8 +11,7 @@ const player = usePlayerStore();
 const ui = useUiStore();
 
 const { isMobile } = storeToRefs(useEnvironmentStore());
-
-const showPlayer = ref(false);
+const { showPlayer, isVideoLoaded } = storeToRefs(player);
 
 const nextTracks = computed(() => {
   const trackEntries = Object.entries(player.audioMap);
@@ -31,8 +30,12 @@ const nextTracks = computed(() => {
 
 function togglePlayer() {
   if (isMobile.value) {
-    showPlayer.value = !showPlayer.value;
+    player.togglePlayer();
   }
+}
+
+function onVideoLoaded() {
+  player.setVideoLoaded(true);
 }
 
 onMounted(() => {
@@ -60,14 +63,24 @@ watch(showPlayer, (open) => {
     @mouseenter="!isMobile ? (showPlayer = true) : null"
     @click="togglePlayer"
   >
-    <FontAwesomeIcon :icon="['fas', 'compact-disc']" />
+    <FontAwesomeIcon
+      :icon="isMobile && showPlayer ? ['fas', 'xmark'] : ['fas', 'compact-disc']"
+    />
   </div>
 
   <Teleport to="#app">
     <!-- Mobile view -->
     <div class="player" v-if="isMobile && showPlayer">
-      <div class="video">
-        <video autoplay muted loop playsinline class="video-bg">
+      <div class="video" :class="{ loaded: isVideoLoaded }">
+        <video
+          autoplay
+          muted
+          loop
+          playsinline
+          preload="auto"
+          class="video-bg"
+          @loadeddata="onVideoLoaded"
+        >
           <source src="@/assets/media/video/player.mp4" type="video/mp4" />
         </video>
       </div>
@@ -86,7 +99,7 @@ watch(showPlayer, (open) => {
           <ul class="list">
             <li
               class="track"
-              v-for="([key, data], i) in nextTracks"
+              v-for="[key, data] in nextTracks"
               :key="key"
               :class="{ active: player.currentTrack === key }"
               @click="player.selectTrack(key)"
@@ -95,13 +108,16 @@ watch(showPlayer, (open) => {
             </li>
           </ul>
         </div>
-        <div class="socials">
+        <!-- Spotify links temporarily hidden - will be re-enabled later -->
+        <!-- <div class="socials">
           <a
             class="spotify"
             href="https://open.spotify.com/intl-it/artist/6ivgRDsZOfEQ8z287GAsF1?si=3GK1cbiySaKik1wrHQSndw"
             target="_blank"
             >Spotify</a
           >
+        </div> -->
+        <div class="socials">
           <a
             class="youtube"
             href="https://youtube.com/@ex.raehmm?si=51oFIqEIh9faCtA0"
@@ -136,11 +152,18 @@ watch(showPlayer, (open) => {
           />
           <span>{{ data.title }}</span>
         </li>
-        <li class="spotify">
+        <!-- <li class="spotify">
           <a
             href="https://open.spotify.com/intl-it/artist/6ivgRDsZOfEQ8z287GAsF1?si=3GK1cbiySaKik1wrHQSndw"
             target="_blank"
             >→ see more on Spotify</a
+          >
+        </li> -->
+        <li class="youtube">
+          <a
+            href="https://youtube.com/@ex.raehmm?si=51oFIqEIh9faCtA0"
+            target="_blank"
+            >→ see more on YouTube</a
           >
         </li>
       </ul>

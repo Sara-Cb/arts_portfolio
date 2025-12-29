@@ -38,7 +38,7 @@ header {
   padding: 0 1rem;
   background-color: $background-color;
   @include border("bottom");
-  z-index: 100;
+  z-index: 200;
 }
 
 main {

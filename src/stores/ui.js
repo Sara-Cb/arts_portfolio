@@ -1,8 +1,17 @@
-// src/stores/ui.js
+/**
+ * Store UI: gestione stato interfaccia, transizioni, navigazione.
+ *
+ * Coordina:
+ * - Ordine e direzione transizioni orizzontali tra pagine
+ * - Mapping route → page per calcolo automatico direzione slide
+ * - Stato snap-scroll (disabilitato quando player aperto)
+ * - Preparazione navigazione verticale (no history) vs orizzontale (con transizioni)
+ */
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 
 export const useUiStore = defineStore("ui", () => {
+  // ========== PAGINE E TRANSIZIONI ORIZZONTALI ==========
   const pageOrder = ref([
     "rahem",
     "materical",
@@ -19,6 +28,9 @@ export const useUiStore = defineStore("ui", () => {
   const setCrossPageTransition = (flag) =>
     (isCrossPageTransition.value = !!flag);
 
+  // ========== SEZIONI E MAPPING ROUTE → PAGE ==========
+  // Ogni pagina (rahem, materical, visual) può avere N sezioni verticali
+  // sectionMap[pageKey] = [{name, params}, ...] descrive le route di quella pagina
   const sectionMap = ref({});
   const setSectionList = (page, list) => {
     sectionMap.value[page] = Array.isArray(list) ? list : [];
@@ -28,6 +40,8 @@ export const useUiStore = defineStore("ui", () => {
     delete sectionMap.value[page];
   };
 
+  // ========== SNAP SCROLL E PLAYER ==========
+  // Snap-scroll disabilitato quando player è aperto o quando lockato manualmente
   const isPlayerOpen = ref(false);
   const isSnapLocked = ref(false);
   const snapScrollEnabled = computed(
@@ -38,21 +52,23 @@ export const useUiStore = defineStore("ui", () => {
   const lockSnap = () => (isSnapLocked.value = true);
   const unlockSnap = () => (isSnapLocked.value = false);
 
-  // Flag per navigazione verticale (non aggiunge alla history)
+  // ========== NAVIGAZIONE VERTICALE ==========
+  // Flag temporaneo (100ms) per indicare navigazione verticale in corso
+  // Impedisce attivazione transizioni orizzontali durante scroll interno pagina
   const isNavigatingVertically = ref(false);
 
-  // Metodo centralizzato per navigazione verticale
-  // Usa replace per non inquinare history
   function prepareVerticalNavigation() {
     isNavigatingVertically.value = true;
     setCrossPageTransition(false);
-    // Auto-reset dopo 100ms
     setTimeout(() => {
       isNavigatingVertically.value = false;
     }, 100);
   }
 
-  // Metodo centralizzato per calcolo direzione orizzontale
+  // ========== NAVIGAZIONE ORIZZONTALE ==========
+  // Calcola direzione slide confrontando indici pagine from/to
+  // Direzione "left" = pagina entra da destra (indice aumenta)
+  // Direzione "right" = pagina entra da sinistra (indice diminuisce)
   function prepareHorizontalNavigation(fromName, fromParams, toName, toParams) {
     const fromKey = findPageKeyForRoute(fromName, fromParams);
     const toKey = findPageKeyForRoute(toName, toParams);
@@ -60,7 +76,6 @@ export const useUiStore = defineStore("ui", () => {
     if (fromKey && toKey && fromKey !== toKey) {
       const fi = pageIndexOf(fromKey);
       const ti = pageIndexOf(toKey);
-      // ti > fi = vai a destra, quindi slide da right (elemento entra da destra)
       setHorizontalDirection(ti > fi ? "left" : "right");
       setCrossPageTransition(true);
     } else {
@@ -68,6 +83,8 @@ export const useUiStore = defineStore("ui", () => {
     }
   }
 
+  // Trova page key cercando in sectionMap quale lista contiene la route data
+  // Fallback: usa primo segmento del route name (es. "materical-project" → "materical")
   function findPageKeyForRoute(name, params = {}) {
     const sameParams = (a = {}, b = {}) => {
       const ak = Object.keys(a).sort(),

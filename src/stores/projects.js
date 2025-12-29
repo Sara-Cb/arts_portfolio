@@ -1,22 +1,31 @@
-// src/stores/projects.js
+/**
+ * Store Projects: caricamento e gestione progetti da JSON + manifest immagini.
+ *
+ * Pipeline:
+ * 1. Fetch JSON progetti per categoria (materical.json, visual.json)
+ * 2. Normalizzazione dati: slugify, sort per data, validazione duplicati
+ * 3. Idratazione gallery da manifest generato build-time (lib/gallery.js)
+ * 4. Indicizzazione per categoria e slug per accesso rapido
+ *
+ * Manifest immagini: generato da build-images-manifest.mjs, contiene dimensioni/metadata
+ * Cache-bust tramite __BUILD_TIME__ per forzare reload manifest post-deploy
+ */
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 import { attachGalleriesToProjects, getProjectGallery } from "@/lib/gallery";
 
 export const useProjectsStore = defineStore("projects", () => {
-  // stato
+  // ========== STATO ==========
   const loaded = ref(false);
   const loading = ref(false);
   const error = ref(null);
 
-  // dati
   const byCategory = ref({ materical: [], visual: [] });
   const indexBySlug = ref({ materical: new Map(), visual: new Map() });
 
-  // base url
   const BASE = (import.meta.env.BASE_URL || "/").replace(/\/+$/, "");
 
-  // utils minime
+  // ========== UTILITIES ==========
   const slugify = (s = "") =>
     String(s)
       .trim()
@@ -61,7 +70,9 @@ export const useProjectsStore = defineStore("projects", () => {
     return res.json();
   }
 
-  // normalizzazione progetto (senza imgs)
+  // ========== NORMALIZZAZIONE PROGETTI ==========
+  // Converte dati grezzi JSON in formato unificato
+  // Gallery.items idratato successivamente da attachGalleriesToProjects
   const normalizeProject = (raw, category) => {
     const id = raw.id ? slugify(raw.id) : slugify(raw.title || "");
     const coverFromJson = resolveCoverSrc(category, id, raw.cover);
@@ -77,11 +88,12 @@ export const useProjectsStore = defineStore("projects", () => {
       videos: Array.isArray(raw.videos) ? raw.videos : [],
       description: raw.description || raw.desc || "",
       ...raw,
-      gallery: { cover: coverFromJson || null, items: [] }, // idratazione successiva
+      gallery: { cover: coverFromJson || null, items: [] },
     };
   };
 
-  // caricare e indicizzare
+  // ========== CARICAMENTO CATEGORIA ==========
+  // Fetch JSON, normalizza, verifica duplicati, sort per data (desc), indicizza
   const loadCategory = async (category, jsonPath) => {
     const data = await fetchJsonSafe(jsonPath);
     if (!Array.isArray(data))
@@ -107,7 +119,8 @@ export const useProjectsStore = defineStore("projects", () => {
     indexBySlug.value[category] = new Map(normalized.map((p) => [p.slug, p]));
   };
 
-  // load complessivo
+  // ========== LOAD COMPLESSIVO ==========
+  // Carica tutte le categorie in parallelo, poi idrata gallery da manifest
   async function ensureLoaded() {
     if (loaded.value || loading.value) return;
     loading.value = true;
@@ -117,7 +130,6 @@ export const useProjectsStore = defineStore("projects", () => {
         loadCategory("materical", "projects/materical.json"),
         loadCategory("visual", "projects/visual.json"),
       ]);
-      // idrata le gallery (usa helper; può includere width/height dal manifest)
       await attachGalleriesToProjects(byCategory.value, {
         base: BASE,
         buildTimeVar:
@@ -132,7 +144,7 @@ export const useProjectsStore = defineStore("projects", () => {
     }
   }
 
-  // getters
+  // ========== GETTERS ==========
   const all = computed(() => [
     ...byCategory.value.materical,
     ...byCategory.value.visual,
@@ -149,7 +161,6 @@ export const useProjectsStore = defineStore("projects", () => {
   const getMaterical = (slug) => getOne("materical", slug);
   const getVisual = (slug) => getOne("visual", slug);
 
-  // export
   return {
     loaded,
     loading,
@@ -162,7 +173,6 @@ export const useProjectsStore = defineStore("projects", () => {
     getOne,
     getMaterical,
     getVisual,
-    // pass-through utile se vuoi ottenere gallery “on demand”
     getProjectGallery: (category, id, title) =>
       getProjectGallery(category, id, title, {
         base: BASE,

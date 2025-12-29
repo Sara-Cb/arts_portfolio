@@ -1,9 +1,24 @@
-// helper unico per leggere il manifest immagini, costruire alt,
-// idratare i progetti con gallery e (opzionale) misurare dimensioni runtime
+/**
+ * Gallery: caricamento manifest immagini e idratazione gallery progetti.
+ *
+ * Manifest immagini:
+ * - Generato build-time da build-images-manifest.mjs
+ * - Scansiona public/images/{category}/{projectId}/
+ * - Estrae dimensioni width/height con image-size package
+ * - Struttura: {category: {projectId: {cover, items: [{url, type, width, height}]}}}
+ *
+ * Idratazione progetti:
+ * - Aggiunge gallery.items[] con dimensioni/ratio/orientation a ogni progetto
+ * - Calcola orientation da ratio (landscape ≥1.15, portrait ≤0.85, square default)
+ * - Genera alt text descrittivi per accessibilità
+ *
+ * Cache-bust: usa __BUILD_TIME__ per forzare reload manifest post-deploy
+ */
 
 let _manifestCache = null;
 
-/** leggere il manifest con cache in memoria */
+// ========== MANIFEST LOADING ==========
+// Carica manifest con cache in-memory, cache-bust query param da buildTimeVar
 export async function getImagesManifest(base = "/", buildTimeVar) {
   if (_manifestCache) return _manifestCache;
   const baseClean = (base || "/").replace(/\/+$/, "");
@@ -15,7 +30,8 @@ export async function getImagesManifest(base = "/", buildTimeVar) {
   return _manifestCache;
 }
 
-/** generare alt coerenti in base al tipo */
+// ========== ALT TEXT GENERATION ==========
+// Genera testo alternativo descrittivo in base a tipo immagine per accessibilità
 export function buildAlt(title, item) {
   switch (item.type) {
     case "cover":
@@ -30,6 +46,8 @@ export function buildAlt(title, item) {
       return title || "";
   }
 }
+
+// Determina orientamento da aspect ratio
 function orientationFromRatio(ratio) {
   if (!ratio) return "square";
   if (ratio >= 1.15) return "landscape";
@@ -37,6 +55,9 @@ function orientationFromRatio(ratio) {
   return "square";
 }
 
+// ========== IDRATAZIONE PROGETTI ==========
+// Unisce dati progetti da JSON con metadata immagini da manifest
+// Aggiunge gallery.items[] completi di width/height/ratio/orientation/alt
 export async function attachGalleriesToProjects(
   byCategory,
   { base = "/", buildTimeVar } = {}
@@ -68,7 +89,7 @@ export async function attachGalleriesToProjects(
           }`,
           title: p.title || p.id,
           ratio,
-          orientation, // <- portrait|landscape|square
+          orientation,
         };
       });
 
@@ -83,7 +104,9 @@ export async function attachGalleriesToProjects(
   return byCategory;
 }
 
-// anche getProjectGallery, se lo usi, aggiungi ratio+orientation
+// ========== GALLERY ON-DEMAND ==========
+// Ottiene gallery per singolo progetto senza caricare tutto lo store
+// Utile per caricamenti asincroni o preview
 export async function getProjectGallery(
   category,
   projectId,
@@ -117,7 +140,9 @@ export async function getProjectGallery(
   return { cover, items };
 }
 
-/** misurare dimensioni runtime se mancanti (fallback) */
+// ========== FALLBACK RUNTIME DIMENSIONS ==========
+// Misura dimensioni immagini runtime se mancanti da manifest
+// Usato come fallback se manifest non contiene dimensioni (deployment issues, cache stale, etc)
 export async function ensureItemDimensions(items) {
   if (!Array.isArray(items) || !items.length) return items;
 

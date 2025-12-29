@@ -1,3 +1,12 @@
+/**
+ * Store Player: gestione audio player e UI player mobile.
+ *
+ * Funzionalità:
+ * - Playlist audio con riproduzione automatica traccia successiva
+ * - Controllo volume (0 = pausa, >0 = play automatico)
+ * - Gestione stato player mobile (showPlayer, video background)
+ * - Auto-avanzamento a traccia successiva al termine
+ */
 import { defineStore } from "pinia";
 import floating from "@/assets/media/music/1-floating_portal.mp3";
 import brookesia from "@/assets/media/music/2-brookesia.mp3";
@@ -33,6 +42,7 @@ export const usePlayerStore = defineStore("player", {
   }),
 
   actions: {
+    // Registra listener "ended" per auto-avanzamento traccia
     initListeners() {
       this.trackOrder.forEach((key, index) => {
         const audio = this.audioMap[key].track;
@@ -75,6 +85,7 @@ export const usePlayerStore = defineStore("player", {
       this.playCurrent();
     },
 
+    // Controllo volume: 0 = pausa, >0 = play automatico
     setVolume(vol) {
       this.volume = vol;
 

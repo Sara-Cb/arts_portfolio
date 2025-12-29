@@ -1,4 +1,11 @@
-// src/composables/useVerticalNavigator.js
+/**
+ * Gestisce navigazione verticale scroll-snap sincronizzata con route.
+ * Coordina tre elementi: scroll nativo, route Vue, input utente (frecce/click).
+ *
+ * Sistema anti-bounce: previene loop infiniti route↔scroll usando lock temporanei.
+ * IntersectionObserver monitora visibilità sezioni e aggiorna route automaticamente.
+ * Keydown globale (singleton) permette navigazione con frecce da qualsiasi componente.
+ */
 import {
   onMounted,
   onBeforeUnmount,
@@ -12,7 +19,10 @@ import {
 import { useRoute, useRouter } from "vue-router";
 import { useUiStore } from "@/stores/ui";
 
-/* ------------------ KEYDOWN GLOBAL SINGLETON ------------------ */
+// ========== KEYDOWN GLOBAL SINGLETON ==========
+// Gestisce listener keyboard condiviso tra più istanze del composable.
+// Una sola istanza di event listener per l'intera applicazione,
+// ogni componente registra il proprio callback nella Set.
 const _keySubscribers = new Set();
 let _keyBound = false;
 function _globalKeyHandler(e) {
@@ -110,12 +120,17 @@ export function useVerticalNavigator({
     panels[idx]?.scrollIntoView({ block: "start", behavior });
   };
 
-  // ---- stato anti-bounce ----
+  // ========== STATO ANTI-BOUNCE ==========
+  // Previene loop infiniti: scroll cambia route → route cambia scroll → scroll cambia route...
+  // lockRouteDrivenScroll: true mentre scroll è comandato da cambio route, blocca aggiornamento route da IO
+  // programmaticRouteChange: true quando route cambia via pushToEntry/step, attiva alignToRoute nel watch
   let lockRouteDrivenScroll = false;
   let unlockTimer = null;
   let programmaticRouteChange = false;
 
-  // ---- IO: route <- scroll nativo ----
+  // ========== INTERSECTION OBSERVER ==========
+  // Monitora visibilità sezioni, aggiorna route quando sezione diventa prevalente (>threshold).
+  // Disabilitato (via lock) durante scroll comandato da route per evitare conflitti.
   let observer = null;
 
   function computeVisibilityRatio(el) {
@@ -169,11 +184,13 @@ export function useVerticalNavigator({
   }
 
   // ---- route change (programmatico) -> scroll ----
+  // Allinea scroll alla sezione corrispondente alla route attuale.
+  // Ottimizzazione: skip se sezione già visibile oltre threshold, evita scroll inutili.
+  // Attiva lock temporaneo per impedire che IO reagisca allo scroll appena comandato.
   function alignToRoute() {
     const idx = activeIndex.value;
     if (idx < 0) return;
 
-    // se la target è già ben visibile: skip
     const target = queryPanels()[idx];
     if (target) {
       const ratio = computeVisibilityRatio(target);
@@ -195,7 +212,7 @@ export function useVerticalNavigator({
     }, routeScrollDebounce);
   }
 
-  // ---- API per nav/dots ----
+  // API pubblica: naviga a una entry specifica (usata da dots, link interni)
   function pushToEntry(entry) {
     if (!entry) return;
     if (sameLocation(entry, route)) return;
@@ -203,7 +220,9 @@ export function useVerticalNavigator({
     router.push(toRouteLocation(entry));
   }
 
-  // ---- STEP da frecce (singleton) ----
+  // Naviga di N sezioni (+1/-1) rispetto all'attuale.
+  // Chiamata dal singleton keyboard per frecce ArrowUp/Down, PageUp/Down.
+  // Attiva sia scroll che lock IO per coordinare cambio route successivo.
   function step(dir) {
     const idx = activeIndex.value;
     const next = Math.max(0, Math.min(sections.value.length - 1, idx + dir));
@@ -220,7 +239,8 @@ export function useVerticalNavigator({
   onMounted(() => {
     nextTick(() => {
       if (initialAlignFirst) {
-        // allineo PRIMA e copro l’IO con un lock breve
+        // Strategia: allinea scroll alla route PRIMA di attivare IO, evita flicker iniziale.
+        // Lock brevissimo (50ms) impedisce che IO reagisca all'allineamento iniziale.
         lockRouteDrivenScroll = true;
         alignToRoute();
         setTimeout(() => {
@@ -248,7 +268,9 @@ export function useVerticalNavigator({
     }
   });
 
-  // route -> scroll (solo se programmatica)
+  // Watch route: quando route cambia via pushToEntry/step (programmaticRouteChange=true),
+  // sincronizza scroll. Altri cambi route (browser back/forward, link esterni) ignorati,
+  // scroll gestito da IO oppure da router.beforeEach esterno.
   watch(
     () => route.fullPath,
     () => {
@@ -259,7 +281,8 @@ export function useVerticalNavigator({
     }
   );
 
-  // lista sezioni cambia -> riallinea e riaccendi IO (una volta sola)
+  // Watch sections: quando lista sezioni cambia (progetti caricati), riallinea e riattiva IO.
+  // Necessario per aggiornare DOM observer dopo mount asincrono dati.
   watch(sections, () => {
     nextTick(() => {
       alignToRoute();

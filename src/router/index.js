@@ -1,8 +1,6 @@
-// src/router/index.js
 import { createRouter, createWebHistory } from "vue-router";
 import { useUiStore } from "@/stores/ui";
 
-// Views
 import HomeView from "@/views/HomeView.vue";
 import MatericalView from "@/views/MatericalView.vue";
 import VisualView from "@/views/VisualView.vue";
@@ -13,12 +11,13 @@ import PrivacyView from "@/views/PrivacyView.vue";
 const router = createRouter({
   history: createWebHistory(),
   routes: [
-    // HOME: 3 rotte, stessa view
+    // ========== HOME ==========
+    // Tre route verticali gestite dalla stessa view
     { path: "/", name: "rahem", component: HomeView },
     { path: "/projects", name: "projects", component: HomeView },
     { path: "/visit-card", name: "visit-card", component: HomeView },
 
-    // MATERICAL: intro + progetto
+    // ========== MATERICAL ==========
     { path: "/materical", name: "materical", component: MatericalView },
     {
       path: "/materical/:slug",
@@ -27,7 +26,7 @@ const router = createRouter({
       props: true,
     },
 
-    // VISUAL (stessa logica di materical)
+    // ========== VISUAL ==========
     { path: "/visual", name: "visual", component: VisualView },
     {
       path: "/visual/:slug",
@@ -36,7 +35,7 @@ const router = createRouter({
       props: true,
     },
 
-    // PERFORMANCE
+    // ========== PERFORMANCE ==========
     { path: "/performance", name: "performance", component: PerformanceView },
     {
       path: "/performance/:slug",
@@ -45,7 +44,7 @@ const router = createRouter({
       props: true,
     },
 
-    // MUSIC
+    // ========== MUSIC ==========
     { path: "/music", name: "music", component: MusicView },
     {
       path: "/music/:slug",
@@ -54,9 +53,10 @@ const router = createRouter({
       props: true,
     },
 
-    // PRIVACY POLICY
+    // ========== STATIC PAGES ==========
     { path: "/privacy", name: "privacy", component: PrivacyView },
 
+    // 404
     {
       path: "/:pathMatch(.*)*",
       name: "not-found",
@@ -65,25 +65,39 @@ const router = createRouter({
   ],
 });
 
+// Estrae "page key" dal nome route: "materical-project" → "materical"
 const rootName = (n) => String(n || "").split("-")[0];
 
+/**
+ * beforeEach: gestisce direzione transizioni orizzontali tra pagine.
+ *
+ * Tre casi:
+ * 1. Prima navigazione (from.name undefined): no transizione
+ * 2. Navigazione verticale (flag isNavigatingVertically): no transizione orizzontale
+ * 3. Navigazione orizzontale (cambio pagina): calcola direzione slide (left/right)
+ *
+ * Direzione: confronta indice pagina from vs to.
+ * Se to > from: slide da sinistra (setHorizontalDirection("left"))
+ * Se from > to: slide da destra (setHorizontalDirection("right"))
+ */
 router.beforeEach((to, from, next) => {
   const ui = useUiStore();
 
+  // Prima navigazione: nessuna transizione
   if (from.name === undefined) {
     ui.setCrossPageTransition(false);
     next();
     return;
   }
 
-  // Se navigazione verticale è stata preparata, assicurati che transizione sia OFF
+  // Navigazione verticale preparata: skip transizione orizzontale
   if (ui.isNavigatingVertically) {
     ui.setCrossPageTransition(false);
     next();
     return;
   }
 
-  // Altrimenti calcola direzione per navigazioni dirette (URL manuale, browser back/forward)
+  // Navigazione orizzontale: calcola direzione per browser back/forward o URL diretti
   const fromKey =
     ui.findPageKeyForRoute(from.name, from.params) ?? rootName(from.name);
   const toKey = ui.findPageKeyForRoute(to.name, to.params) ?? rootName(to.name);
@@ -91,7 +105,6 @@ router.beforeEach((to, from, next) => {
   if (fromKey && toKey && fromKey !== toKey) {
     const fi = ui.pageIndexOf(fromKey);
     const ti = ui.pageIndexOf(toKey);
-    // ti > fi = vai a destra, quindi slide da left (stesso di prepareHorizontalNavigation)
     ui.setHorizontalDirection(ti > fi ? "left" : "right");
     ui.setCrossPageTransition(true);
   } else {

@@ -242,7 +242,6 @@ header {
     @include dimensions(100%, auto);
     @include flexColumn;
     padding: 1rem 1.5rem;
-    flex: 1;
     -webkit-overflow-scrolling: touch;
 
     .next {
@@ -255,7 +254,8 @@ header {
     }
 
     .list {
-      @include dimensions(100%, 100%);
+      width: 100%;
+      height: 23dvh;
       @include flexColumn;
       gap: 1rem;
       overflow-y: auto;
@@ -289,22 +289,30 @@ header {
 
   .socials {
     @include flexRow;
-    @include dimensions(100%, 6rem);
+    @include dimensions(100%, 5rem);
     @include absolute(auto, 0, 0, 0);
-    gap: 1.2rem;
-    font-size: 0.8rem;
+    gap: 2rem;
+    font-size: 0.9rem;
+    padding: 0 1rem;
 
-    .spotify:hover,
-    .youtube:hover {
-      text-decoration: underline;
+    a {
+      transition: all 0.3s ease;
+
+      &:hover,
+      &:active {
+        text-decoration: underline;
+        transform: translateY(-2px);
+      }
     }
 
-    .spotify:hover {
+    .spotify:hover,
+    .spotify:active {
       color: #1db954;
       text-decoration-color: #1db954;
     }
 
-    .youtube:hover {
+    .youtube:hover,
+    .youtube:active {
       color: #ff0000;
       text-decoration-color: #ff0000;
     }

@@ -38,6 +38,12 @@ function onVideoLoaded() {
   player.setVideoLoaded(true);
 }
 
+function startPlayer() {
+  if (player.volume === 0) {
+    player.setVolume(0.4);
+  }
+}
+
 onMounted(() => {
   window.addEventListener("resize", () => {
     isMobile.value = window.innerWidth <= 576;
@@ -88,7 +94,11 @@ watch(showPlayer, (open) => {
       </div>
       <div class="content">
         <div class="current">
-          <div class="waves" :class="{ paused: player.isPlaying === false }">
+          <div
+            class="waves"
+            @click="startPlayer"
+            :class="{ paused: player.isPlaying === false }"
+          >
             <div class="wave" v-for="i in 5" :key="i"></div>
           </div>
           <h3 class="title">
@@ -117,8 +127,6 @@ watch(showPlayer, (open) => {
             target="_blank"
             >Spotify</a
           >
-        </div>
-        <div class="socials">
           <a
             class="youtube"
             href="https://youtube.com/@ex.raehmm?si=51oFIqEIh9faCtA0"

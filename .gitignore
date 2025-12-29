@@ -22,7 +22,7 @@ CLAUDE.md
 
 # Editor directories and files
 .vscode/*
-!.vscode/extensions.json
+.vscode/extensions.json
 .idea
 *.suo
 *.ntvs*
@@ -32,7 +32,6 @@ CLAUDE.md
 
 *.tsbuildinfo
 
-# why not ignore?????
 tools
 .htaccess
 public/projects/_images-manifest.json

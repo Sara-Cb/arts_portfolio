@@ -47,7 +47,7 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
           </a>
           <a
             class="contact"
-            href="https://open.spotify.com/intl-it/artist/6ivgRDsZOfEQ8z287GAsF1?si=3GK1cbiySaKik1wrHQSndw"
+            href="https://open.spotify.com/artist/6Tqf2cvcNjPdTVjuxynWEB?si=6Ig-mVObTReE7qo_8nB8_w"
             target="_blank"
           >
             <p class="info">Ræhm</p>

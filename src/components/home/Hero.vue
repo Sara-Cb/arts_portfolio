@@ -1,11 +1,26 @@
 <script setup>
+import { ref } from "vue";
 import Logo from "@/assets/logo/Logo.vue";
+
+const isVideoLoaded = ref(false);
+
+function onVideoLoaded() {
+  isVideoLoaded.value = true;
+}
 </script>
 
 <template>
   <section id="hero" class="sectionInner">
-    <div class="video">
-      <video autoplay muted loop playsinline class="video-bg">
+    <div class="video" :class="{ loaded: isVideoLoaded }">
+      <video
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="auto"
+        class="video-bg"
+        @loadeddata="onVideoLoaded"
+      >
         <source src="@/assets/media/video/hero.mp4" type="video/mp4" />
       </video>
     </div>

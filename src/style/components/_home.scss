@@ -63,12 +63,22 @@
     .video {
       overflow: hidden;
       z-index: 0;
+      opacity: 0;
+      transition: opacity 0.6s ease-in;
+      will-change: opacity;
+
+      &.loaded {
+        opacity: 1;
+      }
 
       .video-bg {
         @include fullDimensions;
         object-fit: cover;
         object-position: center;
         pointer-events: none;
+        will-change: transform;
+        transform: translateZ(0);
+        backface-visibility: hidden;
       }
     }
 

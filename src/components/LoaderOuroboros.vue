@@ -5,20 +5,23 @@
       viewBox="0 0 50 50"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <!-- Serpente Ouroboros semplificato - un cerchio che si morde la coda -->
-      <circle
-        class="ouroboros-circle"
-        cx="25"
-        cy="25"
-        r="20"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-dasharray="125.6"
-      />
-      <!-- Testa -->
-      <circle cx="25" cy="5" r="2.5" fill="currentColor" />
+      <!-- Serpente Ouroboros - cerchio che si morde la coda -->
+      <g class="ouroboros-body">
+        <!-- Corpo del serpente (arco incompleto) -->
+        <circle
+          class="ouroboros-circle"
+          cx="25"
+          cy="25"
+          r="20"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-dasharray="120 125.6"
+        />
+        <!-- Testa che insegue la coda -->
+        <circle class="ouroboros-head" cx="25" cy="5" r="2.5" fill="currentColor" />
+      </g>
     </svg>
   </div>
 </template>
@@ -35,38 +38,35 @@
   background: rgba($night, 0.5);
   z-index: 5;
   will-change: opacity;
+  backdrop-filter: blur(2px);
 }
 
 .ouroboros-svg {
   width: 48px;
   height: 48px;
   color: $ghost;
+}
+
+.ouroboros-body {
+  transform-origin: center;
   will-change: transform;
-  animation: spin 1.5s linear infinite;
+  animation: rotate 2s linear infinite;
 }
 
 .ouroboros-circle {
-  stroke-dashoffset: 0;
   transform-origin: center;
-  will-change: stroke-dashoffset;
-  animation: dash 1.5s ease-in-out infinite;
 }
 
-@keyframes spin {
+.ouroboros-head {
+  filter: drop-shadow(0 0 3px currentColor);
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
   to {
     transform: rotate(360deg);
-  }
-}
-
-@keyframes dash {
-  0% {
-    stroke-dashoffset: 125.6;
-  }
-  50% {
-    stroke-dashoffset: 0;
-  }
-  100% {
-    stroke-dashoffset: -125.6;
   }
 }
 </style>

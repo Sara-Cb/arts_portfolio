@@ -38,6 +38,7 @@ onMounted(async () => {
 
 <style scoped lang="scss">
 @use "@/style/partials/colors" as *;
+@use "@/style/partials/variables" as *;
 
 .wip-container {
   display: flex;
@@ -45,17 +46,42 @@ onMounted(async () => {
   align-items: center;
   justify-content: center;
   height: 100dvh;
-  gap: 2rem;
+  gap: 1.5rem;
+  padding: 1rem;
 
   h1 {
-    font-size: 4rem;
+    font-size: 2.5rem;
     color: $ghost;
+    text-align: center;
   }
 
   .wip-message {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     color: $cool;
     font-style: italic;
+    text-align: center;
+  }
+
+  @media screen and (min-width: $breakpoint-sm) {
+    gap: 2rem;
+
+    h1 {
+      font-size: 3.5rem;
+    }
+
+    .wip-message {
+      font-size: 1.4rem;
+    }
+  }
+
+  @media screen and (min-width: $breakpoint-md) {
+    h1 {
+      font-size: 4rem;
+    }
+
+    .wip-message {
+      font-size: 1.5rem;
+    }
   }
 }
 </style>

@@ -64,7 +64,9 @@ watch(showPlayer, (open) => {
     @click="togglePlayer"
   >
     <FontAwesomeIcon
-      :icon="isMobile && showPlayer ? ['fas', 'xmark'] : ['fas', 'compact-disc']"
+      :icon="
+        isMobile && showPlayer ? ['fas', 'xmark'] : ['fas', 'compact-disc']
+      "
     />
   </div>
 
@@ -108,15 +110,14 @@ watch(showPlayer, (open) => {
             </li>
           </ul>
         </div>
-        <!-- Spotify links temporarily hidden - will be re-enabled later -->
-        <!-- <div class="socials">
+        <div class="socials">
           <a
             class="spotify"
-            href="https://open.spotify.com/intl-it/artist/6ivgRDsZOfEQ8z287GAsF1?si=3GK1cbiySaKik1wrHQSndw"
+            href="https://open.spotify.com/artist/6Tqf2cvcNjPdTVjuxynWEB?si=6Ig-mVObTReE7qo_8nB8_w"
             target="_blank"
             >Spotify</a
           >
-        </div> -->
+        </div>
         <div class="socials">
           <a
             class="youtube"
@@ -152,13 +153,13 @@ watch(showPlayer, (open) => {
           />
           <span>{{ data.title }}</span>
         </li>
-        <!-- <li class="spotify">
+        <li class="spotify">
           <a
-            href="https://open.spotify.com/intl-it/artist/6ivgRDsZOfEQ8z287GAsF1?si=3GK1cbiySaKik1wrHQSndw"
+            href="https://open.spotify.com/artist/6Tqf2cvcNjPdTVjuxynWEB?si=6Ig-mVObTReE7qo_8nB8_w"
             target="_blank"
             >→ see more on Spotify</a
           >
-        </li> -->
+        </li>
         <li class="youtube">
           <a
             href="https://youtube.com/@ex.raehmm?si=51oFIqEIh9faCtA0"

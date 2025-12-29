@@ -2,7 +2,7 @@
 import { computed, onMounted } from "vue";
 import { useUiStore } from "@/stores/ui";
 import { useProjectsStore } from "@/stores/projects";
-import MusicDetail from "@/views/components/projects/MusicDetail.vue";
+import MusicDetail from "@/components/projects/MusicDetail.vue";
 
 const ui = useUiStore();
 const projectsStore = useProjectsStore();

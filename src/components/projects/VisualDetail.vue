@@ -2,7 +2,7 @@
 import { computed } from "vue";
 import { useGalleryStore } from "@/stores/gallery";
 import { useEnvironmentStore } from "@/stores/environment";
-import InlineGallery from "@/views/components/projects/InlineGallery.vue";
+import InlineGallery from "@/components/projects/InlineGallery.vue";
 
 const props = defineProps({ project: { type: Object, required: true } });
 const galleryStore = useGalleryStore();
@@ -87,8 +87,10 @@ function openGallery(clickedImage) {
         <!-- Left column: Text -->
         <aside class="vd-text-col">
           <div class="vd-text-content">
-            <h2 class="vd-title">{{ project?.title || '' }}</h2>
-            <p v-if="project?.subtitle" class="vd-subtitle">{{ project.subtitle }}</p>
+            <h2 class="vd-title">{{ project?.title || "" }}</h2>
+            <p v-if="project?.subtitle" class="vd-subtitle">
+              {{ project.subtitle }}
+            </p>
 
             <p v-if="project?.description" class="vd-description">
               {{ project.description }}

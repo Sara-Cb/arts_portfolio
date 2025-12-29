@@ -2,7 +2,7 @@
 import { computed, onMounted } from "vue";
 import { useUiStore } from "@/stores/ui";
 import { useProjectsStore } from "@/stores/projects";
-import PerformanceDetail from "@/views/components/projects/PerformanceDetail.vue";
+import PerformanceDetail from "@/components/projects/PerformanceDetail.vue";
 
 const ui = useUiStore();
 const projectsStore = useProjectsStore();

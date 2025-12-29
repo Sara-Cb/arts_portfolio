@@ -7,7 +7,7 @@ import { useEnvironmentStore } from "@/stores/environment";
 import { useUiStore } from "@/stores/ui";
 import { useNavigator } from "@/composables/useNavigator";
 import Logo from "@/assets/logo/Logo.vue";
-import Player from "@/views/components/player/Player.vue";
+import Player from "@/components/player/Player.vue";
 
 const { isMobile } = storeToRefs(useEnvironmentStore());
 const route = useRoute();
@@ -26,7 +26,9 @@ async function goHomeSection(name) {
     await router.replace({ name });
     // Scroll manuale alla sezione
     requestAnimationFrame(() => {
-      const section = document.querySelector(`.snapSection[data-route="${name}"]`);
+      const section = document.querySelector(
+        `.snapSection[data-route="${name}"]`
+      );
       section?.scrollIntoView({ block: "start", behavior: "smooth" });
     });
   } else {

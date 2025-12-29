@@ -1,4 +1,4 @@
-<!-- src/views/components/ScrollIndicator.vue -->
+<!-- src/components/ScrollIndicator.vue -->
 <script setup>
 import { computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
@@ -21,9 +21,10 @@ const sections = computed(() => ui.getSectionList(pageKey.value) || []);
 // Calcola activeIndex confrontando route con sections
 const activeIndex = computed(() => {
   const currentRouteKey = `${route.name}|${JSON.stringify(route.params || {})}`;
-  return sections.value.findIndex(section => {
-    const sectionName = typeof section === 'string' ? section : section.name;
-    const sectionParams = typeof section === 'string' ? {} : (section.params || {});
+  return sections.value.findIndex((section) => {
+    const sectionName = typeof section === "string" ? section : section.name;
+    const sectionParams =
+      typeof section === "string" ? {} : section.params || {};
     const sectionKey = `${sectionName}|${JSON.stringify(sectionParams)}`;
     return sectionKey === currentRouteKey;
   });
@@ -31,15 +32,15 @@ const activeIndex = computed(() => {
 
 // Genera ID sezione (stesso pattern di useVerticalNavigator)
 function sectionId(entry) {
-  const sectionName = typeof entry === 'string' ? entry : entry.name;
-  const sectionParams = typeof entry === 'string' ? {} : (entry.params || {});
+  const sectionName = typeof entry === "string" ? entry : entry.name;
+  const sectionParams = typeof entry === "string" ? {} : entry.params || {};
   const slug = sectionParams.slug ? `-${sectionParams.slug}` : "";
   return (sectionName + slug).replace(/[^a-z0-9_-]+/gi, "-");
 }
 
 function goToSection(entry) {
-  const sectionName = typeof entry === 'string' ? entry : entry.name;
-  const sectionParams = typeof entry === 'string' ? {} : (entry.params || {});
+  const sectionName = typeof entry === "string" ? entry : entry.name;
+  const sectionParams = typeof entry === "string" ? {} : entry.params || {};
 
   // Segnala navigazione verticale e usa replace per history pulita
   ui.prepareVerticalNavigation();
@@ -114,7 +115,9 @@ const showTooltips = computed(() => pageKey.value !== "rahem");
       @click="goToSection(section)"
     >
       <div class="dot-inner"></div>
-      <span v-if="showTooltips" class="dot-tooltip">{{ getSectionTitle(section) }}</span>
+      <span v-if="showTooltips" class="dot-tooltip">{{
+        getSectionTitle(section)
+      }}</span>
     </div>
   </div>
 </template>

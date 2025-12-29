@@ -3,9 +3,9 @@ import { onMounted, nextTick } from "vue";
 import { useRoute } from "vue-router";
 import { useUiStore } from "@/stores/ui";
 import { useVerticalNavigator } from "@/composables/useVerticalNavigator";
-import Hero from "@/views/components/home/Hero.vue";
-import Projects from "@/views/components/home/Projects.vue";
-import VisitCard from "@/views/components/home/VisitCard.vue";
+import Hero from "@/components/home/Hero.vue";
+import Projects from "@/components/home/Projects.vue";
+import VisitCard from "@/components/home/VisitCard.vue";
 
 const ui = useUiStore();
 const route = useRoute();
@@ -47,8 +47,14 @@ onMounted(async () => {
 
 <template>
   <div class="page" id="home">
-    <section class="snapSection" id="rahem" data-route="rahem"><Hero /></section>
-    <section class="snapSection" id="projects" data-route="projects"><Projects /></section>
-    <section class="snapSection" id="visit-card" data-route="visit-card"><VisitCard /></section>
+    <section class="snapSection" id="rahem" data-route="rahem">
+      <Hero />
+    </section>
+    <section class="snapSection" id="projects" data-route="projects">
+      <Projects />
+    </section>
+    <section class="snapSection" id="visit-card" data-route="visit-card">
+      <VisitCard />
+    </section>
   </div>
 </template>

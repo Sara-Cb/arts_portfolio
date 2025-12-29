@@ -2,7 +2,7 @@
 import { computed, onMounted } from "vue";
 import { useUiStore } from "@/stores/ui";
 import { useProjectsStore } from "@/stores/projects";
-import VisualDetail from "@/views/components/projects/VisualDetail.vue";
+import VisualDetail from "@/components/projects/VisualDetail.vue";
 import { useVerticalNavigator } from "@/composables/useVerticalNavigator";
 
 const ui = useUiStore();

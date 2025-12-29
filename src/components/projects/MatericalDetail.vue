@@ -3,7 +3,7 @@ import { computed } from "vue";
 import { chooseLayout } from "@/lib/layoutChooser";
 import { useGalleryStore } from "@/stores/gallery";
 import { useEnvironmentStore } from "@/stores/environment";
-import InlineGallery from "@/views/components/projects/InlineGallery.vue";
+import InlineGallery from "@/components/projects/InlineGallery.vue";
 
 const props = defineProps({ project: { type: Object, required: true } });
 const galleryStore = useGalleryStore();

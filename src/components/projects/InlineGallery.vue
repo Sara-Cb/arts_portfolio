@@ -142,6 +142,34 @@ onBeforeUnmount(() => {
         </div>
       </Transition>
 
+      <!-- Info panel overlay (mobile only, sopra l'immagine) -->
+      <Transition name="info-overlay-fade">
+        <div
+          v-if="showInfo"
+          class="ig-info-overlay"
+          role="region"
+          aria-label="Project information"
+          @click="toggleInfo"
+        >
+          <div class="ig-info-overlay-content" @click.stop>
+            <button
+              class="ig-info-close"
+              @click="toggleInfo"
+              type="button"
+              aria-label="Close project information"
+            >
+              <font-awesome-icon icon="fa-solid fa-xmark" aria-hidden="true" />
+            </button>
+            <p v-if="projectDescription" class="info-description">
+              {{ projectDescription }}
+            </p>
+            <p v-if="projectMaterials" class="info-materials">
+              {{ projectMaterials }}
+            </p>
+          </div>
+        </div>
+      </Transition>
+
       <!-- Bottom controls bar -->
       <div class="ig-controls" role="toolbar" aria-label="Gallery controls">
         <!-- Info button (bottom left) -->
@@ -198,23 +226,5 @@ onBeforeUnmount(() => {
     <div class="sr-only" aria-live="polite" aria-atomic="true">
       Image {{ currentIndex + 1 }} of {{ images.length }}{{ currentImage?.alt ? ': ' + currentImage.alt : '' }}
     </div>
-
-    <!-- Info panel (collapsible, sotto immagine) -->
-    <Transition name="info-slide">
-      <div
-        v-if="showInfo"
-        class="ig-info-panel"
-        @click="toggleInfo"
-        role="region"
-        aria-label="Project information"
-      >
-        <p v-if="projectDescription" class="info-description">
-          {{ projectDescription }}
-        </p>
-        <p v-if="projectMaterials" class="info-materials">
-          {{ projectMaterials }}
-        </p>
-      </div>
-    </Transition>
   </div>
 </template>

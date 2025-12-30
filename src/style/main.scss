@@ -325,3 +325,71 @@ svg .chocolate {
 svg .transparent {
   fill: transparent;
 }
+
+// ========== ACCESSIBILITY UTILITIES ==========
+
+// Screen reader only content - visually hidden but accessible to screen readers
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+// Global focus visible styles for keyboard navigation
+// Escludi elementi che hanno già il loro focus custom o che causano problemi
+*:focus-visible:not(.category):not(.dot):not(.skip-link) {
+  outline: 2px solid $cool;
+  outline-offset: 2px;
+}
+
+// Remove outline for mouse/touch users
+*:focus:not(:focus-visible) {
+  outline: none;
+}
+
+// Assicurati che video, immagini decorative e overlay non ricevano mai focus
+video,
+.video-bg,
+.overlay:not(.page .overlay) {
+  &:focus,
+  &:focus-visible {
+    outline: none !important;
+  }
+}
+
+// Background nelle category cards non deve bloccare click
+.category .background {
+  pointer-events: none;
+}
+
+// Le immagini decorative non dovrebbero mai ricevere tab focus
+img[role="presentation"],
+img[alt=""] {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+// Skip to main content link
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 0;
+  background: $night;
+  color: $ghost;
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+  z-index: 10000;
+  border: 2px solid $cool;
+  border-radius: 0.25rem;
+
+  &:focus {
+    top: 0.5rem;
+    left: 0.5rem;
+  }
+}

@@ -149,6 +149,18 @@
       @include relative;
       overflow: hidden;
       cursor: pointer;
+      border: none;
+      padding: 0;
+      background: none;
+      width: 100%;
+      text-align: left;
+      font-family: inherit;
+
+      &:focus-visible {
+        outline: 3px solid $cool;
+        outline-offset: 2px;
+        z-index: 10;
+      }
 
       .background {
         @include absolute;
@@ -257,7 +269,8 @@
             transition: all 0.6s ease-in-out;
           }
 
-          &:hover {
+          &:hover,
+          &:focus-visible {
             background-color: rgba($night, 0.3);
             transition: background-color 1s ease-out;
 
@@ -270,7 +283,8 @@
         }
         &.materical .text {
           background-color: rgba($night, 0.9);
-          &:hover {
+          &:hover,
+          &:focus-visible {
             background-color: rgba($night, 0.5);
           }
         }
@@ -370,6 +384,14 @@
           .info {
             font-size: 1rem;
             margin: 0.6rem 0;
+            text-decoration: none;
+          }
+
+          &:focus .info,
+          &:focus-visible .info {
+            text-decoration: underline !important;
+            text-decoration-color: $night !important;
+            text-underline-offset: 2px !important;
           }
 
           .icon {
@@ -406,6 +428,10 @@
           &:hover {
             opacity: 0.7;
           }
+        }
+
+        a.privacy {
+          text-align: right;
         }
       }
     }
@@ -446,6 +472,14 @@
           .contact {
             .info {
               font-size: 1.1rem;
+              text-decoration: none;
+            }
+
+            &:focus .info,
+            &:focus-visible .info {
+              text-decoration: underline !important;
+              text-decoration-color: $night !important;
+              text-underline-offset: 2px !important;
             }
 
             .icon {

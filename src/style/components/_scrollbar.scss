@@ -24,6 +24,19 @@
   cursor: pointer;
   position: relative;
   transition: height 0.3s ease;
+  border: none;
+  background: transparent;
+  font-family: inherit;
+
+  &:focus-visible {
+    outline: 2px solid $cool;
+    outline-offset: 2px;
+
+    .dot-inner {
+      opacity: 1;
+      box-shadow: 0 0 8px rgba($cool, 0.6);
+    }
+  }
 }
 
 .dot-inner {

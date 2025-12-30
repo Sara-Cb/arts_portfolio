@@ -51,6 +51,40 @@ header {
   .playerMenu {
     gap: 1rem;
 
+    .volume-icon-btn {
+      background: transparent;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      color: inherit;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &:focus-visible {
+        outline: 2px solid $cool;
+        outline-offset: 2px;
+        border-radius: 4px;
+      }
+    }
+
+    .playerIcon {
+      background: transparent;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      color: inherit;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &:focus-visible {
+        outline: 2px solid $cool;
+        outline-offset: 2px;
+        border-radius: 4px;
+      }
+    }
+
     svg {
       cursor: pointer;
     }
@@ -221,6 +255,11 @@ header {
         background: $cool-trans-30;
         cursor: pointer;
 
+        &:focus-visible {
+          outline: 2px solid $cool;
+          outline-offset: 3px;
+        }
+
         .progress,
         .handle {
           position: absolute;
@@ -235,7 +274,12 @@ header {
           @include dimensions(1rem, 1rem);
           border-radius: 50%;
           cursor: pointer;
+          transition: transform 0.2s ease;
         }
+      }
+
+      .bar:focus-visible .handle {
+        transform: translateY(-50%) scale(1.3);
       }
     }
   }

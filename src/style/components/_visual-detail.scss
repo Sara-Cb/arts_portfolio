@@ -103,22 +103,36 @@
     }
   }
 
+  .vd-image-button {
+    border: none;
+    padding: 0;
+    background: none;
+    cursor: pointer;
+    display: block;
+    width: 100%;
+    margin-bottom: 1.5rem;
+    break-inside: avoid;
+
+    &:focus-visible {
+      outline: 3px solid $cool;
+      outline-offset: 2px;
+    }
+
+    &:hover .vd-grid-image {
+      transform: scale(1.02);
+      opacity: 0.9;
+    }
+  }
+
   .vd-grid-image,
   .vd-grid-video {
     width: 100%;
     height: auto;
     display: block;
-    margin-bottom: 1.5rem;
-    break-inside: avoid;
     object-fit: contain;
-    cursor: pointer;
     transition: transform 0.3s ease, opacity 0.3s ease;
     @include border("all", rgba($chocolate, 0.05));
-
-    &:hover {
-      transform: scale(1.02);
-      opacity: 0.9;
-    }
+    pointer-events: none;
   }
 
   .vd-grid-video {

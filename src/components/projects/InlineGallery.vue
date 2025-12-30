@@ -109,11 +109,13 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="inline-gallery">
+  <div class="inline-gallery" role="region" aria-label="Project image gallery">
     <!-- Image container con swipe -->
     <div
       ref="imageWrap"
       class="ig-image-wrap"
+      role="img"
+      :aria-label="`${currentImage?.alt || projectTitle}, image ${currentIndex + 1} of ${images.length}`"
       @touchstart="handleStart"
       @touchmove="handleMove"
       @touchend="handleEnd"
@@ -128,64 +130,84 @@ onBeforeUnmount(() => {
         :src="currentImage.url"
         :alt="currentImage.alt"
         class="ig-image"
+        aria-hidden="true"
       />
 
       <!-- Swipe hint -->
       <Transition name="hint-fade">
-        <div v-if="showSwipeHint" class="swipe-hint">
-          <font-awesome-icon icon="fa-solid fa-chevron-left" class="hint-arrow hint-arrow--left" />
+        <div v-if="showSwipeHint" class="swipe-hint" role="status" aria-live="polite">
+          <font-awesome-icon icon="fa-solid fa-chevron-left" class="hint-arrow hint-arrow--left" aria-hidden="true" />
           <span class="hint-text">swipe</span>
-          <font-awesome-icon icon="fa-solid fa-chevron-right" class="hint-arrow hint-arrow--right" />
+          <font-awesome-icon icon="fa-solid fa-chevron-right" class="hint-arrow hint-arrow--right" aria-hidden="true" />
         </div>
       </Transition>
 
       <!-- Bottom controls bar -->
-      <div class="ig-controls">
+      <div class="ig-controls" role="toolbar" aria-label="Gallery controls">
         <!-- Info button (bottom left) -->
         <button
           class="ig-info-btn"
           :class="{ active: showInfo }"
           @click="toggleInfo"
-          aria-label="Informazioni opera"
+          type="button"
+          :aria-label="showInfo ? 'Hide project information' : 'Show project information'"
+          :aria-pressed="showInfo"
         >
-          <font-awesome-icon icon="fa-solid fa-circle-info" />
+          <font-awesome-icon icon="fa-solid fa-circle-info" aria-hidden="true" />
         </button>
 
         <!-- Dots indicator (bottom center) -->
-        <div class="ig-dots">
+        <div class="ig-dots" role="tablist" aria-label="Image selection">
           <button
             v-for="(img, idx) in images"
             :key="idx"
             class="ig-dot"
             :class="{ active: idx === currentIndex }"
             @click="goToIndex(idx)"
-            :aria-label="`Vai all'immagine ${idx + 1}`"
+            type="button"
+            role="tab"
+            :aria-selected="idx === currentIndex ? 'true' : 'false'"
+            :aria-label="`Go to image ${idx + 1} of ${images.length}`"
+            :aria-current="idx === currentIndex ? 'true' : undefined"
           ></button>
         </div>
 
         <!-- Navigation arrows (bottom right) -->
-        <div class="ig-arrows">
+        <div class="ig-arrows" role="group" aria-label="Gallery navigation">
           <button
             class="ig-arrow ig-arrow--prev"
             @click="prev"
-            aria-label="Immagine precedente"
+            type="button"
+            :aria-label="`Previous image (currently ${currentIndex + 1} of ${images.length})`"
           >
-            <font-awesome-icon icon="fa-solid fa-chevron-left" />
+            <font-awesome-icon icon="fa-solid fa-chevron-left" aria-hidden="true" />
           </button>
           <button
             class="ig-arrow ig-arrow--next"
             @click="next"
-            aria-label="Immagine successiva"
+            type="button"
+            :aria-label="`Next image (currently ${currentIndex + 1} of ${images.length})`"
           >
-            <font-awesome-icon icon="fa-solid fa-chevron-right" />
+            <font-awesome-icon icon="fa-solid fa-chevron-right" aria-hidden="true" />
           </button>
         </div>
       </div>
     </div>
 
+    <!-- Screen reader only status -->
+    <div class="sr-only" aria-live="polite" aria-atomic="true">
+      Image {{ currentIndex + 1 }} of {{ images.length }}{{ currentImage?.alt ? ': ' + currentImage.alt : '' }}
+    </div>
+
     <!-- Info panel (collapsible, sotto immagine) -->
     <Transition name="info-slide">
-      <div v-if="showInfo" class="ig-info-panel" @click="toggleInfo">
+      <div
+        v-if="showInfo"
+        class="ig-info-panel"
+        @click="toggleInfo"
+        role="region"
+        aria-label="Project information"
+      >
         <p v-if="projectDescription" class="info-description">
           {{ projectDescription }}
         </p>

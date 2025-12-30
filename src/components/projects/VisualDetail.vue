@@ -87,7 +87,7 @@ function openGallery(clickedImage) {
         <!-- Left column: Text -->
         <aside class="vd-text-col">
           <div class="vd-text-content">
-            <h2 class="vd-title">{{ project?.title || "" }}</h2>
+            <h2 class="vd-title" tabindex="0" :aria-label="`Project: ${project?.title || ''}`">{{ project?.title || "" }}</h2>
             <p v-if="project?.subtitle" class="vd-subtitle">
               {{ project.subtitle }}
             </p>
@@ -119,22 +119,29 @@ function openGallery(clickedImage) {
                 class="vd-grid-video"
                 controls
                 preload="metadata"
+                :aria-label="`${project?.title || 'Project'} video ${idx + 1}`"
               >
-                Il tuo browser non supporta il tag video.
+                <p>Your browser does not support the video tag.</p>
               </video>
 
               <!-- Images -->
-              <img
+              <button
                 v-for="img in sortedImages"
                 :key="img.url"
-                v-image-loader
-                :src="img.url"
-                :alt="project?.title || ''"
-                class="vd-grid-image"
-                loading="lazy"
-                decoding="async"
+                type="button"
+                class="vd-image-button"
                 @click="openGallery(img)"
-              />
+                :aria-label="`View ${project?.title || 'image'} in full screen gallery`"
+              >
+                <img
+                  v-image-loader
+                  :src="img.url"
+                  :alt="project?.title || ''"
+                  class="vd-grid-image"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </button>
             </div>
           </div>
         </section>

@@ -14,23 +14,24 @@ async function navigate(category) {
 
 <template>
   <section id="projectCategories" class="sectionInner">
-    <div
+    <button
       v-for="cat in categories"
-      :to="{ name: cat.type }"
+      :key="cat.type"
       class="category"
       :class="cat.type"
-      :key="cat.type"
+      type="button"
       @click="navigate(cat.type)"
+      :aria-label="`Navigate to ${cat.title} category`"
     >
+      <div class="background">
+        <img v-image-loader :src="cat.src" role="presentation" />
+      </div>
       <div class="text">
         <h5 class="title">{{ cat.title }}</h5>
         <p class="subtitle">{{ cat.subtitle }}</p>
         <p class="description">{{ cat.description }}</p>
-        <p class="cta">[ {{ cat.cta }} ]</p>
+        <p class="cta" aria-hidden="true">[ {{ cat.cta }} ]</p>
       </div>
-      <div class="background">
-        <img v-image-loader :src="cat.src" :alt="cat.title" />
-      </div>
-    </div>
+    </button>
   </section>
 </template>

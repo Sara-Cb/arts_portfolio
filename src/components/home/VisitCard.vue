@@ -77,12 +77,12 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
     <footer class="footer">
       <div class="contentContainer">
         <span
-          >© 2025 Marco Campobasso.
+          >© 2025 Marco&nbsp;Campobasso.
           <small class="property">
             All content is protected by intellectual property rights.</small
           ></span
         >
-        <a href="/privacy-policy">Privacy Policy</a>
+        <a href="/privacy-policy" class="privacy">Privacy Policy</a>
       </div>
     </footer>
   </section>

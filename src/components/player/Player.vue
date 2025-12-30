@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted, watch } from "vue";
+import { computed, onMounted, watch, nextTick } from "vue";
 import { storeToRefs } from "pinia";
 import { usePlayerStore } from "@/stores/player";
 import { useUiStore } from "@/stores/ui";
@@ -31,8 +31,24 @@ const nextTracks = computed(() => {
 function togglePlayer() {
   if (isMobile.value) {
     player.togglePlayer();
+  } else {
+    // Desktop: toggle showPlayer on click/enter
+    const wasOpen = showPlayer.value;
+    showPlayer.value = !showPlayer.value;
+
+    // If we just opened the player, focus the first track button
+    if (!wasOpen && showPlayer.value) {
+      // Wait for DOM update
+      nextTick(() => {
+        const firstTrack = document.querySelector('.trackList .track');
+        if (firstTrack) {
+          firstTrack.focus();
+        }
+      });
+    }
   }
 }
+
 
 function onVideoLoaded() {
   player.setVideoLoaded(true);
@@ -43,6 +59,39 @@ function togglePlayback() {
     player.setVolume(0);
   } else {
     player.setVolume(player.volume === 0 ? 0.4 : player.volume);
+  }
+}
+
+function handleTrackListBlur(event) {
+  // Close player when focus leaves the trackList entirely
+  const relatedTarget = event.relatedTarget;
+  const trackListElement = event.currentTarget;
+
+  // Don't close if focus is moving to another element inside trackList
+  if (relatedTarget && trackListElement.contains(relatedTarget)) {
+    return;
+  }
+
+  // Close the player
+  showPlayer.value = false;
+
+  // If focus not going anywhere specific, send it to ScrollIndicator
+  if (!relatedTarget) {
+    const scrollIndicator = document.querySelector('.scrollbar .dot');
+    if (scrollIndicator) {
+      scrollIndicator.focus();
+    }
+  }
+}
+
+function handleLastLinkKeydown(event) {
+  // Trap Tab key on last link to loop back to playerIcon
+  if (event.key === 'Tab' && !event.shiftKey) {
+    event.preventDefault();
+    const playerIcon = document.querySelector('.playerIcon');
+    if (playerIcon) {
+      playerIcon.focus();
+    }
   }
 }
 
@@ -66,22 +115,26 @@ watch(showPlayer, (open) => {
   <VolumeController v-if="!isMobile" />
 
   <!-- Desktop and Mobile view -->
-  <div
+  <button
+    type="button"
     class="playerIcon"
     @mouseenter="!isMobile ? (showPlayer = true) : null"
     @click="togglePlayer"
+    :aria-label="isMobile && showPlayer ? 'Close player' : 'Open player'"
+    :aria-expanded="!isMobile ? showPlayer : undefined"
   >
     <FontAwesomeIcon
       :icon="
         isMobile && showPlayer ? ['fas', 'xmark'] : ['fas', 'compact-disc']
       "
+      aria-hidden="true"
     />
-  </div>
+  </button>
 
   <Teleport to="#app">
     <!-- Mobile view -->
     <div class="player" v-if="isMobile && showPlayer">
-      <div class="video" :class="{ loaded: isVideoLoaded }">
+      <div class="video" :class="{ loaded: isVideoLoaded }" role="presentation">
         <video
           autoplay
           muted
@@ -90,6 +143,7 @@ watch(showPlayer, (open) => {
           preload="auto"
           class="video-bg"
           @loadeddata="onVideoLoaded"
+          aria-hidden="true"
         >
           <source src="@/assets/media/video/player.mp4" type="video/mp4" />
         </video>
@@ -149,37 +203,44 @@ watch(showPlayer, (open) => {
       class="trackList"
       v-if="!isMobile && showPlayer"
       @mouseleave="showPlayer = false"
+      @focusout="handleTrackListBlur"
     >
       <ul class="list">
-        <li
-          class="track"
-          v-for="(data, key) in player.audioMap"
-          :key="key"
-          :class="{ active: player.currentTrack === key }"
-          @click="player.selectTrack(key)"
-        >
-          <FontAwesomeIcon
-            :icon="
-              player.currentTrack === key
-                ? ['fas', 'chart-simple']
-                : ['fas', 'play']
-            "
-            class="playIcon"
-          />
-          <span>{{ data.title }}</span>
+        <li v-for="(data, key) in player.audioMap" :key="key">
+          <button
+            type="button"
+            class="track"
+            :class="{ active: player.currentTrack === key }"
+            @click="player.selectTrack(key)"
+            :aria-label="`Play ${data.title}`"
+          >
+            <FontAwesomeIcon
+              :icon="
+                player.currentTrack === key
+                  ? ['fas', 'chart-simple']
+                  : ['fas', 'play']
+              "
+              class="playIcon"
+              aria-hidden="true"
+            />
+            <span>{{ data.title }}</span>
+          </button>
         </li>
-        <li class="spotify">
+        <li class="social-links">
+          <span class="label">→ see more on:</span>
           <a
+            class="spotify"
             href="https://open.spotify.com/artist/6Tqf2cvcNjPdTVjuxynWEB?si=6Ig-mVObTReE7qo_8nB8_w"
             target="_blank"
-            >→ see more on Spotify</a
+            >Spotify</a
           >
-        </li>
-        <li class="youtube">
+          <span class="separator">|</span>
           <a
+            class="youtube"
             href="https://youtube.com/@ex.raehmm?si=51oFIqEIh9faCtA0"
             target="_blank"
-            >→ see more on YouTube</a
+            @keydown="handleLastLinkKeydown"
+            >YouTube</a
           >
         </li>
       </ul>

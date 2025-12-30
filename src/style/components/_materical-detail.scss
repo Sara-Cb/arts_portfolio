@@ -56,6 +56,22 @@
       }
     }
 
+    /* Button wrapper per immagini clickabili */
+    .md-image-button {
+      border: none;
+      padding: 0;
+      background: none;
+      cursor: pointer;
+      display: block;
+      width: 100%;
+      height: 100%;
+
+      &:focus-visible {
+        outline: 3px solid $cool;
+        outline-offset: 2px;
+      }
+    }
+
     /* immagini: niente crop, riempiono la loro cella rispettando ratio */
     img.img {
       width: 100%;
@@ -64,6 +80,7 @@
       object-position: center center;
       @include border("all", rgba($chocolate, 0.05));
       display: block;
+      pointer-events: none;
     }
     img.img.align-left {
       object-position: left center;

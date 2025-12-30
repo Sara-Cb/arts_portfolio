@@ -8,6 +8,10 @@ const env = useEnvironmentStore();
 
 const isMobile = computed(() => env.width < 576);
 
+// Computed properties for navigation state
+const isFirstImage = computed(() => gallery.currentIndex === 0);
+const isLastImage = computed(() => gallery.currentIndex === gallery.images.length - 1);
+
 // Drag/Swipe support
 const startX = ref(0);
 const endX = ref(0);
@@ -82,41 +86,46 @@ onBeforeUnmount(() => {
 <template>
   <Teleport to="body">
     <Transition name="gallery-fade">
-      <div v-if="gallery.isOpen" class="fullscreen-gallery">
+      <div v-if="gallery.isOpen" class="fullscreen-gallery" role="dialog" aria-modal="true" aria-label="Full screen image gallery">
         <!-- Backdrop blur - cliccabile per chiudere -->
-        <div class="gallery-backdrop" @click="gallery.closeGallery()"></div>
+        <div class="gallery-backdrop" @click="gallery.closeGallery()" aria-hidden="true"></div>
 
         <!-- Main content -->
-        <div class="gallery-content">
+        <div class="gallery-content" role="document">
           <!-- Header bar -->
-          <div class="gallery-header">
+          <div class="gallery-header" role="toolbar" aria-label="Gallery controls">
             <!-- Info button (desktop only, left) -->
             <button
               v-if="!isMobile"
               class="gallery-info-btn"
               :class="{ active: gallery.showInfo }"
               @click="gallery.toggleInfo"
-              aria-label="Informazioni opera"
+              type="button"
+              :aria-label="gallery.showInfo ? 'Hide project information' : 'Show project information'"
+              :aria-pressed="gallery.showInfo"
             >
-              <font-awesome-icon icon="fa-solid fa-circle-info" />
+              <font-awesome-icon icon="fa-solid fa-circle-info" aria-hidden="true" />
             </button>
 
             <!-- Title (centered) -->
-            <h2 class="gallery-title">{{ gallery.projectTitle }}</h2>
+            <h2 class="gallery-title" id="gallery-title">{{ gallery.projectTitle }}</h2>
 
             <!-- Close button (right) -->
             <button
               class="gallery-close"
               @click="gallery.closeGallery"
-              aria-label="Chiudi galleria"
+              type="button"
+              aria-label="Close gallery (Escape key)"
             >
-              <font-awesome-icon icon="fa-solid fa-xmark" />
+              <font-awesome-icon icon="fa-solid fa-xmark" aria-hidden="true" />
             </button>
           </div>
 
           <!-- Image container -->
           <div
             class="gallery-image-wrap"
+            role="img"
+            :aria-label="`${gallery.currentImage?.alt || gallery.projectTitle}, image ${gallery.currentIndex + 1} of ${gallery.images.length}`"
             @click="handleImageClick"
             @touchstart="handleStart"
             @touchmove="handleMove"
@@ -132,36 +141,50 @@ onBeforeUnmount(() => {
               :src="gallery.currentImage.url"
               :alt="gallery.currentImage.alt"
               class="gallery-image"
+              aria-hidden="true"
             />
             <!-- Navigation arrows -->
             <button
               class="gallery-nav gallery-nav--prev"
               :class="{ 'gallery-nav--mobile': isMobile }"
               @click.stop="gallery.prev"
-              aria-label="Immagine precedente"
+              type="button"
+              :disabled="isFirstImage"
+              :aria-label="`Previous image (currently ${gallery.currentIndex + 1} of ${gallery.images.length})${isFirstImage ? ' - at first image' : ''}`"
             >
-              <font-awesome-icon icon="fa-solid fa-chevron-left" />
+              <font-awesome-icon icon="fa-solid fa-chevron-left" aria-hidden="true" />
             </button>
 
             <button
               class="gallery-nav gallery-nav--next"
               :class="{ 'gallery-nav--mobile': isMobile }"
               @click.stop="gallery.next"
-              aria-label="Immagine successiva"
+              type="button"
+              :disabled="isLastImage"
+              :aria-label="`Next image (currently ${gallery.currentIndex + 1} of ${gallery.images.length})${isLastImage ? ' - at last image' : ''}`"
             >
-              <font-awesome-icon icon="fa-solid fa-chevron-right" />
+              <font-awesome-icon icon="fa-solid fa-chevron-right" aria-hidden="true" />
             </button>
           </div>
 
+          <!-- Screen reader only status -->
+          <div class="sr-only" aria-live="polite" aria-atomic="true">
+            Image {{ gallery.currentIndex + 1 }} of {{ gallery.images.length }}{{ gallery.currentImage?.alt ? ': ' + gallery.currentImage.alt : '' }}
+          </div>
+
           <!-- Dots indicator (bottom center) -->
-          <div class="gallery-dots">
+          <div class="gallery-dots" role="tablist" aria-label="Image selection">
             <button
               v-for="(img, idx) in gallery.images"
               :key="idx"
               class="gallery-dot"
               :class="{ active: idx === gallery.currentIndex }"
               @click.stop="gallery.goToIndex(idx)"
-              :aria-label="`Vai all'immagine ${idx + 1}`"
+              type="button"
+              role="tab"
+              :aria-selected="idx === gallery.currentIndex ? 'true' : 'false'"
+              :aria-label="`Go to image ${idx + 1} of ${gallery.images.length}`"
+              :aria-current="idx === gallery.currentIndex ? 'true' : undefined"
             ></button>
           </div>
 
@@ -170,6 +193,8 @@ onBeforeUnmount(() => {
             <aside
               v-if="!isMobile && gallery.showInfo"
               class="gallery-info-panel"
+              role="region"
+              aria-label="Project information"
             >
               <p v-if="gallery.projectMaterials" class="info-materials">
                 <strong>Materiali:</strong> {{ gallery.projectMaterials }}

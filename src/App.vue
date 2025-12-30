@@ -1,6 +1,6 @@
 <script setup>
 import { RouterView, useRoute } from "vue-router";
-import { computed, onMounted } from "vue";
+import { computed, onMounted, onBeforeUnmount, nextTick } from "vue";
 import { useUiStore } from "@/stores/ui";
 
 import HeaderComponent from "@/components/HeaderComponent.vue";
@@ -24,6 +24,19 @@ const viewKey = computed(() => {
   const key = ui.findPageKeyForRoute?.(route.name, route.params);
   return key || route.matched[0]?.path || "view";
 });
+
+// Cleanup transition state dopo che la transizione è completata
+function onAfterEnter() {
+  nextTick(() => {
+    ui.setCrossPageTransition(false);
+  });
+}
+
+function onAfterLeave() {
+  nextTick(() => {
+    ui.setCrossPageTransition(false);
+  });
+}
 
 // stessa logica del router: prendo il "root" del name
 const rootName = (n) => String(n || "").split("-")[0];
@@ -49,6 +62,8 @@ onMounted(() => {
 </script>
 
 <template>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
   <ContentWarning />
 
   <HeaderComponent />
@@ -58,12 +73,15 @@ onMounted(() => {
     :current-category="currentRootCategory"
   />
 
-  <ScrollIndicator />
-
-  <main>
+  <main id="main-content">
     <RouterView v-slot="{ Component }">
       <div class="view-wrapper">
-        <Transition :name="transitionName" mode="out-in">
+        <Transition
+          :name="transitionName"
+          mode="out-in"
+          @after-enter="onAfterEnter"
+          @after-leave="onAfterLeave"
+        >
           <div class="route-page" :key="viewKey">
             <component :is="Component" />
           </div>
@@ -71,6 +89,8 @@ onMounted(() => {
       </div>
     </RouterView>
   </main>
+
+  <ScrollIndicator />
 
   <FullScreenGallery />
 </template>

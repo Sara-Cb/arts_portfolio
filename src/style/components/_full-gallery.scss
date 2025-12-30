@@ -87,6 +87,11 @@
     border-color: rgba(255, 255, 255, 0.4);
   }
 
+  &:focus-visible {
+    outline: 3px solid $cool;
+    outline-offset: 2px;
+  }
+
   @media (max-width: 575px) {
     width: 40px;
     height: 40px;
@@ -113,6 +118,11 @@
   &:hover {
     background: rgba(255, 255, 255, 0.2);
     transform: scale(1.05);
+  }
+
+  &:focus-visible {
+    outline: 3px solid $cool;
+    outline-offset: 2px;
   }
 
   @media (max-width: 575px) {
@@ -163,9 +173,21 @@
   font-size: 1.5rem;
   z-index: 10;
 
-  &:hover {
+  &:hover:not(:disabled) {
     background: rgba(255, 255, 255, 0.2);
     transform: translateY(-50%) scale(1.1);
+  }
+
+  &:focus-visible {
+    outline: 3px solid $cool;
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
   }
 
   &--prev {
@@ -220,6 +242,11 @@
   &:hover {
     background: rgba(255, 255, 255, 0.6);
     transform: scale(1.2);
+  }
+
+  &:focus-visible {
+    outline: 2px solid $cool;
+    outline-offset: 3px;
   }
 
   &.active {

@@ -20,6 +20,40 @@
       @include dimensions(100%, 4rem);
       @include flexColumnBottom;
 
+      .volume-icon-btn {
+        background: transparent;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+        color: inherit;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &:focus-visible {
+          outline: 2px solid $cool;
+          outline-offset: 2px;
+          border-radius: 4px;
+        }
+      }
+
+      .playerIcon {
+        background: transparent;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+        color: inherit;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &:focus-visible {
+          outline: 2px solid $cool;
+          outline-offset: 2px;
+          border-radius: 4px;
+        }
+      }
+
       svg {
         cursor: pointer;
       }
@@ -46,6 +80,11 @@
         .bar {
           background: $cool-darker-20;
           cursor: pointer;
+
+          &:focus-visible {
+            outline: 2px solid $cool;
+            outline-offset: 3px;
+          }
         }
 
         .handle {
@@ -53,6 +92,12 @@
           @include dimensions(0.7rem, 0.7rem);
           border-radius: 50%;
           cursor: pointer;
+          transition: transform 0.2s ease;
+        }
+
+        .bar:focus-visible + .bar .handle,
+        .bar:focus .handle {
+          transform: translateX(-50%) scale(1.3);
         }
       }
     }
@@ -68,19 +113,28 @@
       @include fullDimensions;
       @include flexColumnLeft;
       gap: 0.6rem;
-      .track,
-      .spotify {
-        cursor: pointer;
-      }
       .track {
+        background: transparent;
+        border: none;
+        border-bottom: 1px solid;
+        text-align: left;
+        width: 100%;
+        font-family: inherit;
+        cursor: pointer;
         @include flexRowLeft;
         font-size: 0.9rem;
         color: $cool;
         gap: 0.6rem;
         padding: 0.2rem 0;
-        @include border("bottom");
         border-image: linear-gradient(to right, transparent, $cool, transparent)
           1;
+
+        &:focus-visible {
+          outline: 2px solid $cool;
+          outline-offset: 2px;
+          border-radius: 4px;
+        }
+
         &.active {
           color: $ghost;
           border-image: linear-gradient(
@@ -96,10 +150,42 @@
         }
       }
 
-      .spotify {
+      .social-links {
         margin-top: 0.5rem;
         font-size: 0.8rem;
-        color: #1db954;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: $cool;
+
+        .label {
+          color: $cool;
+        }
+
+        .separator {
+          color: $cool;
+          opacity: 0.5;
+        }
+
+        .spotify {
+          color: #1db954;
+
+          &:hover,
+          &:focus-visible {
+            color: #1ed760;
+            text-decoration: underline;
+          }
+        }
+
+        .youtube {
+          color: #ff0000;
+
+          &:hover,
+          &:focus-visible {
+            color: #ff4444;
+            text-decoration: underline;
+          }
+        }
       }
     }
   }

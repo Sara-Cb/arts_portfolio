@@ -93,7 +93,7 @@ function openGallery(clickedImage) {
     <!-- Desktop: Layout a griglia -->
     <template v-else>
       <div class="md-head">
-        <h2 class="md-title">{{ project.title }}</h2>
+        <h2 class="md-title" tabindex="0" :aria-label="`Project: ${project.title}`">{{ project.title }}</h2>
         <p v-if="project.subtitle" class="md-sub">{{ project.subtitle }}</p>
       </div>
 
@@ -111,20 +111,23 @@ function openGallery(clickedImage) {
         >
           <div class="vf-wrap">
             <template v-for="img in slot.images" :key="img.url || img.text">
-              <img
+              <button
                 v-if="img.kind !== 'text'"
-                v-image-loader
-                :src="img.url"
-                :alt="img.alt"
-                :class="img.classes"
-                :style="{
-                  ...img.style,
-                  cursor: 'pointer',
-                }"
-                loading="lazy"
-                decoding="async"
+                type="button"
+                class="md-image-button"
+                :style="img.style"
                 @click="openGallery(img)"
-              />
+                :aria-label="`View ${img.alt} in full screen gallery`"
+              >
+                <img
+                  v-image-loader
+                  :src="img.url"
+                  :alt="img.alt"
+                  :class="img.classes"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </button>
               <div
                 v-else
                 :class="img.classes"

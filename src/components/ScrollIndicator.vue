@@ -103,21 +103,23 @@ const showTooltips = computed(() => pageKey.value !== "rahem");
 </script>
 
 <template>
-  <div class="scrollbar">
-    <div
+  <nav class="scrollbar" role="navigation" aria-label="Page sections">
+    <button
       v-for="(section, index) in sections"
       :key="sectionId(section)"
-      class="dot"
       :id="sectionId(section) + '-dot'"
+      class="dot"
       :class="{ active: index === activeIndex }"
-      :data-title="getSectionTitle(section)"
       :style="{ '--dot-height': getDotHeight(index) }"
       @click="goToSection(section)"
+      type="button"
+      :aria-label="`Navigate to ${getSectionTitle(section)}`"
+      :aria-current="index === activeIndex ? 'true' : undefined"
     >
       <div class="dot-inner"></div>
-      <span v-if="showTooltips" class="dot-tooltip">{{
+      <span v-if="showTooltips" class="dot-tooltip" aria-hidden="true">{{
         getSectionTitle(section)
       }}</span>
-    </div>
-  </div>
+    </button>
+  </nav>
 </template>

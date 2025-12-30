@@ -1,0 +1,576 @@
+@use "@/style/partials/colors" as *;
+@use "@/style/partials/typography" as *;
+@use "@/style/partials/variables" as *;
+@use "@/style/partials/mixins" as *;
+
+.music-detail {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+// ====================================
+// MOBILE LAYOUT (Instagram Reel Style)
+// ====================================
+.md-mobile-container {
+  width: 100%;
+  height: calc(100dvh - $header-size - $projects-navbar-height);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: $night;
+}
+
+.md-video-section {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.md-video-wrap {
+  flex: 1;
+  width: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.md-video-iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+  pointer-events: none; // Disable YouTube default controls
+}
+
+// Overlay trasparente per intercettare tap senza interferire con controlli YouTube
+.md-video-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  cursor: pointer;
+  background: transparent;
+}
+
+// Play button area (separate section below video)
+.md-play-area {
+  width: 100%;
+  padding: 3rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.md-play-btn {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 2px solid rgba($ghost, 0.5);
+  background: rgba($cool, 0.15);
+  backdrop-filter: blur(12px);
+  color: $ghost;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1.5rem;
+  box-shadow: 0 4px 16px rgba($night, 0.5);
+
+  svg {
+    margin-left: 4px; // Centra visivamente l'icona play
+  }
+
+  &:active {
+    transform: scale(0.92);
+    background: rgba($ghost, 0.3);
+  }
+}
+
+// Progress container (bottom left when playing)
+.md-progress-container {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 0.75rem;
+  right: 4.5rem; // Space for side controls
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  z-index: 12;
+  pointer-events: auto;
+}
+
+.md-progress-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  cursor: pointer;
+}
+
+.md-progress-track {
+  position: relative;
+  width: 100%;
+  height: 4px;
+  background: rgba($ghost, 0.25);
+  border-radius: 2px;
+  overflow: visible;
+}
+
+.md-progress-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: $ghost;
+  border-radius: 2px;
+  transition: width 0.1s linear;
+}
+
+.md-progress-handle {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 12px;
+  height: 12px;
+  background: $ghost;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba($night, 0.4);
+  transition: left 0.1s linear;
+  cursor: grab;
+
+  &:active {
+    cursor: grabbing;
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+}
+
+.md-progress-time {
+  font-size: 0.75rem;
+  color: $ghost;
+  font-family: $font-family-base;
+  text-shadow: 0 1px 2px rgba($night, 0.6);
+}
+
+// Listen on button
+.md-listen-btn {
+  background: rgba($cool, 0.15);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba($ghost, 0.3);
+  color: $ghost;
+  font-family: $font-family-base;
+  font-size: 0.75rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: lowercase;
+  white-space: nowrap;
+  align-self: flex-start;
+
+  &:active {
+    background: rgba($ghost, 0.25);
+    transform: scale(0.95);
+  }
+}
+
+// Side controls column (Instagram Reel style - right side)
+.md-side-controls {
+  position: absolute;
+  bottom: 1.5rem;
+  right: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  z-index: 15;
+}
+
+.md-control-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid rgba($ghost, 0.3);
+  background: rgba($cool, 0.15);
+  backdrop-filter: blur(8px);
+  color: $ghost;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+
+  &:active {
+    transform: scale(0.92);
+    background: rgba($ghost, 0.25);
+  }
+
+  &.active {
+    background: rgba($cool, 0.3);
+    border-color: rgba($ghost, 0.5);
+  }
+
+  // Spotify brand color hint
+  &.md-control-spotify {
+    svg {
+      color: #1db954;
+    }
+  }
+
+  // YouTube brand color hint
+  &.md-control-youtube {
+    svg {
+      color: #ff0000;
+    }
+  }
+
+  // Lyrics icon
+  &.md-control-lyrics {
+    svg {
+      font-size: 1rem;
+    }
+  }
+}
+
+// ====================================
+// LYRICS OVERLAY (Mobile)
+// ====================================
+.md-lyrics-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  z-index: 25;
+  backdrop-filter: blur(12px);
+  background: rgba($night, 0.85);
+}
+
+.md-lyrics-content {
+  background: rgba($chocolate, 0.2);
+  border: 1px solid rgba($ghost, 0.25);
+  border-radius: 16px;
+  padding: 2rem 1.5rem;
+  color: $ghost;
+  max-width: 90%;
+  max-height: 85%;
+  overflow-y: auto;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.md-lyrics-title {
+  font-family: $font-family-heading;
+  font-size: 1.3rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: $ghost;
+  margin: 0;
+  padding-right: 2rem; // Space for close button
+}
+
+.md-lyrics-text {
+  font-family: $font-family-base;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: rgba($ghost, 0.9);
+  white-space: pre-wrap;
+  margin: 0;
+  overflow-wrap: break-word;
+}
+
+.md-lyrics-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: rgba($ghost, 0.15);
+  border: 1px solid rgba($ghost, 0.3);
+  color: $ghost;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 1rem;
+  z-index: 1;
+
+  &:active {
+    background: rgba($ghost, 0.25);
+    transform: scale(0.92);
+  }
+}
+
+// ====================================
+// DESKTOP LAYOUT (Centered Video + Side Controls)
+// ====================================
+.md-desktop-container {
+  width: 100%;
+  min-height: calc(100dvh - $header-size - $projects-navbar-height);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 2rem;
+  gap: 2rem;
+
+  .md-video-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: min(1200px, 70vw);
+  }
+
+  .md-video-wrap {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba($night, 0.4);
+    @include border("all", rgba($chocolate, 0.1));
+    position: relative;
+  }
+
+  .md-play-area {
+    padding: 2rem 0;
+  }
+
+  .md-play-btn {
+    width: 72px;
+    height: 72px;
+    font-size: 1.75rem;
+
+    &:hover {
+      transform: scale(1.08);
+      background: rgba($ghost, 0.2);
+      border-color: rgba($ghost, 0.7);
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+  }
+
+  .md-progress-container--desktop {
+    bottom: 1.5rem;
+    left: 1.5rem;
+    right: 1.5rem;
+
+    .md-progress-time {
+      font-size: 0.85rem;
+    }
+
+    .md-listen-btn {
+      font-size: 0.85rem;
+      padding: 0.5rem 1rem;
+    }
+  }
+
+  .md-video-iframe {
+    width: 100%;
+    height: 100%;
+  }
+
+  .md-side-controls {
+    position: static;
+    flex-direction: column;
+    gap: 1.2rem;
+    margin-left: 0;
+  }
+
+  .md-control-btn {
+    width: 52px;
+    height: 52px;
+    font-size: 1.2rem;
+
+    &:hover {
+      background: rgba($ghost, 0.2);
+      transform: scale(1.05);
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+  }
+}
+
+// ====================================
+// LYRICS PANEL (Desktop - Slide from Right)
+// ====================================
+.md-lyrics-panel {
+  position: fixed;
+  top: $header-size;
+  right: 0;
+  width: min(420px, 35vw);
+  height: calc(100vh - $header-size);
+  background: rgba($chocolate, 0.25);
+  backdrop-filter: blur(16px);
+  border-left: 1px solid rgba($ghost, 0.2);
+  padding: 2.5rem 2rem;
+  overflow-y: auto;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+
+  .md-lyrics-close {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+  }
+
+  .md-lyrics-title {
+    font-size: 1.6rem;
+    padding-right: 3rem;
+  }
+
+  .md-lyrics-text {
+    font-size: 1rem;
+    line-height: 1.8;
+  }
+}
+
+// ====================================
+// TRANSITIONS
+// ====================================
+
+// Play button area fade
+.play-btn-fade-enter-active,
+.play-btn-fade-leave-active {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.play-btn-fade-enter-from,
+.play-btn-fade-leave-to {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+// Progress container fade
+.progress-fade-enter-active,
+.progress-fade-leave-active {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.progress-fade-enter-from,
+.progress-fade-leave-to {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+// Lyrics overlay (mobile)
+.lyrics-overlay-fade-enter-active {
+  transition: opacity 0.3s ease, backdrop-filter 0.3s ease;
+}
+
+.lyrics-overlay-fade-leave-active {
+  transition: opacity 0.25s ease, backdrop-filter 0.25s ease;
+}
+
+.lyrics-overlay-fade-enter-from,
+.lyrics-overlay-fade-leave-to {
+  opacity: 0;
+  backdrop-filter: blur(0px);
+}
+
+.lyrics-overlay-fade-enter-active .md-lyrics-content {
+  animation: lyrics-scale-in 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.lyrics-overlay-fade-leave-active .md-lyrics-content {
+  animation: lyrics-scale-out 0.25s cubic-bezier(0.4, 0, 0.6, 1);
+}
+
+@keyframes lyrics-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes lyrics-scale-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
+
+// Lyrics panel (desktop - slide)
+.lyrics-panel-slide-enter-active,
+.lyrics-panel-slide-leave-active {
+  transition: transform 0.35s cubic-bezier(0.25, 0.8, 0.25, 1),
+    opacity 0.35s ease;
+}
+
+.lyrics-panel-slide-enter-from {
+  transform: translateX(100%);
+  opacity: 0;
+}
+
+.lyrics-panel-slide-leave-to {
+  transform: translateX(100%);
+  opacity: 0;
+}
+
+// ====================================
+// RESPONSIVE ADJUSTMENTS
+// ====================================
+@media (max-width: 575px) {
+  .md-mobile-container {
+    height: calc(100dvh - $header-size - $projects-navbar-height);
+  }
+
+  .md-side-controls {
+    bottom: 1rem;
+    right: 0.5rem;
+    gap: 0.8rem;
+  }
+
+  .md-control-btn {
+    width: 44px;
+    height: 44px;
+    font-size: 1rem;
+  }
+}
+
+@media (min-width: 1400px) {
+  .md-desktop-container {
+    padding: 3rem;
+
+    .md-video-wrap {
+      max-width: 1400px;
+    }
+  }
+
+  .md-lyrics-panel {
+    width: 480px;
+    padding: 3rem 2.5rem;
+  }
+}

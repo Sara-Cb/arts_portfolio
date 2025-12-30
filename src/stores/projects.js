@@ -20,8 +20,8 @@ export const useProjectsStore = defineStore("projects", () => {
   const loading = ref(false);
   const error = ref(null);
 
-  const byCategory = ref({ materical: [], visual: [] });
-  const indexBySlug = ref({ materical: new Map(), visual: new Map() });
+  const byCategory = ref({ materical: [], visual: [], music: [] });
+  const indexBySlug = ref({ materical: new Map(), visual: new Map(), music: new Map() });
 
   const BASE = (import.meta.env.BASE_URL || "/").replace(/\/+$/, "");
 
@@ -76,6 +76,23 @@ export const useProjectsStore = defineStore("projects", () => {
   const normalizeProject = (raw, category) => {
     const id = raw.id ? slugify(raw.id) : slugify(raw.title || "");
     const coverFromJson = resolveCoverSrc(category, id, raw.cover);
+
+    // Music projects have different structure (videoId, lyrics, links)
+    if (category === "music") {
+      return {
+        id,
+        slug: id,
+        category,
+        title: raw.title || "",
+        date: raw.date || null,
+        videoId: raw.videoId || "",
+        links: raw.links || {},
+        lyrics: raw.lyrics || "",
+        ...raw,
+      };
+    }
+
+    // Standard project structure for materical/visual
     return {
       id,
       slug: id,
@@ -129,12 +146,17 @@ export const useProjectsStore = defineStore("projects", () => {
       await Promise.all([
         loadCategory("materical", "projects/materical.json"),
         loadCategory("visual", "projects/visual.json"),
+        loadCategory("music", "projects/music.json"),
       ]);
-      await attachGalleriesToProjects(byCategory.value, {
-        base: BASE,
-        buildTimeVar:
-          typeof __BUILD_TIME__ !== "undefined" ? __BUILD_TIME__ : undefined,
-      });
+      // Only attach galleries for materical and visual (music doesn't use gallery manifest)
+      await attachGalleriesToProjects(
+        { materical: byCategory.value.materical, visual: byCategory.value.visual },
+        {
+          base: BASE,
+          buildTimeVar:
+            typeof __BUILD_TIME__ !== "undefined" ? __BUILD_TIME__ : undefined,
+        }
+      );
       loaded.value = true;
     } catch (e) {
       console.error("[projects] load error:", e);
@@ -148,9 +170,11 @@ export const useProjectsStore = defineStore("projects", () => {
   const all = computed(() => [
     ...byCategory.value.materical,
     ...byCategory.value.visual,
+    ...byCategory.value.music,
   ]);
   const matericals = computed(() => byCategory.value.materical);
   const visuals = computed(() => byCategory.value.visual);
+  const musics = computed(() => byCategory.value.music);
   function getByCategory(category) {
     return byCategory.value[category] || [];
   }
@@ -160,6 +184,7 @@ export const useProjectsStore = defineStore("projects", () => {
   }
   const getMaterical = (slug) => getOne("materical", slug);
   const getVisual = (slug) => getOne("visual", slug);
+  const getMusic = (slug) => getOne("music", slug);
 
   return {
     loaded,
@@ -169,10 +194,12 @@ export const useProjectsStore = defineStore("projects", () => {
     all,
     matericals,
     visuals,
+    musics,
     getByCategory,
     getOne,
     getMaterical,
     getVisual,
+    getMusic,
     getProjectGallery: (category, id, title) =>
       getProjectGallery(category, id, title, {
         base: BASE,

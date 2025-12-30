@@ -117,5 +117,13 @@ export const usePlayerStore = defineStore("player", {
     setVideoLoaded(loaded) {
       this.isVideoLoaded = loaded;
     },
+
+    pause() {
+      const current = this.audioMap[this.currentTrack]?.track;
+      if (!current) return;
+
+      current.pause();
+      this.isPlaying = false;
+    },
   },
 });

@@ -9,7 +9,7 @@ Allow: /
 # Contains artistic works with nudity and mature themes
 
 # Sitemap
-Sitemap: https://yourdomain.com/sitemap.xml
+Sitemap: https://raehm.com/sitemap.xml
 
 # Crawl-delay for respectful crawling
 Crawl-delay: 10

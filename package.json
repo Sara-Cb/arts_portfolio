@@ -5,10 +5,11 @@
   "type": "module",
   "scripts": {
     "build:manifest": "node tools/build-images-manifest.mjs",
+    "build:sitemap": "node tools/generate-sitemap.mjs",
     "optimize:images": "node tools/optimize-images.mjs",
     "optimize:replace": "node tools/replace-optimized.mjs",
     "dev": "npm run build:manifest && vite",
-    "prebuild": "npm run build:manifest",
+    "prebuild": "npm run build:manifest && npm run build:sitemap",
     "build": "vite build",
     "preview": "vite preview"
   },

@@ -1,14 +1,49 @@
 <script setup>
-import { computed, onMounted } from "vue";
+import { computed, onMounted, watch } from "vue";
+import { useRoute } from "vue-router";
 import { useUiStore } from "@/stores/ui";
 import { useProjectsStore } from "@/stores/projects";
+import { useSeo, useStructuredData, getCreativeWorkStructuredData } from "@/composables/useSeo";
 import MusicDetail from "@/components/projects/MusicDetail.vue";
 import { useVerticalNavigator } from "@/composables/useVerticalNavigator";
 
 const ui = useUiStore();
 const projectsStore = useProjectsStore();
+const route = useRoute();
 
 const projects = computed(() => projectsStore.musics);
+
+// SEO dinamico basato sul progetto corrente
+const currentProject = computed(() => {
+  if (!route.params.slug) return null;
+  return projectsStore.getMusic(route.params.slug);
+});
+
+// SEO per lista o progetto specifico
+const seoOptions = computed(() => {
+  if (currentProject.value) {
+    return {
+      title: `${currentProject.value.title} | Music`,
+      description: `Listen to "${currentProject.value.title}" by Ræhm. ${currentProject.value.lyrics ? 'View lyrics and' : ''} Watch the official video. Mature content (18+).`,
+      keywords: ["music", "song", "video", currentProject.value.title, "Raehm"],
+      type: "music.song",
+    };
+  }
+  return {
+    title: "Music | Ræhm",
+    description: "Explore music videos and songs by Ræhm. Contemporary music with visual storytelling. Mature content (18+).",
+    keywords: ["music", "songs", "music videos", "contemporary music"],
+  };
+});
+
+useSeo(seoOptions);
+
+// Structured data per progetto corrente
+watch(currentProject, (project) => {
+  if (project) {
+    useStructuredData(getCreativeWorkStructuredData(project, "music"));
+  }
+}, { immediate: true });
 
 // Music projects are ready when loaded (no gallery dependency)
 const isReady = computed(

@@ -1,14 +1,49 @@
 <script setup>
-import { computed, onMounted } from "vue";
+import { computed, onMounted, watch } from "vue";
+import { useRoute } from "vue-router";
 import { useUiStore } from "@/stores/ui";
 import { useProjectsStore } from "@/stores/projects";
+import { useSeo, useStructuredData, getCreativeWorkStructuredData } from "@/composables/useSeo";
 import MatericalDetail from "@/components/projects/MatericalDetail.vue";
 import { useVerticalNavigator } from "@/composables/useVerticalNavigator";
 
 const ui = useUiStore();
 const projectsStore = useProjectsStore();
+const route = useRoute();
 
 const projects = computed(() => projectsStore.matericals);
+
+// SEO dinamico basato sul progetto corrente
+const currentProject = computed(() => {
+  if (!route.params.slug) return null;
+  return projectsStore.getMaterical(route.params.slug);
+});
+
+// SEO per lista o progetto specifico
+const seoOptions = computed(() => {
+  if (currentProject.value) {
+    return {
+      title: `${currentProject.value.title} | Materical`,
+      description: currentProject.value.description || currentProject.value.subtitle || `Explore "${currentProject.value.title}" - Material art and sculpture by Ræhm. Mature content (18+).`,
+      keywords: ["sculpture", "material art", "contemporary sculpture", currentProject.value.title, "Raehm"],
+      type: "article",
+    };
+  }
+  return {
+    title: "Materical | Ræhm",
+    description: "Explore material art and sculptural works by Ræhm. Contemporary sculptures exploring form, texture, and materiality. Mature content (18+).",
+    keywords: ["sculpture", "material art", "contemporary sculpture", "3D art", "sculptural works"],
+  };
+});
+
+useSeo(seoOptions);
+
+// Structured data per progetto corrente
+watch(currentProject, (project) => {
+  if (project) {
+    useStructuredData(getCreativeWorkStructuredData(project, "materical"));
+  }
+}, { immediate: true });
 
 // pronto = projectsStore.loaded + ogni progetto ha gallery con items
 const isReady = computed(

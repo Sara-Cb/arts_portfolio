@@ -35,3 +35,5 @@ CLAUDE.md
 tools
 .htaccess
 public/projects/_images-manifest.json
+.env.example
+.env

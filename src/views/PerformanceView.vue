@@ -1,12 +1,22 @@
 <script setup>
 import { computed, onMounted } from "vue";
+import { useRoute } from "vue-router";
 import { useUiStore } from "@/stores/ui";
 import { useProjectsStore } from "@/stores/projects";
+import { useSeo } from "@/composables/useSeo";
 import PerformanceDetail from "@/components/projects/PerformanceDetail.vue";
 
 const ui = useUiStore();
 const projectsStore = useProjectsStore();
+const route = useRoute();
 const projects = computed(() => projectsStore.getByCategory("performance"));
+
+// SEO per performance (work in progress)
+useSeo({
+  title: "Performance | Ræhm",
+  description: "Performance art works by Ræhm. Coming soon. Mature content (18+).",
+  keywords: ["performance art", "contemporary performance", "live art", "body art"],
+});
 
 // Genera ID sezione
 function sectionId(slug) {

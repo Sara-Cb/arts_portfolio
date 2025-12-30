@@ -1,14 +1,49 @@
 <script setup>
-import { computed, onMounted } from "vue";
+import { computed, onMounted, watch } from "vue";
+import { useRoute } from "vue-router";
 import { useUiStore } from "@/stores/ui";
 import { useProjectsStore } from "@/stores/projects";
+import { useSeo, useStructuredData, getCreativeWorkStructuredData } from "@/composables/useSeo";
 import VisualDetail from "@/components/projects/VisualDetail.vue";
 import { useVerticalNavigator } from "@/composables/useVerticalNavigator";
 
 const ui = useUiStore();
 const projectsStore = useProjectsStore();
+const route = useRoute();
 
 const projects = computed(() => projectsStore.visuals);
+
+// SEO dinamico basato sul progetto corrente
+const currentProject = computed(() => {
+  if (!route.params.slug) return null;
+  return projectsStore.getVisual(route.params.slug);
+});
+
+// SEO per lista o progetto specifico
+const seoOptions = computed(() => {
+  if (currentProject.value) {
+    return {
+      title: `${currentProject.value.title} | Visual`,
+      description: currentProject.value.description || currentProject.value.subtitle || `Explore "${currentProject.value.title}" - Visual art by Ræhm. Mature content (18+).`,
+      keywords: ["visual art", "contemporary art", "photography", "digital art", currentProject.value.title, "Raehm"],
+      type: "article",
+    };
+  }
+  return {
+    title: "Visual | Ræhm",
+    description: "Explore visual art works by Ræhm. Contemporary photography, digital art, and visual compositions. Mature content (18+).",
+    keywords: ["visual art", "contemporary art", "photography", "digital art", "artistic photography"],
+  };
+});
+
+useSeo(seoOptions);
+
+// Structured data per progetto corrente
+watch(currentProject, (project) => {
+  if (project) {
+    useStructuredData(getCreativeWorkStructuredData(project, "visual"));
+  }
+}, { immediate: true });
 
 const isReady = computed(
   () =>

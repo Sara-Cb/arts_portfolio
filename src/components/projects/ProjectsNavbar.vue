@@ -20,10 +20,12 @@ const currentProject = computed(() => {
   if (!route.params.slug) return null;
 
   const category = props.currentCategory;
-  if (category === 'materical') return projectsStore.getMaterical(route.params.slug);
-  if (category === 'visual') return projectsStore.getVisual(route.params.slug);
-  if (category === 'performance') return projectsStore.getPerformance(route.params.slug);
-  if (category === 'music') return projectsStore.getMusic(route.params.slug);
+  if (category === "materical")
+    return projectsStore.getMaterical(route.params.slug);
+  if (category === "visual") return projectsStore.getVisual(route.params.slug);
+  if (category === "performance")
+    return projectsStore.getPerformance(route.params.slug);
+  if (category === "music") return projectsStore.getMusic(route.params.slug);
 
   return null;
 });
@@ -110,7 +112,7 @@ onBeforeUnmount(() =>
     <!-- Mobile: titolo progetto a sinistra, categoria + menu a destra -->
     <template v-if="isMobile && currentProject">
       <div class="pn-left">
-        <span class="pn-project-title">{{ currentProject.title }}</span>
+        <h1 class="pn-project-title">{{ currentProject.title }}</h1>
       </div>
 
       <div class="pn-right-mobile">
@@ -163,9 +165,7 @@ onBeforeUnmount(() =>
     <!-- Desktop: layout originale -->
     <template v-else>
       <div class="pn-left">
-        <span class="pn-current" :data-name="current">{{
-          labelOf(current)
-        }}</span>
+        <h1 class="pn-current" :data-name="current">{{ labelOf(current) }}</h1>
       </div>
 
       <ul class="pn-right pn-desktop" role="list">

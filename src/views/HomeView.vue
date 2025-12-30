@@ -3,12 +3,22 @@ import { onMounted, nextTick } from "vue";
 import { useRoute } from "vue-router";
 import { useUiStore } from "@/stores/ui";
 import { useVerticalNavigator } from "@/composables/useVerticalNavigator";
+import { useSeo, useStructuredData, getArtistStructuredData } from "@/composables/useSeo";
 import Hero from "@/components/home/Hero.vue";
 import Projects from "@/components/home/Projects.vue";
 import VisitCard from "@/components/home/VisitCard.vue";
 
 const ui = useUiStore();
 const route = useRoute();
+
+// SEO
+useSeo({
+  title: "Ræhm | Contemporary Artist Portfolio",
+  description: "Contemporary artist portfolio featuring sculpture, visual art, performance, and music. Explore multidisciplinary works. Mature content (18+).",
+  keywords: ["contemporary art", "sculpture", "visual art", "performance art", "music", "artist portfolio"],
+});
+
+useStructuredData(getArtistStructuredData());
 
 ui.setSectionList("rahem", [
   { name: "rahem" },

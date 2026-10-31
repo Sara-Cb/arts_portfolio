@@ -1,14 +1,5 @@
 [
   {
-    "id": "attacchi-di-panico",
-    "title": "Attacchi di Panico",
-    "date": "2023",
-    "videoId": "azZfm2RS20k",
-    "links": {
-      "youtube": "https://www.youtube.com/watch?v=azZfm2RS20k&list=PLWt3sXi3SSj3D3QXBxRerOZz8ytfXhH-C&index=2"
-    }
-  },
-  {
     "id": "a-blurred-man",
     "title": "a blurred man in my sleep paralysis wants to hurt me again",
     "date": "2024-06-10",
@@ -18,12 +9,12 @@
     }
   },
   {
-    "id": "serpent-church",
-    "title": "Serpent Church",
-    "date": "04-2025",
-    "videoId": "QrwqsYX4i-Y",
+    "id": "attacchi-di-panico",
+    "title": "attacchi di panico",
+    "date": "2023-08-25",
+    "videoId": "azZfm2RS20k",
     "links": {
-      "youtube": "https://www.youtube.com/watch?v=QrwqsYX4i-Y"
+      "youtube": "https://www.youtube.com/watch?v=azZfm2RS20k"
     }
   }
 ]

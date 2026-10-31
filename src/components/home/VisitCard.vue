@@ -23,8 +23,8 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
           <h6>Let's create new dimensions together.</h6>
         </div>
         <div class="contactList">
-          <a class="contact" href="mailto:lab@raehm.com" target="_blank">
-            <p class="info">lab@ræhm.com</p>
+          <a class="contact" href="mailto:raehm098@gmail.com" target="_blank">
+            <p class="info">raehm098@gmail.com</p>
             <div class="icon">
               <FontAwesomeIcon :icon="['fas', 'envelope']" />
             </div>

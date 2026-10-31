@@ -139,8 +139,8 @@ function createPlayer() {
         rel: 0,
         enablejsapi: 1,
         iv_load_policy: 3, // disabilita annotazioni
-        fs: 0,             // disabilita fullscreen
-        disablekb: 1,      // disabilita controlli tastiera YouTube
+        fs: 0, // disabilita fullscreen
+        disablekb: 1, // disabilita controlli tastiera YouTube
         playsinline: 1,
       },
       events: {
@@ -372,7 +372,6 @@ onBeforeUnmount(() => {
               </div>
             </div>
           </div>
-
         </div>
 
         <!-- Side controls column (right) - Mobile -->
@@ -511,7 +510,6 @@ onBeforeUnmount(() => {
               </div>
             </div>
           </div>
-
         </div>
 
         <!-- Side controls column (right) -->

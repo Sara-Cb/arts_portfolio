@@ -51,23 +51,7 @@ header {
   .playerMenu {
     gap: 1rem;
 
-    .volume-icon-btn {
-      background: transparent;
-      border: none;
-      padding: 0;
-      cursor: pointer;
-      color: inherit;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      &:focus-visible {
-        outline: 2px solid $cool;
-        outline-offset: 2px;
-        border-radius: 4px;
-      }
-    }
-
+    .volume-icon-btn,
     .playerIcon {
       background: transparent;
       border: none;

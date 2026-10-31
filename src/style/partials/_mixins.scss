@@ -208,14 +208,6 @@
   justify-content: space-between;
 }
 
-@mixin container() {
-  @include fullDimensions;
-  @include flexColumnTop;
-  gap: $margin-lg;
-  margin: 0 auto;
-  @include containerPadding;
-}
-
 //
 // POSITION
 //

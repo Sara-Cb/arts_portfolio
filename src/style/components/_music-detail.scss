@@ -62,40 +62,36 @@
   background: transparent;
 }
 
-// Play button area (separate section below video)
-.md-play-area {
-  width: 100%;
-  padding: 3rem 0;
+// Fallback quando YouTube blocca l'embedding (errore 100/101/150)
+.md-embed-fallback {
+  position: absolute;
+  inset: 0;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-}
+  gap: 1.5rem;
+  background: $night;
 
-.md-play-btn {
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  border: 2px solid rgba($ghost, 0.5);
-  background: rgba($cool, 0.15);
-  backdrop-filter: blur(12px);
-  color: $ghost;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: 1.5rem;
-  box-shadow: 0 4px 16px rgba($night, 0.5);
-
-  svg {
-    margin-left: 4px; // Centra visivamente l'icona play
+  .md-fallback-thumb {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.4;
+    position: absolute;
+    inset: 0;
   }
 
-  &:active {
-    transform: scale(0.92);
-    background: rgba($ghost, 0.3);
+  .md-fallback-body {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
   }
 }
+
 
 // Progress container (bottom left when playing)
 .md-progress-container {
@@ -350,26 +346,6 @@
     position: relative;
   }
 
-  .md-play-area {
-    padding: 2rem 0;
-  }
-
-  .md-play-btn {
-    width: 72px;
-    height: 72px;
-    font-size: 1.75rem;
-
-    &:hover {
-      transform: scale(1.08);
-      background: rgba($ghost, 0.2);
-      border-color: rgba($ghost, 0.7);
-    }
-
-    &:active {
-      transform: scale(0.95);
-    }
-  }
-
   .md-progress-container--desktop {
     bottom: 1.5rem;
     left: 1.5rem;
@@ -452,18 +428,6 @@
 // ====================================
 // TRANSITIONS
 // ====================================
-
-// Play button area fade
-.play-btn-fade-enter-active,
-.play-btn-fade-leave-active {
-  transition: opacity 0.3s ease, transform 0.3s ease;
-}
-
-.play-btn-fade-enter-from,
-.play-btn-fade-leave-to {
-  opacity: 0;
-  transform: translateY(20px);
-}
 
 // Progress container fade
 .progress-fade-enter-active,

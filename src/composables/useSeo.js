@@ -105,19 +105,17 @@ export function useSeo(options = {}) {
  * Aggiunge dati strutturati per Google Rich Results
  */
 export function useStructuredData(data) {
-  onMounted(() => {
-    const scriptId = 'structured-data';
-    let script = document.getElementById(scriptId);
+  const scriptId = 'structured-data';
+  let script = document.getElementById(scriptId);
 
-    if (!script) {
-      script = document.createElement('script');
-      script.id = scriptId;
-      script.type = 'application/ld+json';
-      document.head.appendChild(script);
-    }
+  if (!script) {
+    script = document.createElement('script');
+    script.id = scriptId;
+    script.type = 'application/ld+json';
+    document.head.appendChild(script);
+  }
 
-    script.textContent = JSON.stringify(data);
-  });
+  script.textContent = JSON.stringify(data);
 }
 
 /**

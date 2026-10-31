@@ -13,13 +13,29 @@ const isMobile = computed(() => env.width < 576);
 const showLyrics = ref(false);
 const youtubePlayer = ref(null);
 const iframeId = ref(
-  `youtube-player-${Math.random().toString(36).substring(2, 11)}`
+  `youtube-player-${Math.random().toString(36).substring(2, 11)}`,
 );
-const isPlaying = ref(false); // Video playing state (full play vs preview loop)
+const isPlaying = ref(false);
+const embedBlocked = ref(false); // true when YouTube disallows embedding (error 100/101/150)
 const currentTime = ref(0);
 const duration = ref(0);
 const isDragging = ref(false);
 let apiCheckInterval = null;
+
+const youtubeThumbnail = computed(() =>
+  props.project?.videoId
+    ? `https://img.youtube.com/vi/${props.project.videoId}/maxresdefault.jpg`
+    : null,
+);
+
+function openVideoOnYoutube() {
+  const url =
+    props.project?.links?.youtube ||
+    (props.project?.videoId
+      ? `https://www.youtube.com/watch?v=${props.project.videoId}`
+      : null);
+  if (url) window.open(url, "_blank");
+}
 
 const hasLyrics = computed(() => {
   return props.project?.lyrics && props.project.lyrics.trim().length > 0;
@@ -56,6 +72,17 @@ function openListenLink() {
   if (listenPlatform.value?.url) {
     window.open(listenPlatform.value.url, "_blank");
   }
+}
+
+function openSpotifyProfile() {
+  window.open(
+    "https://open.spotify.com/intl-it/artist/6Tqf2cvcNjPdTVjuxynWEB",
+    "_blank",
+  );
+}
+
+function openYoutubeProfile() {
+  window.open("https://www.youtube.com/@ex.raehmm", "_blank");
 }
 
 // Initialize YouTube IFrame API
@@ -106,22 +133,36 @@ function createPlayer() {
         autoplay: 1,
         mute: 1,
         loop: 1,
-        playlist: props.project.videoId, // Required for loop
+        playlist: props.project.videoId,
         controls: 0,
         modestbranding: 1,
         rel: 0,
         enablejsapi: 1,
+        iv_load_policy: 3, // disabilita annotazioni
+        fs: 0,             // disabilita fullscreen
+        disablekb: 1,      // disabilita controlli tastiera YouTube
+        playsinline: 1,
       },
       events: {
         onStateChange: onPlayerStateChange,
         onReady: onPlayerReady,
         onError: (event) => {
-          console.error('[MusicDetail] YouTube player error:', event.data);
+          // 100: video not found/private, 101/150: embedding disabled by owner
+          if ([100, 101, 150].includes(event.data)) {
+            stopProgressTracking();
+            embedBlocked.value = true;
+            // Distruggi il player: Vue rimuoverà l'iframe dal DOM,
+            // ma senza destroy() il riferimento continua a fare chiamate API
+            if (youtubePlayer.value?.destroy) {
+              youtubePlayer.value.destroy();
+            }
+            youtubePlayer.value = null;
+          }
         },
       },
     });
   } catch (error) {
-    console.error('[MusicDetail] Error creating YouTube player:', error);
+    console.error("[MusicDetail] Error creating YouTube player:", error);
   }
 }
 
@@ -134,17 +175,18 @@ function onPlayerReady(event) {
 }
 
 function onPlayerStateChange(event) {
-  // YT.PlayerState.PLAYING = 1, PAUSED = 2, ENDED = 0
   const state = event.data;
+  // YT.PlayerState: ENDED=0, PLAYING=1, PAUSED=2, BUFFERING=3
 
-  if (state === 1) {
-    // Playing
-    if (!isPlaying.value) {
-      // In preview loop mode, pause audio player
-      if (playerStore.isPlaying) {
-        playerStore.pause();
-      }
-    }
+  if (state === 0) {
+    // Video finito — riparti subito in loop manuale per evitare
+    // che YouTube mostri la schermata "Altri video"
+    event.target.seekTo(0, true);
+    event.target.playVideo();
+  }
+
+  if (state === 1 && !isPlaying.value) {
+    if (playerStore.isPlaying) playerStore.pause();
   }
 }
 
@@ -224,7 +266,7 @@ watch(
   () => route.params.slug,
   () => {
     resetToPreview();
-  }
+  },
 );
 
 function resetToPreview() {
@@ -267,57 +309,70 @@ onBeforeUnmount(() => {
       <div class="md-mobile-container">
         <div class="md-video-section">
           <div class="md-video-wrap">
-            <div v-if="project?.videoId" :id="iframeId" class="md-video-iframe"></div>
+            <template v-if="!embedBlocked">
+              <div
+                v-if="project?.videoId"
+                :id="iframeId"
+                class="md-video-iframe"
+              ></div>
 
-            <!-- Overlay trasparente per intercettare tap -->
-            <div class="md-video-overlay" @click="toggleVideoPlay"></div>
+              <!-- Overlay trasparente per intercettare tap -->
+              <div class="md-video-overlay" @click="toggleVideoPlay"></div>
 
-            <!-- Progress bar (shown when playing) -->
-            <Transition name="progress-fade">
-              <div v-if="isPlaying" class="md-progress-container">
-                <div class="md-progress-bar" @mousedown="onProgressMouseDown">
-                  <div class="md-progress-track">
-                    <div
-                      class="md-progress-fill"
-                      :style="{ width: `${progressPercent}%` }"
-                    ></div>
-                    <div
-                      class="md-progress-handle"
-                      :style="{ left: `${progressPercent}%` }"
-                    ></div>
+              <!-- Progress bar (shown when playing) -->
+              <Transition name="progress-fade">
+                <div v-if="isPlaying" class="md-progress-container">
+                  <div class="md-progress-bar" @mousedown="onProgressMouseDown">
+                    <div class="md-progress-track">
+                      <div
+                        class="md-progress-fill"
+                        :style="{ width: `${progressPercent}%` }"
+                      ></div>
+                      <div
+                        class="md-progress-handle"
+                        :style="{ left: `${progressPercent}%` }"
+                      ></div>
+                    </div>
+                    <div class="md-progress-time">
+                      {{ currentTimeFormatted }} / {{ durationFormatted }}
+                    </div>
                   </div>
-                  <div class="md-progress-time">
-                    {{ currentTimeFormatted }} / {{ durationFormatted }}
-                  </div>
+
+                  <!-- Listen on button -->
+                  <button
+                    v-if="listenPlatform"
+                    class="md-listen-btn"
+                    @click.stop="openListenLink"
+                    type="button"
+                    :aria-label="`Listen on ${listenPlatform.name}`"
+                  >
+                    Open on {{ listenPlatform.name }}
+                  </button>
                 </div>
+              </Transition>
+            </template>
 
-                <!-- Listen on button -->
+            <!-- Fallback: embedding disabilitato su YouTube -->
+            <div v-else class="md-embed-fallback">
+              <img
+                v-if="youtubeThumbnail"
+                :src="youtubeThumbnail"
+                class="md-fallback-thumb"
+                alt=""
+              />
+              <div class="md-fallback-body">
                 <button
-                  v-if="listenPlatform"
                   class="md-listen-btn"
-                  @click.stop="openListenLink"
+                  @click="openVideoOnYoutube"
                   type="button"
-                  :aria-label="`Listen on ${listenPlatform.name}`"
+                  aria-label="Guarda su YouTube"
                 >
-                  Ascolta su {{ listenPlatform.name }}
+                  Guarda su YouTube
                 </button>
               </div>
-            </Transition>
+            </div>
           </div>
 
-          <!-- Play button area (shown in preview mode) -->
-          <Transition name="play-btn-fade">
-            <div v-if="!isPlaying" class="md-play-area">
-              <button
-                class="md-play-btn"
-                @click="toggleVideoPlay"
-                type="button"
-                aria-label="Play video"
-              >
-                <font-awesome-icon icon="fa-solid fa-play" aria-hidden="true" />
-              </button>
-            </div>
-          </Transition>
         </div>
 
         <!-- Side controls column (right) - Mobile -->
@@ -325,13 +380,7 @@ onBeforeUnmount(() => {
           <!-- Spotify bubble -->
           <button
             class="md-control-btn md-control-spotify"
-            @click.stop="
-              () =>
-                window.open(
-                  'https://open.spotify.com/artist/6Tqf2cvcNjPdTVjuxynWEB?si=6Ig-mVObTReE7qo_8nB8_w',
-                  '_blank'
-                )
-            "
+            @click.stop="openSpotifyProfile"
             type="button"
             aria-label="Open Spotify Profile"
           >
@@ -341,13 +390,7 @@ onBeforeUnmount(() => {
           <!-- YouTube bubble -->
           <button
             class="md-control-btn md-control-youtube"
-            @click.stop="
-              () =>
-                window.open(
-                  'https://youtube.com/@ex.raehmm?si=51oFIqEIh9faCtA0',
-                  '_blank'
-                )
-            "
+            @click.stop="openYoutubeProfile"
             type="button"
             aria-label="Open YouTube channel"
           >
@@ -402,60 +445,73 @@ onBeforeUnmount(() => {
       <div class="md-desktop-container">
         <div class="md-video-section">
           <div class="md-video-wrap">
-            <div v-if="project?.videoId" :id="iframeId" class="md-video-iframe"></div>
-
-            <!-- Overlay trasparente per intercettare tap -->
-            <div class="md-video-overlay" @click="toggleVideoPlay"></div>
-
-            <!-- Progress bar (shown when playing) - Desktop -->
-            <Transition name="progress-fade">
+            <template v-if="!embedBlocked">
               <div
-                v-if="isPlaying"
-                class="md-progress-container md-progress-container--desktop"
-              >
-                <div class="md-progress-bar" @mousedown="onProgressMouseDown">
-                  <div class="md-progress-track">
-                    <div
-                      class="md-progress-fill"
-                      :style="{ width: `${progressPercent}%` }"
-                    ></div>
-                    <div
-                      class="md-progress-handle"
-                      :style="{ left: `${progressPercent}%` }"
-                    ></div>
-                  </div>
-                  <div class="md-progress-time">
-                    {{ currentTimeFormatted }} / {{ durationFormatted }}
-                  </div>
-                </div>
+                v-if="project?.videoId"
+                :id="iframeId"
+                class="md-video-iframe"
+              ></div>
 
-                <!-- Listen on button -->
-                <button
-                  v-if="listenPlatform"
-                  class="md-listen-btn"
-                  @click.stop="openListenLink"
-                  type="button"
-                  :aria-label="`Listen on ${listenPlatform.name}`"
+              <!-- Overlay trasparente per intercettare tap -->
+              <div class="md-video-overlay" @click="toggleVideoPlay"></div>
+
+              <!-- Progress bar (shown when playing) - Desktop -->
+              <Transition name="progress-fade">
+                <div
+                  v-if="isPlaying"
+                  class="md-progress-container md-progress-container--desktop"
                 >
-                  Ascolta su {{ listenPlatform.name }}
+                  <div class="md-progress-bar" @mousedown="onProgressMouseDown">
+                    <div class="md-progress-track">
+                      <div
+                        class="md-progress-fill"
+                        :style="{ width: `${progressPercent}%` }"
+                      ></div>
+                      <div
+                        class="md-progress-handle"
+                        :style="{ left: `${progressPercent}%` }"
+                      ></div>
+                    </div>
+                    <div class="md-progress-time">
+                      {{ currentTimeFormatted }} / {{ durationFormatted }}
+                    </div>
+                  </div>
+
+                  <!-- Listen on button -->
+                  <button
+                    v-if="listenPlatform"
+                    class="md-listen-btn"
+                    @click.stop="openListenLink"
+                    type="button"
+                    :aria-label="`Listen on ${listenPlatform.name}`"
+                  >
+                    Open on {{ listenPlatform.name }}
+                  </button>
+                </div>
+              </Transition>
+            </template>
+
+            <!-- Fallback: embedding disabilitato su YouTube -->
+            <div v-else class="md-embed-fallback">
+              <img
+                v-if="youtubeThumbnail"
+                :src="youtubeThumbnail"
+                class="md-fallback-thumb"
+                alt=""
+              />
+              <div class="md-fallback-body">
+                <button
+                  class="md-listen-btn"
+                  @click="openVideoOnYoutube"
+                  type="button"
+                  aria-label="Guarda su YouTube"
+                >
+                  Guarda su YouTube
                 </button>
               </div>
-            </Transition>
+            </div>
           </div>
 
-          <!-- Play button area (shown in preview mode) - Desktop -->
-          <Transition name="play-btn-fade">
-            <div v-if="!isPlaying" class="md-play-area">
-              <button
-                class="md-play-btn"
-                @click="toggleVideoPlay"
-                type="button"
-                aria-label="Play video"
-              >
-                <font-awesome-icon icon="fa-solid fa-play" aria-hidden="true" />
-              </button>
-            </div>
-          </Transition>
         </div>
 
         <!-- Side controls column (right) -->
@@ -463,13 +519,7 @@ onBeforeUnmount(() => {
           <!-- Spotify bubble -->
           <button
             class="md-control-btn md-control-spotify"
-            @click.stop="
-              () =>
-                window.open(
-                  'https://open.spotify.com/artist/6Tqf2cvcNjPdTVjuxynWEB?si=6Ig-mVObTReE7qo_8nB8_w',
-                  '_blank'
-                )
-            "
+            @click.stop="openSpotifyProfile"
             type="button"
             aria-label="Open Spotify Profile"
           >
@@ -479,13 +529,7 @@ onBeforeUnmount(() => {
           <!-- YouTube bubble -->
           <button
             class="md-control-btn md-control-youtube"
-            @click.stop="
-              () =>
-                window.open(
-                  'https://youtube.com/@ex.raehmm?si=51oFIqEIh9faCtA0',
-                  '_blank'
-                )
-            "
+            @click.stop="openYoutubeProfile"
             type="button"
             aria-label="Open YouTube channel"
           >

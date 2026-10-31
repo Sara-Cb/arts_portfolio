@@ -20,9 +20,9 @@ import { useRoute, useRouter } from "vue-router";
 import { useUiStore } from "@/stores/ui";
 
 // ========== KEYDOWN GLOBAL SINGLETON ==========
-// Gestisce listener keyboard condiviso tra più istanze del composable.
-// Una sola istanza di event listener per l'intera applicazione,
-// ogni componente registra il proprio callback nella Set.
+// Una sola istanza di listener keyboard per tutta l'app.
+// FIX: registrato solo su window (non anche su document) per evitare
+// che ogni tasto scatti il callback due volte.
 const _keySubscribers = new Set();
 let _keyBound = false;
 function _globalKeyHandler(e) {
@@ -37,16 +37,25 @@ function _globalKeyHandler(e) {
 function _ensureGlobalKeys() {
   if (_keyBound) return;
   window.addEventListener("keydown", _globalKeyHandler, { capture: true });
-  document.addEventListener("keydown", _globalKeyHandler, { capture: true });
   _keyBound = true;
 }
 function _maybeRemoveGlobalKeys() {
   if (_keySubscribers.size > 0 || !_keyBound) return;
   window.removeEventListener("keydown", _globalKeyHandler, true);
-  document.removeEventListener("keydown", _globalKeyHandler, true);
   _keyBound = false;
 }
 /* -------------------------------------------------------------- */
+
+/**
+ * Genera l'id DOM di una sezione di navigazione.
+ * Formula condivisa tra useVerticalNavigator, ScrollIndicator e le view.
+ * @param {string} routeName - nome della route (es. "materical-project")
+ * @param {string} [slug]    - slug del progetto, se presente
+ */
+export function makeSectionId(routeName, slug) {
+  const suffix = slug ? `-${slug}` : "";
+  return `${routeName}${suffix}`.replace(/[^a-z0-9_-]+/gi, "-");
+}
 
 export function useVerticalNavigator({
   pageKey,
@@ -55,7 +64,7 @@ export function useVerticalNavigator({
   keydownEnabled = true,
   routeScrollDebounce = 600,
   ioThreshold = 0.6,
-  initialAlignFirst = true, // allinea PRIMA di attivare IO
+  initialAlignFirst = true,
   debug = false,
 } = {}) {
   if (!getCurrentInstance()) {
@@ -110,8 +119,7 @@ export function useVerticalNavigator({
 
   const sectionId = (entry) => {
     const { name, params } = normalizeEntry(entry);
-    const slug = params.slug ? `-${params.slug}` : "";
-    return (name + slug).replace(/[^a-z0-9_-]+/gi, "-");
+    return makeSectionId(name, params.slug);
   };
 
   const scrollToIndex = (idx, behavior = "smooth") => {
@@ -121,16 +129,13 @@ export function useVerticalNavigator({
   };
 
   // ========== STATO ANTI-BOUNCE ==========
-  // Previene loop infiniti: scroll cambia route → route cambia scroll → scroll cambia route...
-  // lockRouteDrivenScroll: true mentre scroll è comandato da cambio route, blocca aggiornamento route da IO
-  // programmaticRouteChange: true quando route cambia via pushToEntry/step, attiva alignToRoute nel watch
   let lockRouteDrivenScroll = false;
   let unlockTimer = null;
-  let programmaticRouteChange = false;
+  // FIX: traccia l'entry specifica della pushToEntry anziché un booleano generico,
+  // così navigate rapide consecutive non perdono l'allineamento.
+  let lastProgrammaticEntry = null;
 
   // ========== INTERSECTION OBSERVER ==========
-  // Monitora visibilità sezioni, aggiorna route quando sezione diventa prevalente (>threshold).
-  // Disabilitato (via lock) durante scroll comandato da route per evitare conflitti.
   let observer = null;
 
   function computeVisibilityRatio(el) {
@@ -164,6 +169,16 @@ export function useVerticalNavigator({
         if (bestIdx < 0 || bestRatio < ioThreshold) return;
         if (lockRouteDrivenScroll) return;
 
+        // FIX: non aggiornare la route se è in corso una transizione orizzontale
+        // (il componente potrebbe essere ancora nella leave-animation)
+        if (ui.isCrossPageTransition) return;
+
+        // FIX: non aggiornare la route se questo componente non appartiene
+        // alla pagina corrente (evita che l'IO della leave-animation forzi
+        // router.replace sulla pagina di destinazione)
+        const currentPageKey = ui.findPageKeyForRoute(route.name, route.params);
+        if (currentPageKey !== pageKeyRef.value) return;
+
         const entry = sections.value[bestIdx];
         if (entry && !sameLocation(entry, route)) {
           if (debug) console.info("[VN] IO -> router.replace", entry);
@@ -184,9 +199,6 @@ export function useVerticalNavigator({
   }
 
   // ---- route change (programmatico) -> scroll ----
-  // Allinea scroll alla sezione corrispondente alla route attuale.
-  // Ottimizzazione: skip se sezione già visibile oltre threshold, evita scroll inutili.
-  // Attiva lock temporaneo per impedire che IO reagisca allo scroll appena comandato.
   function alignToRoute() {
     const idx = activeIndex.value;
     if (idx < 0) return;
@@ -205,29 +217,37 @@ export function useVerticalNavigator({
     }
 
     lockRouteDrivenScroll = true;
-    scrollToIndex(idx, "smooth");
+    // "instant": alignToRoute è una correzione posizionale, non navigazione utente.
+    // Smooth scrolling tra snap-sections produce un frame "vuoto" (sfondo scuro)
+    // mentre passa tra le sezioni, specialmente al termine di una transizione orizzontale.
+    // La navigazione smooth è gestita da step() su input utente (frecce/dot).
+    scrollToIndex(idx, "instant");
     clearTimeout(unlockTimer);
     unlockTimer = setTimeout(() => {
       lockRouteDrivenScroll = false;
     }, routeScrollDebounce);
   }
 
-  // API pubblica: naviga a una entry specifica (usata da dots, link interni)
+  // API pubblica: naviga a una entry specifica (dot ScrollIndicator, link interni)
   function pushToEntry(entry) {
     if (!entry) return;
     if (sameLocation(entry, route)) return;
-    programmaticRouteChange = true;
+    // FIX: traccia l'entry attesa per allineare solo quando la route giusta arriva
+    lastProgrammaticEntry = toRouteLocation(entry);
     router.push(toRouteLocation(entry));
   }
 
-  // Naviga di N sezioni (+1/-1) rispetto all'attuale.
-  // Chiamata dal singleton keyboard per frecce ArrowUp/Down, PageUp/Down.
-  // Attiva sia scroll che lock IO per coordinare cambio route successivo.
+  // Naviga di N sezioni (+1/-1) con i tasti freccia.
   function step(dir) {
+    // FIX: blocca navigazione verticale durante transizioni orizzontali tra pagine
+    if (ui.isCrossPageTransition) return;
+    // FIX: blocca se una navigazione verticale è già in corso (evita skip multipli)
+    if (lockRouteDrivenScroll) return;
+
     const idx = activeIndex.value;
     const next = Math.max(0, Math.min(sections.value.length - 1, idx + dir));
     if (next === idx) return;
-    programmaticRouteChange = true;
+
     lockRouteDrivenScroll = true;
     scrollToIndex(next, "smooth");
     clearTimeout(unlockTimer);
@@ -239,8 +259,6 @@ export function useVerticalNavigator({
   onMounted(() => {
     nextTick(() => {
       if (initialAlignFirst) {
-        // Strategia: allinea scroll alla route PRIMA di attivare IO, evita flicker iniziale.
-        // Lock brevissimo (50ms) impedisce che IO reagisca all'allineamento iniziale.
         lockRouteDrivenScroll = true;
         alignToRoute();
         setTimeout(() => {
@@ -262,27 +280,33 @@ export function useVerticalNavigator({
   onBeforeUnmount(() => {
     cleanupObserver();
     clearTimeout(unlockTimer);
+    // FIX: azzera lo stato al dismount per non lasciare lock attivi
+    lockRouteDrivenScroll = false;
+    lastProgrammaticEntry = null;
     if (keydownEnabled) {
       _keySubscribers.delete(step);
       _maybeRemoveGlobalKeys();
     }
   });
 
-  // Watch route: quando route cambia via pushToEntry/step (programmaticRouteChange=true),
-  // sincronizza scroll. Altri cambi route (browser back/forward, link esterni) ignorati,
-  // scroll gestito da IO oppure da router.beforeEach esterno.
+  // Watch route: allinea lo scroll quando pushToEntry porta alla route attesa.
+  // FIX: controlla l'entry specifica anziché un flag booleano generico,
+  // così navigate rapide consecutive funzionano tutte correttamente.
   watch(
     () => route.fullPath,
     () => {
-      if (programmaticRouteChange) {
-        programmaticRouteChange = false;
+      if (!lastProgrammaticEntry) return;
+      const expectedKey = `${lastProgrammaticEntry.name}|${JSON.stringify(
+        sortObj(lastProgrammaticEntry.params || {})
+      )}`;
+      if (expectedKey === routeKey(route)) {
+        lastProgrammaticEntry = null;
         alignToRoute();
       }
     }
   );
 
-  // Watch sections: quando lista sezioni cambia (progetti caricati), riallinea e riattiva IO.
-  // Necessario per aggiornare DOM observer dopo mount asincrono dati.
+  // Watch sections: riallinea e riattiva IO quando la lista sezioni cambia.
   watch(sections, () => {
     nextTick(() => {
       alignToRoute();

@@ -25,17 +25,12 @@ const viewKey = computed(() => {
   return key || route.matched[0]?.path || "view";
 });
 
-// Cleanup transition state dopo che la transizione è completata
+// Cleanup transition state solo dopo che il componente entrante ha finito.
+// NON farlo in onAfterLeave: in mode="out-in" Vue avvia subito la fase enter
+// dopo la leave — azzerare isCrossPageTransition in quel nextTick rimuove
+// le classi CSS dall'animazione entrante, bloccandola fuori schermo.
 function onAfterEnter() {
-  nextTick(() => {
-    ui.setCrossPageTransition(false);
-  });
-}
-
-function onAfterLeave() {
-  nextTick(() => {
-    ui.setCrossPageTransition(false);
-  });
+  ui.setCrossPageTransition(false);
 }
 
 // stessa logica del router: prendo il "root" del name
@@ -80,7 +75,6 @@ onMounted(() => {
           :name="transitionName"
           mode="out-in"
           @after-enter="onAfterEnter"
-          @after-leave="onAfterLeave"
         >
           <div class="route-page" :key="viewKey">
             <component :is="Component" />

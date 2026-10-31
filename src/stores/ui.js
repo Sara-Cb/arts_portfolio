@@ -25,8 +25,20 @@ export const useUiStore = defineStore("ui", () => {
   const isCrossPageTransition = ref(false);
   const setHorizontalDirection = (dir) =>
     (horizontalDirection.value = dir === "right" ? "right" : "left");
-  const setCrossPageTransition = (flag) =>
-    (isCrossPageTransition.value = !!flag);
+
+  // FIX: safety timer — se onAfterEnter in App.vue non scatta (transizione
+  // interrotta o sostituita), il flag viene azzerato automaticamente dopo 1.5s
+  // (abbondantemente oltre la durata dell'animazione CSS di 0.5s).
+  let _transitionResetTimer = null;
+  const setCrossPageTransition = (flag) => {
+    isCrossPageTransition.value = !!flag;
+    clearTimeout(_transitionResetTimer);
+    if (flag) {
+      _transitionResetTimer = setTimeout(() => {
+        isCrossPageTransition.value = false;
+      }, 1500);
+    }
+  };
 
   // ========== SEZIONI E MAPPING ROUTE → PAGE ==========
   // Ogni pagina (rahem, materical, visual) può avere N sezioni verticali

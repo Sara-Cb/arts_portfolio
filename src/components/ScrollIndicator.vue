@@ -4,6 +4,7 @@ import { computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useUiStore } from "@/stores/ui";
 import { useProjectsStore } from "@/stores/projects";
+import { makeSectionId } from "@/composables/useVerticalNavigator";
 
 const route = useRoute();
 const router = useRouter();
@@ -30,12 +31,10 @@ const activeIndex = computed(() => {
   });
 });
 
-// Genera ID sezione (stesso pattern di useVerticalNavigator)
 function sectionId(entry) {
-  const sectionName = typeof entry === "string" ? entry : entry.name;
-  const sectionParams = typeof entry === "string" ? {} : entry.params || {};
-  const slug = sectionParams.slug ? `-${sectionParams.slug}` : "";
-  return (sectionName + slug).replace(/[^a-z0-9_-]+/gi, "-");
+  const name = typeof entry === "string" ? entry : entry.name;
+  const slug = typeof entry === "string" ? undefined : entry.params?.slug;
+  return makeSectionId(name, slug);
 }
 
 function goToSection(entry) {

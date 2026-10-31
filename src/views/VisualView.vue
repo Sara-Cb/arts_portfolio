@@ -5,7 +5,7 @@ import { useUiStore } from "@/stores/ui";
 import { useProjectsStore } from "@/stores/projects";
 import { useSeo, useStructuredData, getCreativeWorkStructuredData } from "@/composables/useSeo";
 import VisualDetail from "@/components/projects/VisualDetail.vue";
-import { useVerticalNavigator } from "@/composables/useVerticalNavigator";
+import { useVerticalNavigator, makeSectionId } from "@/composables/useVerticalNavigator";
 
 const ui = useUiStore();
 const projectsStore = useProjectsStore();
@@ -57,10 +57,7 @@ const isReady = computed(
     )
 );
 
-// Genera ID sezione
-function sectionId(slug) {
-  return `visual-project-${slug}`.replace(/[^a-z0-9_-]+/gi, "-");
-}
+const sectionId = (slug) => makeSectionId("visual-project", slug);
 
 onMounted(async () => {
   await projectsStore.ensureLoaded();

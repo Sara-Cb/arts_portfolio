@@ -20,8 +20,8 @@ export const useProjectsStore = defineStore("projects", () => {
   const loading = ref(false);
   const error = ref(null);
 
-  const byCategory = ref({ materical: [], visual: [], music: [] });
-  const indexBySlug = ref({ materical: new Map(), visual: new Map(), music: new Map() });
+  const byCategory = ref({ materical: [], visual: [], music: [], performance: [] });
+  const indexBySlug = ref({ materical: new Map(), visual: new Map(), music: new Map(), performance: new Map() });
 
   const BASE = (import.meta.env.BASE_URL || "/").replace(/\/+$/, "");
 
@@ -76,6 +76,20 @@ export const useProjectsStore = defineStore("projects", () => {
   const normalizeProject = (raw, category) => {
     const id = raw.id ? slugify(raw.id) : slugify(raw.title || "");
     const coverFromJson = resolveCoverSrc(category, id, raw.cover);
+
+    // Performance projects: type "video" (main.mp4) or "grid" (YouTube mosaic)
+    if (category === "performance") {
+      return {
+        id,
+        slug: id,
+        category,
+        title: raw.title || "",
+        date: raw.date || null,
+        type: raw.type || "",
+        items: Array.isArray(raw.items) ? raw.items : [],
+        ...raw,
+      };
+    }
 
     // Music projects have different structure (videoId, lyrics, links)
     if (category === "music") {
@@ -147,6 +161,7 @@ export const useProjectsStore = defineStore("projects", () => {
         loadCategory("materical", "projects/materical.json"),
         loadCategory("visual", "projects/visual.json"),
         loadCategory("music", "projects/music.json"),
+        loadCategory("performance", "projects/performance.json"),
       ]);
       // Only attach galleries for materical and visual (music doesn't use gallery manifest)
       await attachGalleriesToProjects(
@@ -175,6 +190,7 @@ export const useProjectsStore = defineStore("projects", () => {
   const matericals = computed(() => byCategory.value.materical);
   const visuals = computed(() => byCategory.value.visual);
   const musics = computed(() => byCategory.value.music);
+  const performances = computed(() => byCategory.value.performance);
   function getByCategory(category) {
     return byCategory.value[category] || [];
   }
@@ -185,6 +201,7 @@ export const useProjectsStore = defineStore("projects", () => {
   const getMaterical = (slug) => getOne("materical", slug);
   const getVisual = (slug) => getOne("visual", slug);
   const getMusic = (slug) => getOne("music", slug);
+  const getPerformance = (slug) => getOne("performance", slug);
 
   return {
     loaded,
@@ -195,11 +212,13 @@ export const useProjectsStore = defineStore("projects", () => {
     matericals,
     visuals,
     musics,
+    performances,
     getByCategory,
     getOne,
     getMaterical,
     getVisual,
     getMusic,
+    getPerformance,
     getProjectGallery: (category, id, title) =>
       getProjectGallery(category, id, title, {
         base: BASE,
